@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="8Fc-9b-jCA" customClass="SignatureView" customModule="JuiResidenceUser" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WA-pe-84v">
+                    <rect key="frame" x="25" y="184" width="364" height="450"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RE7-rx-PPW">
+                            <rect key="frame" x="25" y="45" width="45.5" height="18"/>
+                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
+                            <color key="textColor" red="0.36470588240000001" green="0.36470588240000001" blue="0.36470588240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UvZ-Bp-h48" customClass="PaddedTextField" customModule="JuiResidenceUser" customModuleProvider="target">
+                            <rect key="frame" x="25" y="73" width="314" height="40"/>
+                            <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="MSA-xK-Nxk"/>
+                            </constraints>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                        </textField>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vt7-Fu-bOJ">
+                            <rect key="frame" x="25" y="148" width="69.5" height="17.5"/>
+                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
+                            <color key="textColor" red="0.36470588240000001" green="0.36470588240000001" blue="0.36470588240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEq-KF-aw5">
+                            <rect key="frame" x="327" y="17" width="20" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="20" id="3ic-pB-dkI"/>
+                                <constraint firstAttribute="height" constant="20" id="ycd-hF-CGE"/>
+                            </constraints>
+                            <state key="normal" image="closebtn"/>
+                            <connections>
+                                <action selector="actionClose:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="jpz-fW-L1k"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0nM-gs-Pce" customClass="YPDrawSignatureView" customModule="JuiResidenceUser" customModuleProvider="target">
+                            <rect key="frame" x="25" y="175.5" width="314" height="150"/>
+                            <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="150" id="L07-V2-Hgu"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="arZ-CY-EwW">
+                            <rect key="frame" x="25" y="380" width="314" height="50"/>
+                            <color key="backgroundColor" red="0.54901960780000003" green="0.49019607840000001" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="GeK-i9-kne"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="20"/>
+                            <state key="normal" title="Done">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="actionDone:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="KsB-8D-fxx"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hne-Eg-tBH" customClass="DashedLineView" customModule="JuiResidenceUser" customModuleProvider="target">
+                            <rect key="frame" x="25" y="335.5" width="314" height="1"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="pl1-ab-4Yj"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="spaceBetweenDash">
+                                    <real key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="perDashLength">
+                                    <real key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in the box" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OeN-Ft-rGI">
+                            <rect key="frame" x="25" y="344.5" width="87" height="15"/>
+                            <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                            <color key="textColor" red="0.63529411764705879" green="0.63529411764705879" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z07-gi-RGA">
+                            <rect key="frame" x="228" y="337" width="111" height="30"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                            <state key="normal" title="Clear Signature">
+                                <color key="titleColor" red="0.54901960780000003" green="0.49019607840000001" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="actionClearSignature:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="h03-zA-tiB"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Z07-gi-RGA" firstAttribute="centerY" secondItem="OeN-Ft-rGI" secondAttribute="centerY" id="0S2-J8-YNI"/>
+                        <constraint firstItem="0nM-gs-Pce" firstAttribute="top" secondItem="Vt7-Fu-bOJ" secondAttribute="bottom" constant="10" id="1C0-Mk-xZ4"/>
+                        <constraint firstAttribute="trailing" secondItem="arZ-CY-EwW" secondAttribute="trailing" constant="25" id="1Iw-6j-vJo"/>
+                        <constraint firstItem="arZ-CY-EwW" firstAttribute="leading" secondItem="3WA-pe-84v" secondAttribute="leading" constant="25" id="4Gu-IZ-Zlg"/>
+                        <constraint firstAttribute="trailing" secondItem="Z07-gi-RGA" secondAttribute="trailing" constant="25" id="DQR-co-Ez3"/>
+                        <constraint firstItem="dEq-KF-aw5" firstAttribute="top" secondItem="3WA-pe-84v" secondAttribute="top" constant="17" id="FVz-nG-8Io"/>
+                        <constraint firstItem="0nM-gs-Pce" firstAttribute="trailing" secondItem="UvZ-Bp-h48" secondAttribute="trailing" id="IDZ-tC-aEE"/>
+                        <constraint firstItem="UvZ-Bp-h48" firstAttribute="leading" secondItem="RE7-rx-PPW" secondAttribute="leading" id="Kgc-Pc-b0L"/>
+                        <constraint firstAttribute="height" constant="450" id="KhQ-RE-beF"/>
+                        <constraint firstItem="hne-Eg-tBH" firstAttribute="top" secondItem="0nM-gs-Pce" secondAttribute="bottom" constant="10" id="Nvg-jx-LpH"/>
+                        <constraint firstItem="OeN-Ft-rGI" firstAttribute="leading" secondItem="hne-Eg-tBH" secondAttribute="leading" id="Pbk-sI-rwP"/>
+                        <constraint firstItem="UvZ-Bp-h48" firstAttribute="top" secondItem="RE7-rx-PPW" secondAttribute="bottom" constant="10" id="Qx9-8b-OMP"/>
+                        <constraint firstItem="hne-Eg-tBH" firstAttribute="leading" secondItem="3WA-pe-84v" secondAttribute="leading" constant="25" id="Tok-kO-c5I"/>
+                        <constraint firstAttribute="trailing" secondItem="UvZ-Bp-h48" secondAttribute="trailing" constant="25" id="VPm-cF-9q0"/>
+                        <constraint firstAttribute="trailing" secondItem="hne-Eg-tBH" secondAttribute="trailing" constant="25" id="VSr-Rk-jYp"/>
+                        <constraint firstItem="Vt7-Fu-bOJ" firstAttribute="top" secondItem="UvZ-Bp-h48" secondAttribute="bottom" constant="35" id="Yg0-Xc-KId"/>
+                        <constraint firstAttribute="bottom" secondItem="arZ-CY-EwW" secondAttribute="bottom" constant="20" id="cxS-12-fXO"/>
+                        <constraint firstItem="OeN-Ft-rGI" firstAttribute="top" secondItem="hne-Eg-tBH" secondAttribute="bottom" constant="8" id="ghH-3q-TbL"/>
+                        <constraint firstAttribute="trailing" secondItem="dEq-KF-aw5" secondAttribute="trailing" constant="17" id="gwO-UF-4d7"/>
+                        <constraint firstItem="Vt7-Fu-bOJ" firstAttribute="leading" secondItem="RE7-rx-PPW" secondAttribute="leading" id="iw9-an-0jJ"/>
+                        <constraint firstItem="RE7-rx-PPW" firstAttribute="leading" secondItem="3WA-pe-84v" secondAttribute="leading" constant="25" id="nxi-Xx-0Eb"/>
+                        <constraint firstItem="RE7-rx-PPW" firstAttribute="top" secondItem="3WA-pe-84v" secondAttribute="top" constant="45" id="qYJ-lQ-C4K"/>
+                        <constraint firstItem="0nM-gs-Pce" firstAttribute="leading" secondItem="UvZ-Bp-h48" secondAttribute="leading" id="zag-fg-waE"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="ss9-IS-8M6"/>
+            <color key="backgroundColor" white="0.0" alpha="0.80195082100000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="3WA-pe-84v" firstAttribute="leading" secondItem="ss9-IS-8M6" secondAttribute="leading" constant="25" id="5V4-gl-8Z5"/>
+                <constraint firstItem="3WA-pe-84v" firstAttribute="top" secondItem="ss9-IS-8M6" secondAttribute="top" constant="140" id="faR-An-bU6"/>
+                <constraint firstItem="ss9-IS-8M6" firstAttribute="trailing" secondItem="3WA-pe-84v" secondAttribute="trailing" constant="25" id="hBT-tU-soe"/>
+            </constraints>
+            <connections>
+                <outlet property="btn_Home" destination="arZ-CY-EwW" id="ZZ1-eA-gTW"/>
+                <outlet property="txtName" destination="UvZ-Bp-h48" id="fqC-I5-lRo"/>
+                <outlet property="view_Background" destination="3WA-pe-84v" id="7f7-CT-jre"/>
+                <outlet property="vwSignature" destination="0nM-gs-Pce" id="0Vm-42-Fpo"/>
+            </connections>
+            <point key="canvasLocation" x="18.840579710144929" y="37.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="closebtn" width="140" height="140"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
