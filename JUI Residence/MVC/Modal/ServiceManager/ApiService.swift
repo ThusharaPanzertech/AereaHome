@@ -1810,4 +1810,64 @@ class ApiService{
         
      
     }
+    static func submit_RenovationInspection(files:[[String:Any]]?,parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        
+        ServiceManager.sharedInstance.postMethodAlamofire_With_Multiple_Data1(API.kEForm_RenovationInspection, with: parameters, imagedatas: files) { (status, result, error) in
+            if status
+            {
+                let data = result?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try RenovationInspectionBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+            
+        }
+        
+        
+        
+        
+        
+     
+    }
+    static func submit_RenovationPayment(signature: Data?, parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        var datas = [Data]()
+        if signature != nil{
+        datas.append(signature!)
+        }
+        ServiceManager.sharedInstance.postMethod_UploadData1(API.kEForm_RenovationPayment, path: "signature", parameter: parameters, imagedata: datas) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let loginModal = try RenovationInspectionBase(result as! [String : Any])
+                    completion(true,loginModal as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+       
+    }
 }

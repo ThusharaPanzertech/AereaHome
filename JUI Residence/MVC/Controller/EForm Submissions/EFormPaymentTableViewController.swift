@@ -38,13 +38,11 @@ class EFormPaymentTableViewController: BaseTableViewController {
     let view_Signature: SignatureView = SignatureView.getInstance
     var signature1 : UIImage!
     var moveInOutData: MoveInOut!
-    
-    
-    var isToEdit : Bool!
+    var renovationData: Renovation!
+    var formType : eForm!
     
      override func viewDidLoad() {
          super.viewDidLoad()
-        self.isToEdit = self.moveInOutData.payment != nil
         let toolbar = UIToolbar();
         toolbar.sizeToFit()
         let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done));
@@ -84,8 +82,8 @@ class EFormPaymentTableViewController: BaseTableViewController {
         view_Background1.layer.masksToBounds = true
         
        
-  //      self.lbl_Title.text = kChangeMail.replacingOccurrences(of: "\n", with: "")
-    //    self.lbl_SubTitle.text = "(To be completed by resident)"
+        self.lbl_Title.text = formType == .moveInOut ? "Moving In & Out Application" : "Renovation Work Application"
+        self.lbl_SubTitle.text = "(For official use only)"
         
         for vw in arr_Views{
             vw.layer.cornerRadius = 20.0
@@ -122,6 +120,7 @@ class EFormPaymentTableViewController: BaseTableViewController {
      override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
          self.showBottomMenu()
+        if formType == .moveInOut{
         if self.moveInOutData.payment != nil{
             self.txt_Manager.text = self.moveInOutData.payment.manager_received
             self.txt_Acknowledge.text = self.moveInOutData.payment.acknowledged_by
@@ -134,6 +133,20 @@ class EFormPaymentTableViewController: BaseTableViewController {
         if image != nil{
          self.imgView_signature1.image = image
          }
+        }
+        }
+        else if formType == .renovation{
+          /*  self.txt_Manager.text = self.moveInOutData.payment.manager_received
+            self.txt_Acknowledge.text = self.moveInOutData.payment.acknowledged_by
+            self.txt_ReceiptNo.text = self.moveInOutData.payment.receipt_no
+            self.txt_Bank.text = self.moveInOutData.payment.cheque_bank
+            self.txt_Cheque.text = self.moveInOutData.payment.cheque_no
+        
+        let sign1 = self.moveInOutData.payment.signature
+        let image = self.convertBase64StringToImage(imageBase64String: sign1)
+        if image != nil{
+         self.imgView_signature1.image = image
+         }*/
         }
      }
      override func viewWillDisappear(_ animated: Bool) {
@@ -167,9 +180,18 @@ func closeMenu(){
        
         let params = NSMutableDictionary()
         params.setValue("\(userId)", forKey: "login_id")
+        if formType == .moveInOut{
         params.setValue("\(moveInOutData.submission.id)", forKey: "id")
         if moveInOutData.payment != nil{
             params.setValue("\(moveInOutData.payment.id)", forKey: "payment_id")
+        }
+            
+        }
+        else if formType == .renovation{
+            params.setValue("\(renovationData.submission.id)", forKey: "id")
+           // if renovationData.payment != nil{
+            //    params.setValue("\(renovationData.payment.id)", forKey: "payment_id")
+          //  }
         }
         params.setValue(txt_Cheque.text!, forKey: "cheque_no")
         params.setValue(txt_Bank.text!, forKey: "cheque_bank")
@@ -190,7 +212,7 @@ func closeMenu(){
         data = signature1.jpegData(compressionQuality: 0.5)! as NSData as Data
      }
     
-        
+        if formType == .moveInOut{
         ApiService.submit_MoveIOPayment(signature: data, parameters: params as! [String : Any]) { status, result, error in
             ActivityIndicatorView.hiding()
             if status  && result != nil{
@@ -217,7 +239,35 @@ func closeMenu(){
             }
         }
         
-        
+        }
+        else if formType == .renovation{
+          //
+            ApiService.submit_RenovationPayment(signature: data, parameters: params as! [String : Any]) { status, result, error in
+                ActivityIndicatorView.hiding()
+                if status  && result != nil{
+                    if let response = (result as? RenovationInspectionBase){
+                        if response.response == 1{
+                            self.isToShowSucces =  true
+                            DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                                let indexPath = NSIndexPath(row: 0, section: 0)
+                                self.tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
+                            }
+                        }
+                        else{
+                            self.displayErrorAlert(alertStr: response.message, title: "Alert")
+                        }
+                       
+                    }
+            }
+                else if error != nil{
+                    self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+                }
+                else{
+                    self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+                }
+            }
+        }
         
      
             }

@@ -148,8 +148,8 @@ struct API {
     static let kEForm_RenovationSearch = "renovationsearch"
     static let kEForm_RenovationDelete = "renovationdelete"
     static let kEForm_RenovationUpdate = "renovationedit"
-    static let kEForm_RenovationPayment = "moveinoutpaymentsave"
-    static let kEForm_RenovationInspection = "moveinoutinspectionsave"
+    static let kEForm_RenovationPayment = "renovationpaymentsave"
+    static let kEForm_RenovationInspection = "renovationinspectionsave"
     
     static let kEForm_DoorAccessSummary = "dooraccesssummary"
     static let kEForm_DoorAccessSearch = "dooraccesssearch"

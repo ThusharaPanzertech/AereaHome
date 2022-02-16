@@ -13,6 +13,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     var isToShowSucces = false
      //Outlets
+    @IBOutlet weak var datePicker:  UIDatePicker!
      @IBOutlet weak var lbl_UserName: UILabel!
      @IBOutlet weak var lbl_UserRole: UILabel!
      @IBOutlet weak var lbl_Title: UILabel!
@@ -26,23 +27,24 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
     @IBOutlet var arr_Buttons: [UIButton]!
     @IBOutlet var arr_Views: [UIView]!
     @IBOutlet var arr_TextFields: [UITextField]!
-    
+    @IBOutlet var arr_AmtTextFields: [UITextField]!
+    @IBOutlet var arr_AmtLabels: [UILabel]!
     
     @IBOutlet weak var txt_Management: UITextField!
     @IBOutlet weak var txt_ActualDate: UITextField!
     @IBOutlet weak var txt_UnitInspection: UITextField!
     @IBOutlet weak var btn_UnitInOrder: UIButton!
     
-    @IBOutlet weak var txt_OwnerName: UITextField!
+  //  @IBOutlet weak var txt_OwnerName: UITextField!
     @IBOutlet weak var btn_NotInOrder: UIButton!
     @IBOutlet weak var txt_AmtDeducted: UITextField!
     @IBOutlet weak var txt_AmtBalance: UITextField!
-    @IBOutlet weak var txt_ReceivedBy: UITextField!
-    @IBOutlet weak var txt_NRIC1: UITextField!
+ //   @IBOutlet weak var txt_ReceivedBy: UITextField!
+ //   @IBOutlet weak var txt_NRIC1: UITextField!
     @IBOutlet weak var txt_AmtClaimable: UITextField!
     @IBOutlet weak var txt_AmtRecvd: UITextField!
     @IBOutlet weak var txt_AcknowledgeBy: UITextField!
-    @IBOutlet weak var txt_NRIC2: UITextField!
+    @IBOutlet weak var txt_NRIC1: UITextField!
     
     
     @IBOutlet weak var table_Ht: NSLayoutConstraint!
@@ -50,21 +52,23 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
     var dataSource = DataSource_MoveIOInspection()
     //@IBOutlet weak var txt_SignDate: UITextField!
     @IBOutlet weak var imgView_signature1 : UIImageView!
-    @IBOutlet weak var imgView_signature2 : UIImageView!
-    @IBOutlet weak var imgView_signature3 : UIImageView!
+ //   @IBOutlet weak var imgView_signature2 : UIImageView!
+ //   @IBOutlet weak var imgView_signature3 : UIImageView!
     @IBOutlet weak var imgView_signature4 : UIImageView!
   
     let view_Signature: SignatureView = SignatureView.getInstance
     var signature_management : UIImage!
     var signature_owner1 : UIImage!
-    var signature_owner2 : UIImage!
-    var signature_owner3 : UIImage!
+//    var signature_owner2 : UIImage!
+//    var signature_owner3 : UIImage!
     var moveInOutData: MoveInOut!
-    
+    var renovationData: Renovation!
+    var formType : eForm!
     
     
      override func viewDidLoad() {
          super.viewDidLoad()
+        self.configureDatePicker()
         let toolbar = UIToolbar();
         toolbar.sizeToFit()
         let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done));
@@ -108,8 +112,9 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
         view_Background1.layer.masksToBounds = true
         
        
-  //      self.lbl_Title.text = kChangeMail.replacingOccurrences(of: "\n", with: "")
-    //    self.lbl_SubTitle.text = "(To be completed by resident)"
+        self.lbl_Title.text = formType == .moveInOut ? "Moving In & Out Application" : "Renovation Work Application"
+        self.lbl_SubTitle.text =  formType == .moveInOut ? "(For official use only - for inspection after moving work)" : "(For official use only - for inspection after renovation work)"
+        
         
         for vw in arr_Views{
             vw.layer.cornerRadius = 20.0
@@ -131,11 +136,57 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
     @objc func done(){self.view.endEditing(true)
     }
 
+    func configureDatePicker(){
+      //Formate Date
+       datePicker.datePickerMode = .date
+        
+        // Get right now as it's `DateComponents`.
+        let now = Calendar.current.dateComponents(in: .current, from: Date())
 
+        // Create the start of the day in `DateComponents` by leaving off the time.
+        let today = DateComponents(year: now.year, month: now.month, day: now.day)
+        let dateToday = Calendar.current.date(from: today)!
+
+       
+        
+        
+        datePicker.minimumDate = Date()
+      
+        //ToolBar
+          let toolbar = UIToolbar();
+          toolbar.sizeToFit()
+          let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(donedatePicker));
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+         let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelDatePicker));
+
+        toolbar.setItems([cancelButton,spaceButton,doneButton], animated: false)
+
+   // add toolbar to textField
+        txt_ActualDate.inputAccessoryView = toolbar
+    // add datepicker to textField
+        txt_ActualDate.inputView = datePicker
+
+      }
+    
+    @objc func donedatePicker(){
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "dd/MM/yy"
+        txt_ActualDate.text = formatter.string(from: datePicker.date)
+            self.view.endEditing(true)
+        
+      
+        
+    }
+
+    @objc func cancelDatePicker(){
+       self.view.endEditing(true)
+     }
      override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 1{
             table_Ht.constant =  CGFloat( 320 * arr_DamageDesc.count)
-            return CGFloat(self.isToShowSucces == true ? 0 :   2140 + 320 * arr_DamageDesc.count)
+            return CGFloat(self.isToShowSucces == true ? 0 :   1550 + 330 * arr_DamageDesc.count)
         }
         else  if indexPath.row == 2{
             return self.isToShowSucces == false ? 0 : super.tableView(tableView, heightForRowAt: indexPath)
@@ -146,6 +197,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
      override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
          self.showBottomMenu()
+        if formType == .moveInOut{
         if moveInOutData.inspection != nil{
             self.txt_Management.text = moveInOutData.inspection.manager_received
             self.txt_ActualDate.text = moveInOutData.inspection.date_of_completion
@@ -153,20 +205,36 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
             
             if moveInOutData.inspection.unit_in_order_or_not == 1{
                 self.btn_UnitInOrder.isSelected = true
+                for field in arr_AmtTextFields{
+                    field.isEnabled = false
+                    field.alpha = 0.7
+                }
+                for field in arr_AmtLabels{
+                    field.isEnabled = false
+                    field.alpha = 0.7
+                }
             }
             else if moveInOutData.inspection.unit_in_order_or_not == 2{
                 self.btn_NotInOrder.isSelected = true
+                for field in arr_AmtTextFields{
+                    field.isEnabled = true
+                    field.alpha = 1
+                }
+                for field in arr_AmtLabels{
+                    field.isEnabled = true
+                    field.alpha = 1
+                }
             }
             
-            self.txt_ReceivedBy.text = moveInOutData.inspection.amount_received_by
+            //self.txt_ReceivedBy.text = moveInOutData.inspection.amount_received_by
             self.txt_AmtDeducted.text = moveInOutData.inspection.amount_deducted
             self.txt_AmtBalance.text = moveInOutData.inspection.refunded_amount
-            self.txt_OwnerName.text = moveInOutData.inspection.amount_received_by
+          //  self.txt_OwnerName.text = moveInOutData.inspection.amount_received_by
             self.txt_NRIC1.text = moveInOutData.inspection.resident_nric
             self.txt_AmtClaimable.text = moveInOutData.inspection.amount_claimable
             self.txt_AmtRecvd.text = moveInOutData.inspection.actual_amount_received
             self.txt_AcknowledgeBy.text = moveInOutData.inspection.acknowledged_by
-            self.txt_NRIC2.text = moveInOutData.inspection.resident_nric
+         //   self.txt_NRIC2.text = moveInOutData.inspection.resident_nric
            
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -184,10 +252,96 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
             let sign2 = self.moveInOutData.inspection.resident_signature
             let image1 = self.convertBase64StringToImage(imageBase64String: sign2)
             if image1 != nil{
-             self.imgView_signature2.image = image1
-                self.imgView_signature3.image = image1
+             self.imgView_signature4.image = image1
              }
+            arr_DamageDesc.removeAll()
+            for obj in moveInOutData.defects{
+                let image = self.convertBase64StringToImage(imageBase64String: obj.image_base64)
+                let damage = [kDesc:obj.notes, kImage: image ?? UIImage(named: "add_photo")!] as [String : Any]
+                arr_DamageDesc.append(damage)
+                
+            }
+            if arr_DamageDesc.count == 0{
+                arr_DamageDesc = [[kDesc:"", kImage: ""]]
+            }
+            
+            self.table_Damages.reloadData()
         }
+        }
+        
+        else  if formType == .renovation{
+          /*  if moveInOutData.inspection != nil{
+                self.txt_Management.text = moveInOutData.inspection.manager_received
+                self.txt_ActualDate.text = moveInOutData.inspection.date_of_completion
+                self.txt_UnitInspection.text = moveInOutData.inspection.inspected_by
+                
+                if moveInOutData.inspection.unit_in_order_or_not == 1{
+                    self.btn_UnitInOrder.isSelected = true
+                    for field in arr_AmtTextFields{
+                        field.isEnabled = false
+                        field.alpha = 0.7
+                    }
+                    for field in arr_AmtLabels{
+                        field.isEnabled = false
+                        field.alpha = 0.7
+                    }
+                }
+                else if moveInOutData.inspection.unit_in_order_or_not == 2{
+                    self.btn_NotInOrder.isSelected = true
+                    for field in arr_AmtTextFields{
+                        field.isEnabled = true
+                        field.alpha = 1
+                    }
+                    for field in arr_AmtLabels{
+                        field.isEnabled = true
+                        field.alpha = 1
+                    }
+                }
+                
+                //self.txt_ReceivedBy.text = moveInOutData.inspection.amount_received_by
+                self.txt_AmtDeducted.text = moveInOutData.inspection.amount_deducted
+                self.txt_AmtBalance.text = moveInOutData.inspection.refunded_amount
+              //  self.txt_OwnerName.text = moveInOutData.inspection.amount_received_by
+                self.txt_NRIC1.text = moveInOutData.inspection.resident_nric
+                self.txt_AmtClaimable.text = moveInOutData.inspection.amount_claimable
+                self.txt_AmtRecvd.text = moveInOutData.inspection.actual_amount_received
+                self.txt_AcknowledgeBy.text = moveInOutData.inspection.acknowledged_by
+             //   self.txt_NRIC2.text = moveInOutData.inspection.resident_nric
+               
+                let formatter = DateFormatter()
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let moving_date = formatter.date(from:moveInOutData.inspection.date_of_completion)
+                formatter.dateFormat = "dd/MM/yyyy"
+                    let moving_dateStr = formatter.string(from: moving_date ?? Date())
+                self.txt_ActualDate.text = moving_dateStr
+                
+                let sign1 = self.moveInOutData.inspection.manager_signature
+                let image = self.convertBase64StringToImage(imageBase64String: sign1)
+                if image != nil{
+                 self.imgView_signature1.image = image
+                 }
+                let sign2 = self.moveInOutData.inspection.resident_signature
+                let image1 = self.convertBase64StringToImage(imageBase64String: sign2)
+                if image1 != nil{
+                 self.imgView_signature4.image = image1
+                 }
+                arr_DamageDesc.removeAll()
+                for obj in moveInOutData.defects{
+                    let image = self.convertBase64StringToImage(imageBase64String: obj.image_base64)
+                    let damage = [kDesc:obj.notes, kImage: image ?? UIImage(named: "add_photo")!] as [String : Any]
+                    arr_DamageDesc.append(damage)
+                    
+                }
+                if arr_DamageDesc.count == 0{
+                    arr_DamageDesc = [[kDesc:"", kImage: ""]]
+                }
+                
+                self.table_Damages.reloadData()
+               
+            }
+             */
+            }
      }
      override func viewWillDisappear(_ animated: Bool) {
          super.viewWillDisappear(animated)
@@ -223,14 +377,22 @@ func closeMenu(){
        
         let params = NSMutableDictionary()
         params.setValue("\(userId)", forKey: "login_id")
-        params.setValue(moveInOutData.submission.id, forKey: "id")
+        if formType == .moveInOut{
+        params.setValue("\(moveInOutData.submission.id)", forKey: "id")
         if moveInOutData.inspection != nil{
-            params.setValue(moveInOutData.inspection.id, forKey: "inspection_id")
+            params.setValue("\(moveInOutData.inspection.id)", forKey: "inspection_id")
         }
+        }
+        else  if formType == .renovation{
+            params.setValue("\(renovationData.submission.id)", forKey: "id")
+//            if moveInOutData.inspection != nil{
+//                params.setValue("\(moveInOutData.inspection.id)", forKey: "inspection_id")
+//            }
+            }
       
         params.setValue(moving_dateStr, forKey: "date_of_completion")
-        params.setValue(txt_OwnerName.text!, forKey: "inspected_by")
-        params.setValue(btn_UnitInOrder.isSelected ? 1 : 2, forKey: "unit_in_order_or_not")
+        params.setValue(txt_UnitInspection.text!, forKey: "inspected_by")
+        params.setValue(btn_UnitInOrder.isSelected ? "1" : "2", forKey: "unit_in_order_or_not")
         params.setValue(txt_AmtDeducted.text!, forKey: "amount_deducted")
         params.setValue(txt_AmtBalance.text!, forKey: "refunded_amount")
         params.setValue(txt_AmtClaimable.text!, forKey: "amount_claimable")
@@ -253,21 +415,22 @@ func closeMenu(){
             arrData.append(["name":"resident_signature","image":(signature_owner1.jpegData(compressionQuality: 0.5)! as NSData) as Data])
         }
         for (indx, obj) in arr_DamageDesc.enumerated(){
-            
+            params.setValue(obj[kDesc], forKey: "description_\(indx + 1)")
+            arrData.append(["name":"file_\(indx + 1)","image":((obj[kImage] as! UIImage).jpegData(compressionQuality: 0.5)! as NSData) as Data])
         }
         
-       /*
+       
+        if formType == .moveInOut{
         
         
-        
-        ApiService.submit_MailingAddress(parameters: params as! [String : Any], datas: arrData) { status, result, error in
+        ApiService.submit_MoveIOInspection(files: arrData, parameters: params as! [String : Any]) {  status, result, error in
           
         
       
                    
                     ActivityIndicatorView.hiding()
                     if status  && result != nil{
-                        if let response = (result as? MailingAddressBase){
+                        if let response = (result as? MoveIOInspectionBase){
                             if response.response == 1{
                                 self.isToShowSucces =  true
                                 DispatchQueue.main.async {
@@ -288,7 +451,40 @@ func closeMenu(){
                     else{
                         self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
                     }
-                }*/
+                }
+        }
+        else if formType == .renovation{
+            ApiService.submit_RenovationInspection(files: arrData, parameters: params as! [String : Any]) {  status, result, error in
+              
+            
+          
+                       
+                        ActivityIndicatorView.hiding()
+                        if status  && result != nil{
+                            if let response = (result as? RenovationInspectionBase){
+                                if response.response == 1{
+                                    self.isToShowSucces =  true
+                                    DispatchQueue.main.async {
+                                    self.tableView.reloadData()
+                                        let indexPath = NSIndexPath(row: 0, section: 0)
+                                        self.tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
+                                    }
+                                }
+                                else{
+                                    self.displayErrorAlert(alertStr: response.message, title: "Alert")
+                                }
+                               
+                            }
+                    }
+                        else if error != nil{
+                            self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+                        }
+                        else{
+                            self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+                        }
+                    }
+        }
+        
             }
         
         
@@ -306,13 +502,13 @@ func closeMenu(){
         self.navigationController?.popToRootViewController(animated: true)
     }
     @IBAction func actionSubmittedForms(_ sender: UIButton){
-        
+        self.navigationController?.popViewController(animated: true)
     }
     @IBAction func actionSign1(_ sender: UIButton){
         self.view_Signature.delegate = self
         let name = sender.tag == 1 ? txt_Management.text :
-            sender.tag == 2 ? txt_OwnerName.text  :
-            sender.tag == 3 ? txt_ReceivedBy.text  : ""
+           
+            txt_AcknowledgeBy.text
         self.view_Signature.showInView(self.view, parent:self, tag: sender.tag, name: name ?? "")
        
         
@@ -321,10 +517,26 @@ func closeMenu(){
         if sender.tag == 1{
             btn_UnitInOrder.isSelected = true
             btn_NotInOrder.isSelected = false
+            for field in arr_AmtTextFields{
+                field.isEnabled = false
+                field.alpha = 0.7
+            }
+            for field in arr_AmtLabels{
+                field.isEnabled = false
+                field.alpha = 0.7
+            }
         }
         else{
             btn_UnitInOrder.isSelected = false
             btn_NotInOrder.isSelected = true
+            for field in arr_AmtTextFields{
+                field.isEnabled = true
+                field.alpha = 1
+            }
+            for field in arr_AmtLabels{
+                field.isEnabled = true
+                field.alpha = 1
+            }
         }
         
     }
@@ -352,15 +564,17 @@ func closeMenu(){
     }
     
     
-        guard txt_ReceivedBy.text!.count  > 0 else {
-            displayErrorAlert(alertStr: "Please enter the name of owner", title: "")
+//        guard txt_ReceivedBy.text!.count  > 0 else {
+//            displayErrorAlert(alertStr: "Please enter the name of owner", title: "")
+//            return
+//        }
+        
+  
+        if btn_UnitInOrder.isSelected == false && btn_NotInOrder.isSelected == false{
+            displayErrorAlert(alertStr: "Please select unit in order or not", title: "")
             return
         }
-        
-    guard signature_owner1 != nil else {
-        displayErrorAlert(alertStr: "Please provide the owner signature", title: "")
-        return
-    }
+        if btn_NotInOrder.isSelected == true{
         guard txt_AmtDeducted.text!.count  > 0 else {
             displayErrorAlert(alertStr: "Please enter the amount deducted from deposit", title: "")
             return
@@ -369,27 +583,48 @@ func closeMenu(){
             displayErrorAlert(alertStr: "Please enter the amount balance to be refunded", title: "")
             return
         }
+            guard txt_AmtClaimable.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter the amount claimable", title: "")
+                return
+            }
+            guard txt_AmtRecvd.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter the actual amount received", title: "")
+                return
+            }
+        }
         guard txt_NRIC1.text!.count  > 0 else {
             displayErrorAlert(alertStr: "Please enter the PP/NRIC of owner", title: "")
             return
         }
        
       
-        guard txt_AmtClaimable.text!.count  > 0 else {
-            displayErrorAlert(alertStr: "Please enter the amount claimable", title: "")
-            return
-        }
-        guard txt_AmtRecvd.text!.count  > 0 else {
-            displayErrorAlert(alertStr: "Please enter the actual amount received", title: "")
-            return
-        }
+      
         guard txt_AcknowledgeBy.text!.count  > 0 else {
             displayErrorAlert(alertStr: "Please enter acknowledge by name of owner", title: "")
             return
         }
+        guard signature_owner1 != nil else {
+            displayErrorAlert(alertStr: "Please provide the owner signature", title: "")
+            return
+        }
+        var flag = false
+        var msg = ""
+        for obj in arr_DamageDesc{
+            if obj[kDesc] as? String == "" || obj[kImage] as? UIImage == nil{
+                flag = true
+                msg = obj[kDesc] as? String == "" ? "Please enter the remarks" : "Please upload the image"
+                break
+                
+            }
+        }
+        if flag == true{
+            displayErrorAlert(alertStr: msg, title: "")
+            return
+        }
+        else{
        
       submitAppication()
-        
+        }
         
  
     }
@@ -463,16 +698,16 @@ extension MoveIOInspectionTableViewController:SignatureViewDelegate{
         }
         else if signView.tag == 2{
             self.signature_owner1 = image
-            self.imgView_signature2.image = image
-        }
-        else if signView.tag == 3{
-            self.signature_owner2 = image
-            self.imgView_signature3.image = image
-        }
-        else if signView.tag == 4{
-            self.signature_owner3 = image
             self.imgView_signature4.image = image
         }
+//        else if signView.tag == 3{
+//            self.signature_owner2 = image
+//            self.imgView_signature3.image = image
+//        }
+//        else if signView.tag == 4{
+//            self.signature_owner3 = image
+//            self.imgView_signature4.image = image
+//        }
         else{
             
         }
@@ -672,7 +907,7 @@ class DataSource_MoveIOInspection: NSObject, UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        return 320
+        return 330
     }
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
        

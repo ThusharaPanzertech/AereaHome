@@ -566,7 +566,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             cell.lbl_SubmittedBy.text = info.submitted_by.name
         }
         else if formType == .vehicleReg{
-            cell.btn_Payment.isHidden = false
+            cell.btn_Payment.isHidden = true
             cell.btn_Inspection.isHidden = true
             let info = arr_VehicleReg[indexPath.row]
             
@@ -594,7 +594,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             cell.lbl_SubmittedBy.text = info.submitted_by.name
         }
         else if formType == .doorAccess {
-            cell.btn_Payment.isHidden = true
+            cell.btn_Payment.isHidden = false
             cell.btn_Inspection.isHidden = true
             let info = arr_DoorAccess[indexPath.row]
             
@@ -738,14 +738,16 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             
             let moveIODetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "MoveIOInspectionTableViewController") as! MoveIOInspectionTableViewController
             moveIODetailsTVC.moveInOutData = arr_MoveInOut[sender.tag]
+            moveIODetailsTVC.formType = .moveInOut
             self.parentVc.navigationController?.pushViewController(moveIODetailsTVC, animated: true)
            
         }
         else  if formType == .renovation {
             
-            let renovationDetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "RenovationDetailsTableViewController") as! RenovationDetailsTableViewController
-            renovationDetailsTVC.renovationData = arr_Renovation[sender.tag]
-            self.parentVc.navigationController?.pushViewController(renovationDetailsTVC, animated: true)
+            let moveIODetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "MoveIOInspectionTableViewController") as! MoveIOInspectionTableViewController
+            moveIODetailsTVC.renovationData = arr_Renovation[sender.tag]
+            moveIODetailsTVC.formType = .renovation
+            self.parentVc.navigationController?.pushViewController(moveIODetailsTVC, animated: true)
            
         }
        
@@ -755,21 +757,23 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             
             let moveIODetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "EFormPaymentTableViewController") as! EFormPaymentTableViewController
             moveIODetailsTVC.moveInOutData = arr_MoveInOut[sender.tag]
+            moveIODetailsTVC.formType = .moveInOut
             self.parentVc.navigationController?.pushViewController(moveIODetailsTVC, animated: true)
            
         }
         else  if formType == .renovation {
             
-            let renovationDetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "RenovationDetailsTableViewController") as! RenovationDetailsTableViewController
+            let renovationDetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "EFormPaymentTableViewController") as! EFormPaymentTableViewController
             renovationDetailsTVC.renovationData = arr_Renovation[sender.tag]
+            renovationDetailsTVC.formType = .renovation
             self.parentVc.navigationController?.pushViewController(renovationDetailsTVC, animated: true)
            
         }
         else  if formType == .doorAccess {
             
-            let renovationDetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "DoorAccessDetailsTableViewController") as! DoorAccessDetailsTableViewController
-            renovationDetailsTVC.doorAccessData = arr_DoorAccess[sender.tag]
-            self.parentVc.navigationController?.pushViewController(renovationDetailsTVC, animated: true)
+            let doorAccessTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "DoorAccessPaymentTableViewController") as! DoorAccessPaymentTableViewController
+            doorAccessTVC.doorAccessData = arr_DoorAccess[sender.tag]
+            self.parentVc.navigationController?.pushViewController(doorAccessTVC, animated: true)
            
         }
     }

@@ -2081,3 +2081,17 @@ struct MoveIOInspectionBase: SafeMappable {
         
     }
 }
+struct RenovationInspectionBase: SafeMappable {
+    var data:RenovationSubmission!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        data <- map.relation("data")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}

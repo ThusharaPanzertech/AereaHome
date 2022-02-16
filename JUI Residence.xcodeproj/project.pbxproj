@@ -26,6 +26,7 @@
 		F60C27D826AC5BF800A668B6 /* AccessRolesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C27D726AC5BF800A668B6 /* AccessRolesTableViewCell.swift */; };
 		F628EDBD27B0F2FA006E1C78 /* EFormSummaryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628EDBC27B0F2FA006E1C78 /* EFormSummaryTableViewController.swift */; };
 		F628EDBF27B17411006E1C78 /* EFormTypesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F628EDBE27B17411006E1C78 /* EFormTypesTableViewController.swift */; };
+		F633188B27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F633188A27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift */; };
 		F65135DB269EEE1400B63491 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65135DA269EEE1400B63491 /* BaseViewController.swift */; };
 		F654CD7E26AE340C008A0417 /* UserManagementTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F654CD7D26AE340C008A0417 /* UserManagementTableViewController.swift */; };
 		F654CD8026AE3D11008A0417 /* EditUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F654CD7F26AE3D11008A0417 /* EditUserTableViewController.swift */; };
@@ -161,6 +162,7 @@
 		F60C27D726AC5BF800A668B6 /* AccessRolesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessRolesTableViewCell.swift; sourceTree = "<group>"; };
 		F628EDBC27B0F2FA006E1C78 /* EFormSummaryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EFormSummaryTableViewController.swift; sourceTree = "<group>"; };
 		F628EDBE27B17411006E1C78 /* EFormTypesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EFormTypesTableViewController.swift; sourceTree = "<group>"; };
+		F633188A27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorAccessPaymentTableViewController.swift; sourceTree = "<group>"; };
 		F65135DA269EEE1400B63491 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		F654CD7D26AE340C008A0417 /* UserManagementTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementTableViewController.swift; sourceTree = "<group>"; };
 		F654CD7F26AE3D11008A0417 /* EditUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserTableViewController.swift; sourceTree = "<group>"; };
@@ -340,6 +342,7 @@
 				F67AA09627B9627A004B6701 /* UpdateParticularsTableViewController.swift */,
 				F67AA09827BA5A6E004B6701 /* EFormPaymentTableViewController.swift */,
 				F673F9D327BB86100071A49E /* MoveIOInspectionTableViewController.swift */,
+				F633188A27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift */,
 			);
 			path = "EForm Submissions";
 			sourceTree = "<group>";
@@ -974,6 +977,7 @@
 				F6E3A71627267A4E00C6D65A /* ApiService.swift in Sources */,
 				F66C7F4D2701CF44000B12D7 /* AddEditFeedbackTableViewController.swift in Sources */,
 				F654CD9226AEF8E2008A0417 /* EditAppointmentTableViewController.swift in Sources */,
+				F633188B27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift in Sources */,
 				F65135DB269EEE1400B63491 /* BaseViewController.swift in Sources */,
 				F654CD8A26AEC3F9008A0417 /* AnnouncementDetailsTableViewController.swift in Sources */,
 				F670EB8A2771A6DC00669D1B /* AlertView.swift in Sources */,
@@ -1154,7 +1158,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
 				INFOPLIST_FILE = "JUI Residence/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1175,7 +1179,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
 				INFOPLIST_FILE = "JUI Residence/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
