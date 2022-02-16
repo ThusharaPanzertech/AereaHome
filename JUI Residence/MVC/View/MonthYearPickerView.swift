@@ -44,7 +44,8 @@ class MonthYearPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataS
         var years: [Int] = []
         if years.count == 0 {
             var year = Calendar(identifier: .gregorian).component(.year, from: Date())
-            for _ in 1...15 {
+            year = year - 1
+            for _ in 1...3 {
                 years.append(year)
                 year += 1
             }

@@ -1,0 +1,6 @@
+framework module Pods_JUI_Residence_JUI_ResidenceUITests {
+  umbrella header "Pods-JUI Residence-JUI ResidenceUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

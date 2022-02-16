@@ -7,83 +7,273 @@
 
 import UIKit
 
-class VisitingPurposeTableViewController: UITableViewController {
+class VisitingPurposeTableViewController: BaseTableViewController {
+    
+    
+      let menu: MenuView = MenuView.getInstance
+      var dataSource = DataSource_VisitingPurpose()
+      var heightSet = false
+      var tableHeight: CGFloat = 0
+      var arr_VisitingPurpose = [VisitingPurpose]()
+      //Outlets
+    @IBOutlet weak var txt_Visitors: UITextField!
+    @IBOutlet weak var btn_NoLimit: UIButton!
+    @IBOutlet weak var btn_Update: UIButton!
+    @IBOutlet weak var table_VisitingPurpose: UITableView!
+      @IBOutlet weak var lbl_UserName: UILabel!
+      @IBOutlet weak var lbl_UserRole: UILabel!
+     
+      @IBOutlet weak var view_Background: UIView!
+      @IBOutlet weak var view_Footer: UIView!
+     
+      @IBOutlet weak var imgView_Profile: UIImageView!
 
     override func viewDidLoad() {
-        super.viewDidLoad()
+          super.viewDidLoad()
+          let fname = Users.currentUser?.user?.name ?? ""
+          let lname = Users.currentUser?.moreInfo?.last_name ?? ""
+          self.lbl_UserName.text = "\(fname) \(lname)"
+          let role = Users.currentUser?.role?.name ?? ""
+          self.lbl_UserRole.text = role
+          imgView_Profile.addborder()
+        table_VisitingPurpose.dataSource = dataSource
+        table_VisitingPurpose.delegate = dataSource
+          dataSource.parentVc = self
+        table_VisitingPurpose.reloadData()
+          UITextField.appearance().attributedPlaceholder = NSAttributedString(string: UITextField().placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+        btn_NoLimit.isSelected = false
+        btn_NoLimit.backgroundColor = UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
+        btn_NoLimit.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+        btn_NoLimit.layer.cornerRadius = 20.0
+        btn_Update.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+        btn_Update.layer.cornerRadius = 8.0
+        
+        txt_Visitors.layer.cornerRadius = 20.0
+        txt_Visitors.layer.masksToBounds = true
+        txt_Visitors.delegate = self
+        txt_Visitors.textColor = textColor
+        txt_Visitors.attributedPlaceholder = NSAttributedString(string: txt_Visitors.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
+        txt_Visitors.backgroundColor = !btn_NoLimit.isSelected ? UIColor.white : UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
+          let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
+          if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
+              self.imgView_Profile.af_setImage(
+                          withURL: url1,
+                          placeholderImage: UIImage(named: "avatar"),
+                          filter: nil,
+                          imageTransition: .crossDissolve(0.2)
+                      )
+          }
+          else{
+              self.imgView_Profile.image = UIImage(named: "avatar")
+          }
+          view_Background.layer.cornerRadius = 25.0
+          view_Background.layer.masksToBounds = true
+          
+         
+      }
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+      override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+          return view_Footer
+      }
+      override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+          return 150
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+      }
+
+      override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+          if indexPath.row == 1{
+              
+            return  CGFloat(120 * arr_VisitingPurpose.count) + 230
+             
+          }
+          return super.tableView(tableView, heightForRowAt: indexPath)
+      }
+      override func viewWillAppear(_ animated: Bool) {
+          super.viewWillAppear(animated)
+          getVisitingPurposeSummary()
+          self.showBottomMenu()
+      }
+      override func viewWillDisappear(_ animated: Bool) {
+          super.viewWillDisappear(animated)
+          
+          self.closeMenu()
+      }
+      func showBottomMenu(){
+          
+          menu.delegate = self
+          menu.showInView(self.view, title: "", message: "")
+        
+      }
+      func closeMenu(){
+          menu.removeView()
+      }
+      override func getBackgroundImageName() -> String {
+          let imgdefault = ""//UserInfoModalBase.currentUser?.data.property.defect_bg ?? ""
+          return imgdefault
+      }
+      //MARK: ******  PARSING *********
+      
+      func getVisitingPurposeSummary(){
+          ActivityIndicatorView.show("Loading")
+          let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+          //
+          ApiService.get_VisitingPurpose(parameters: ["login_id":userId], completion: { status, result, error in
+             
+              ActivityIndicatorView.hiding()
+              if status  && result != nil{
+                   if let response = (result as? VisitingPurposeSummaryBase){
+                      self.arr_VisitingPurpose = response.data
+                      self.dataSource.arr_VisitingPurpose = response.data
+                     
+                      self.table_VisitingPurpose.reloadData()
+                      self.tableView.reloadData()
+                  }
+          }
+              else if error != nil{
+                  self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+              }
+              else{
+                  self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+              }
+          })
+      }
+      
+      //MARK: UIBUTTON ACTIONS
+    @IBAction func actionNoLimit(_ sender: UIButton){
+        sender.isSelected = true
+        if sender.isSelected == false{
+            btn_NoLimit.backgroundColor = UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
+        }
+        else{
+            btn_NoLimit.backgroundColor = UIColor.white
+            
+        }
+        txt_Visitors.text = ""
+        txt_Visitors.backgroundColor = !btn_NoLimit.isSelected ? UIColor.white : UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
     }
+      @IBAction func actionAddNew(_ sender: UIButton){
 
-    // MARK: - Table view data source
+        let addRoleVC = kStoryBoardSettings.instantiateViewController(identifier: "AddEditVisitingPurposeTableViewController") as! AddEditVisitingPurposeTableViewController
+        addRoleVC.isToEdit = false
+        self.navigationController?.pushViewController(addRoleVC, animated: true)
+      }
+      //MARK: MENU ACTIONS
+   
+      @IBAction func actionLogout(_ sender: UIButton){
+          let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
+          alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
+              UserDefaults.standard.removeObject(forKey: "UserId")
+              kAppDelegate.setLogin()
+          }))
+          alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+             
+          }))
+          self.present(alert, animated: true, completion: nil)
+      }
+     
+      func goToSettings(){
+          var controller: UIViewController!
+          for cntroller in self.navigationController!.viewControllers as Array {
+              if cntroller.isKind(of: SettingsTableViewController.self) {
+                  controller = cntroller
+                 
+                  break
+              }
+          }
+          if controller != nil{
+              self.navigationController!.popToViewController(controller, animated: true)
+          }
+          else{
+          let settingsTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsTableViewController") as! SettingsTableViewController
+          self.navigationController?.pushViewController(settingsTVC, animated: true)
+          }
+      }
+  }
+  class DataSource_VisitingPurpose: NSObject, UITableViewDataSource, UITableViewDelegate {
+      var parentVc: UIViewController!
+      var propertyInfo : PropertyInfo!
+      var filePath = ""
+    var arr_VisitingPurpose = [VisitingPurpose]()
+      func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
+          return 1;
+      }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
-    }
+       func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return  arr_VisitingPurpose.count
+      }
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+              let cell = tableView.dequeueReusableCell(withIdentifier: "roleCell") as! RoleTableViewCell
+         
+          cell.view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+          //dropShadow()
+          cell.view_Outer.tag = indexPath.row
+          let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+          cell.view_Outer.addGestureRecognizer(tap)
+          
+          
+        cell.lbl_Role.text  = arr_VisitingPurpose[indexPath.row].visiting_purpose
+        cell.view_Outer.addGestureRecognizer(tap)
+        cell.btn_Edit.tag = indexPath.row
+        cell.btn_Edit.addTarget(self, action: #selector(self.actionEdit(_:)), for: .touchUpInside)
+       
+          cell.selectionStyle = .none
+         
+          
+              return cell
+        
+      }
+      func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+          
+          return 92
+      }
+      @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
+         
+ 
+      }
+     
+      @IBAction func actionEdit(_ sender: UIButton){
+//          let editRoleVC = kStoryBoardSettings.instantiateViewController(identifier: "EditRoleTableViewController") as! EditRoleTableViewController
+//        editRoleVC.roleInfo = arr_VisitingPurpose[sender.tag]
+//          self.parentVc.navigationController?.pushViewController(editRoleVC, animated: true)
+      }
+      
+  }
+  extension VisitingPurposeTableViewController: MenuViewDelegate{
+      func onMenuClicked(_ sender: UIButton) {
+          switch sender.tag {
+          case 1:
+              
+              self.navigationController?.popToRootViewController(animated: true)
+              break
+          case 2:
+              self.goToSettings()
+              break
+          case 3:
+              self.actionLogout(sender)
+              break
+       
+          default:
+              break
+          }
+      }
+      
+      func onCloseClicked(_ sender: UIButton) {
+          
+      }
+      
+      
+  }
+extension VisitingPurposeTableViewController: UITextFieldDelegate{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+       
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        btn_NoLimit.isSelected = false
+        btn_NoLimit.backgroundColor = UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
+        txt_Visitors.backgroundColor = !btn_NoLimit.isSelected ? UIColor.white : UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

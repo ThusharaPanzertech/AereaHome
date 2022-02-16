@@ -8,7 +8,13 @@
 import UIKit
 
 class AnnouncementHistoryTableViewCell: UITableViewCell {
-
+    //Outlets
+    @IBOutlet weak var lbl_Title: UILabel!
+    @IBOutlet weak var lbl_Date: UILabel!
+    @IBOutlet weak var lbl_UserTypes: UILabel!
+    @IBOutlet weak var view_Outer: UIView!
+   
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

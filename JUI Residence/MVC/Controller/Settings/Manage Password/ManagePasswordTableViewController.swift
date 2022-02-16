@@ -7,83 +7,154 @@
 
 import UIKit
 
-class ManagePasswordTableViewController: UITableViewController {
-
+class ManagePasswordTableViewController: BaseTableViewController {
+    //Outlets
+    @IBOutlet weak var lbl_UserName: UILabel!
+    @IBOutlet weak var lbl_UserRole: UILabel!
+    @IBOutlet weak var txt_OldPassword: UITextField!
+    @IBOutlet weak var txt_NewPassword: UITextField!
+    @IBOutlet weak var txt_ConfirmPassword: UITextField!
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var btn_Submit: UIButton!
+    var selectedFeedbackName = ""
+    let menu: MenuView = MenuView.getInstance
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+       
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+      
+        self.showBottomMenu()
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.closeMenu()
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    func showBottomMenu(){
+        
+        menu.delegate = self
+        menu.showInView(self.view, title: "", message: "")
+       // self.menu.loadCollection(array_Permissions: global_array_Permissions, array_Modules: global_array_Modules)
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    func closeMenu(){
+        menu.removeView()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    override func getBackgroundImageName() -> String {
+        let imgdefault = ""//UserInfoModalBase.currentUser?.data.property.defect_bg ?? ""
+        return imgdefault
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    //MARK: MENU ACTIONS
+    @IBAction func actionInbox(_ sender: UIButton){
+//        let inboxTVC = self.storyboard?.instantiateViewController(identifier: "InboxTableViewController") as! InboxTableViewController
+//        self.navigationController?.pushViewController(inboxTVC, animated: true)
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    @IBAction func actionLogout(_ sender: UIButton){
+        let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
+            UserDefaults.standard.removeObject(forKey: "UserId")
+            kAppDelegate.setLogin()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+           
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func actionUserManagement(_ sender: UIButton){
+        let userManagementTVC = kStoryBoardMain.instantiateViewController(identifier: "UserManagementTableViewController") as! UserManagementTableViewController
+        self.navigationController?.pushViewController(userManagementTVC, animated: true)
     }
-    */
-
+    @IBAction func actionAnnouncement(_ sender: UIButton){
+        let announcementTVC = kStoryBoardMain.instantiateViewController(identifier: "AnnouncementTableViewController") as! AnnouncementTableViewController
+        self.navigationController?.pushViewController(announcementTVC, animated: true)
+    }
+    @IBAction func actionAppointmemtUnitTakeOver(_ sender: UIButton){
+        //self.checkAppointmentStatus(type: .unitTakeOver)
+    }
+    @IBAction func actionDefectList(_ sender: UIButton){
+        self.menu.contractMenu()
+    }
+    @IBAction func actionAppointmentJointInspection(_ sender: UIButton){
+        //self.checkAppointmentStatus(type: .jointInspection)
+    }
+    @IBAction func actionFacilityBooking(_ sender: UIButton){
+//        let facilityBookingTVC = self.storyboard?.instantiateViewController(identifier: "FacilitySummaryTableViewController") as! FacilitySummaryTableViewController
+//        self.navigationController?.pushViewController(facilityBookingTVC, animated: true)
+    }
+    @IBAction func actionFeedback(_ sender: UIButton){
+//        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
+//        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+    func goToSettings(){
+        var controller: UIViewController!
+        for cntroller in self.navigationController!.viewControllers as Array {
+            if cntroller.isKind(of: SettingsTableViewController.self) {
+                controller = cntroller
+               
+                break
+            }
+        }
+        if controller != nil{
+            self.navigationController!.popToViewController(controller, animated: true)
+        }
+        else{
+        let settingsTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsTableViewController") as! SettingsTableViewController
+        self.navigationController?.pushViewController(settingsTVC, animated: true)
+        }
+    }
+}
+extension ManagePasswordTableViewController: MenuViewDelegate{
+    func onMenuClicked(_ sender: UIButton) {
+        switch sender.tag {
+        case 1:
+            self.menu.contractMenu()
+            self.navigationController?.popToRootViewController(animated: true)
+            break
+        case 2:
+            self.actionInbox(sender)
+            break
+        case 3:
+            self.goToSettings()
+            break
+        case 4:
+            self.actionLogout(sender)
+            break
+        case 5:
+            self.menu.contractMenu()
+            self.actionAnnouncement(sender)
+            break
+        case 6:
+            self.menu.contractMenu()
+            self.actionAppointmemtUnitTakeOver(sender)
+            break
+        case 7:
+            self.menu.contractMenu()
+            self.actionDefectList(sender)
+            break
+        case 8:
+            self.menu.contractMenu()
+            self.actionAppointmentJointInspection(sender)
+            break
+        case 9:
+            self.menu.contractMenu()
+            self.actionFacilityBooking(sender)
+            break
+        case 10:
+            self.menu.contractMenu()
+            self.actionFeedback(sender)
+            break
+        default:
+            break
+        }
+    }
+    
+    func onCloseClicked(_ sender: UIButton) {
+        
+    }
+    
+    
 }

@@ -14,7 +14,7 @@ class SignatureView: UIView {
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var btn_Home: UIButton!
     fileprivate var parentView: UIView?
-    fileprivate var parentController: NewBaseTableViewController?
+    fileprivate var parentController: BaseTableViewController?
     var signature: UIImage!
     @IBOutlet weak var vwSignature: YPDrawSignatureView!
     var isSignatureDrawn = false
@@ -26,7 +26,7 @@ class SignatureView: UIView {
                                            options: nil)
         return obj![0] as! SignatureView
     }
-    open func showInView(_ view: UIView?,   parent: NewBaseTableViewController, tag: Int, name: String){
+    open func showInView(_ view: UIView?,   parent: BaseTableViewController, tag: Int, name: String){
         self.parentView = view
         txtName.text = name
         self.vwSignature.clear()

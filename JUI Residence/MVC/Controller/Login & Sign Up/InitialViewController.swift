@@ -28,11 +28,14 @@ class InitialViewController: BaseViewController {
             displayErrorAlert(alertStr: "Please enter a valid email address", title: "")
             return
         }
-        self.retrieveInfo()
+        let signinVC = self.storyboard?.instantiateViewController(identifier: "SignInViewController") as! SignInViewController
+        signinVC.email = self.txt_Email.text!
+        self.navigationController?.pushViewController(signinVC, animated: true)
+       // self.retrieveInfo()
         }
     
     //MARK: ******  PARSING *********
-    func retrieveInfo(){
+/*    func retrieveInfo(){
         ActivityIndicatorView.show("Loading")
         ApiService.retrieve_User_Info(email: txt_Email.text!, completion: { status, result, error in
             ActivityIndicatorView.hiding()
@@ -72,7 +75,7 @@ class InitialViewController: BaseViewController {
         })
           
     }
-
+     */
 }
 extension InitialViewController: UITextFieldDelegate{
     

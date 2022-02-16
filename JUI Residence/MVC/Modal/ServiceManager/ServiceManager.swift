@@ -30,8 +30,7 @@ class ServiceManager: NSObject {
             if imagedata != nil
             {
                 
-              //  multipartFormData.append(selfi as Data, withName: "profile_picture", fileName: "image\\1.jpg", mimeType:  "image/jpg/png/jpeg")
-                multipartFormData.append(imagedata!, withName: "picture", fileName:"\( Utilities.makeFileName()).png", mimeType: "image/jpeg")
+                multipartFormData.append(imagedata!, withName: "upload", fileName:"\( Utilities.makeFileName()).png", mimeType: "image/jpeg")
             }
             for (key, value) in parameter! {
                 
@@ -103,7 +102,7 @@ class ServiceManager: NSObject {
 //                    multipartFormData.append(data, withName: "upload" , fileName:"\( Utilities.makeFileName()).png", mimeType: "image/jpeg")
 //                }
 //                else{
-                multipartFormData.append(data, withName: "upload_\(indx + 1)" , fileName:"\( Utilities.makeFileName()).png", mimeType: "image/jpeg")
+                multipartFormData.append(data, withName: "upload" , fileName:"\( Utilities.makeFileName()).png", mimeType: "image/jpeg")
                // }
                 
             }
@@ -234,7 +233,7 @@ class ServiceManager: NSObject {
         request("\(kBaseUrl)"+"\(service)", method: .post, parameters: parameter, encoding: URLEncoding.httpBody, headers: headers).responseJSON { (response) in
             switch response.result {
             case .success(let jsonData):
-                print("Success with JSON: \(jsonData)")
+              //  print("Success with JSON: \(jsonData)")
                 let dictionary = jsonData as! NSDictionary
                 if  let status = dictionary.object(forKey: "response") as? Bool
                 {

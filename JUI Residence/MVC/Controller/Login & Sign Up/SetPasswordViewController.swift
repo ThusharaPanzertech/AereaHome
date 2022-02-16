@@ -37,12 +37,13 @@ class SetPasswordViewController: BaseViewController {
             }
            
             
-            self.setPassword()
-          
+         //   self.setPassword()
+        kAppDelegate.setHome()
             
       
     }
-  
+//MARK: ******  PARSING *********
+/*
     func setPassword(){
         ActivityIndicatorView.show("Loading")
         ApiService.setPassword_User_With(parameters: ["email":self.email,"password":txt_Password.text!,"confirmpassword":txt_ConfirmPassword.text!], completion: { status, result, error in
@@ -115,6 +116,7 @@ class SetPasswordViewController: BaseViewController {
             }
         })
     }
+ */
 }
 extension SetPasswordViewController: UITextFieldDelegate{
     

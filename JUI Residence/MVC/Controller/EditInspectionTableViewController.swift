@@ -7,83 +7,228 @@
 
 import UIKit
 
-class EditInspectionTableViewController: UITableViewController {
-
+class EditInspectionTableViewController: BaseTableViewController {
+    
+    //Outlets
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var lbl_BookedBy: UILabel!
+    @IBOutlet weak var lbl_Date: UILabel!
+    @IBOutlet weak var lbl_Time: UILabel!
+    @IBOutlet weak var txt_Status: UITextField!
+    @IBOutlet weak var txt_NewDate: UITextField!
+    @IBOutlet weak var txt_NewTime: UITextField!
+    @IBOutlet weak var txt_DaysReminder: UITextField!
+    @IBOutlet weak var txt_Email: UITextField!
+    @IBOutlet weak var txt_Message: UITextView!
+    
+    @IBOutlet weak var lbl_UserName: UILabel!
+    @IBOutlet weak var lbl_UserRole: UILabel!
+    @IBOutlet weak var view_Background: UIView!
+    @IBOutlet weak var imgView_Profile: UIImageView!
+    @IBOutlet weak var view_Outer: UIView!
+    @IBOutlet var arr_Buttons: [UIButton]!
+    @IBOutlet var arr_Textfields: [UITextField]!
+    let alertView: AlertView = AlertView.getInstance
+    let alertView_message: MessageAlertView = MessageAlertView.getInstance
+    let menu: MenuView = MenuView.getInstance
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
+        if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
+           // self.imgView_Profile.af_setImage(withURL: url1)
+            self.imgView_Profile.af_setImage(
+                        withURL: url1,
+                        placeholderImage: UIImage(named: "avatar"),
+                        filter: nil,
+                        imageTransition: .crossDissolve(0.2)
+                    )
+        }
+        else{
+            self.imgView_Profile.image = UIImage(named: "avatar")
+        }
+        let fname = Users.currentUser?.user?.name ?? ""
+        let lname = Users.currentUser?.moreInfo?.last_name ?? ""
+        self.lbl_UserName.text = "\(fname) \(lname)"
+        let role = Users.currentUser?.role?.name ?? ""
+        self.lbl_UserRole.text = role
+      
+        setUpUI()
+       
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.showBottomMenu()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.closeMenu()
+    }
+    func showBottomMenu(){
+    
+    menu.delegate = self
+    menu.showInView(self.view, title: "", message: "")
+  
+}
+func closeMenu(){
+    menu.removeView()
+}
+    func setUpUI(){
+        view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+        view_Outer.layer.cornerRadius = 10.0
+        txt_Message.layer.cornerRadius = 20.0
+        txt_Message.layer.masksToBounds = true
+        
+        view_Background.layer.cornerRadius = 25.0
+        view_Background.layer.masksToBounds = true
+      
+        imgView_Profile.addborder()
+        for field in arr_Textfields{
+            field.delegate = self
+            field.layer.cornerRadius = 20.0
+            field.layer.masksToBounds = true
+            field.textColor = textColor
+            field.attributedPlaceholder = NSAttributedString(string: field.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
+        }
+        for btn in arr_Buttons{
+            btn.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+            btn.layer.cornerRadius = 8.0
+        }
+        txt_Message.textColor = textColor
     }
 
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    //MARK: UIButton Action
+    @IBAction func actionSave(_ sender: UIButton){
+        
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+    @IBAction func actionCancelBooking(_ sender: UIButton){
+        alertView.delegate = self
+        alertView.showInView(self.view_Background, title: "Are you sure you want to\n cancel the booking?", okTitle: "Yes", cancelTitle: "Back")
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    //MARK: MENU ACTIONS
+    @IBAction func actionInbox(_ sender: UIButton){
+//        let inboxTVC = self.storyboard?.instantiateViewController(identifier: "InboxTableViewController") as! InboxTableViewController
+//        self.navigationController?.pushViewController(inboxTVC, animated: true)
     }
-    */
+    @IBAction func actionLogout(_ sender: UIButton){
+        let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
+            UserDefaults.standard.removeObject(forKey: "UserId")
+            kAppDelegate.setLogin()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+           
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    @IBAction func actionUserManagement(_ sender: UIButton){
+        let userManagementTVC = kStoryBoardMain.instantiateViewController(identifier: "UserManagementTableViewController") as! UserManagementTableViewController
+        self.navigationController?.pushViewController(userManagementTVC, animated: true)
+    }
+    @IBAction func actionAnnouncement(_ sender: UIButton){
+        self.menu.contractMenu()
+//        let announcementTVC = kStoryBoardMain.instantiateViewController(identifier: "AnnouncementTableViewController") as! AnnouncementTableViewController
+//        self.navigationController?.pushViewController(announcementTVC, animated: true)
+    }
+    @IBAction func actionAppointmemtUnitTakeOver(_ sender: UIButton){
+        //self.checkAppointmentStatus(type: .unitTakeOver)
+    }
+    @IBAction func actionDefectList(_ sender: UIButton){
+        self.menu.contractMenu()
+    }
+    @IBAction func actionAppointmentJointInspection(_ sender: UIButton){
+        //self.checkAppointmentStatus(type: .jointInspection)
+    }
+    @IBAction func actionFacilityBooking(_ sender: UIButton){
+//        let facilityBookingTVC = self.storyboard?.instantiateViewController(identifier: "FacilitySummaryTableViewController") as! FacilitySummaryTableViewController
+//        self.navigationController?.pushViewController(facilityBookingTVC, animated: true)
+    }
+    @IBAction func actionFeedback(_ sender: UIButton){
+//        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
+//        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+    func goToSettings(){
+        var controller: UIViewController!
+        for cntroller in self.navigationController!.viewControllers as Array {
+            if cntroller.isKind(of: SettingsTableViewController.self) {
+                controller = cntroller
+               
+                break
+            }
+        }
+        if controller != nil{
+            self.navigationController!.popToViewController(controller, animated: true)
+        }
+        else{
+        let settingsTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsTableViewController") as! SettingsTableViewController
+        self.navigationController?.pushViewController(settingsTVC, animated: true)
+        }
+    }
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+
+    
+extension EditInspectionTableViewController: AlertViewDelegate{
+    func onBackClicked() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func onCloseClicked() {
+        
+    }
+    
+    func onOkClicked() {
+        alertView_message.delegate = self
+        alertView_message.showInView(self.view_Background, title: "Booking has been\n cancelled", okTitle: "Home", cancelTitle: "View List")
+    }
+    
+    
+}
+extension EditInspectionTableViewController: MessageAlertViewDelegate{
+    func onHomeClicked() {
+        selectedRowIndex_Appointment = -1
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func onListClicked() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
+}
+extension EditInspectionTableViewController: MenuViewDelegate{
+    func onMenuClicked(_ sender: UIButton) {
+        switch sender.tag {
+        case 1:
+            
+            self.navigationController?.popToRootViewController(animated: true)
+            break
+        case 2:
+            self.goToSettings()
+            break
+        case 3:
+            self.actionLogout(sender)
+            break
+     
+        default:
+            break
+        }
+    }
+    
+    func onCloseClicked(_ sender: UIButton) {
+        
+    }
+    
+    
+}
+
+   
+   
+
+
+extension EditInspectionTableViewController: UITextFieldDelegate
+{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

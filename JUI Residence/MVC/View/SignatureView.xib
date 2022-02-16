@@ -15,7 +15,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="8Fc-9b-jCA" customClass="SignatureView" customModule="JuiResidenceUser" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="8Fc-9b-jCA" customClass="SignatureView" customModule="Aerea_Manager" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -28,7 +28,7 @@
                             <color key="textColor" red="0.36470588240000001" green="0.36470588240000001" blue="0.36470588240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UvZ-Bp-h48" customClass="PaddedTextField" customModule="JuiResidenceUser" customModuleProvider="target">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UvZ-Bp-h48" customClass="PaddedTextField" customModule="Aerea_Manager" customModuleProvider="target">
                             <rect key="frame" x="25" y="73" width="314" height="40"/>
                             <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -44,18 +44,7 @@
                             <color key="textColor" red="0.36470588240000001" green="0.36470588240000001" blue="0.36470588240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEq-KF-aw5">
-                            <rect key="frame" x="327" y="17" width="20" height="20"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="20" id="3ic-pB-dkI"/>
-                                <constraint firstAttribute="height" constant="20" id="ycd-hF-CGE"/>
-                            </constraints>
-                            <state key="normal" image="closebtn"/>
-                            <connections>
-                                <action selector="actionClose:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="jpz-fW-L1k"/>
-                            </connections>
-                        </button>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0nM-gs-Pce" customClass="YPDrawSignatureView" customModule="JuiResidenceUser" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0nM-gs-Pce" customClass="YPDrawSignatureView" customModule="Aerea_Manager" customModuleProvider="target">
                             <rect key="frame" x="25" y="175.5" width="314" height="150"/>
                             <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -76,7 +65,7 @@
                                 <action selector="actionDone:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="KsB-8D-fxx"/>
                             </connections>
                         </button>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hne-Eg-tBH" customClass="DashedLineView" customModule="JuiResidenceUser" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hne-Eg-tBH" customClass="DashedLineView" customModule="Aerea_Manager" customModuleProvider="target">
                             <rect key="frame" x="25" y="335.5" width="314" height="1"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
@@ -105,6 +94,17 @@
                             </state>
                             <connections>
                                 <action selector="actionClearSignature:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="h03-zA-tiB"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEq-KF-aw5">
+                            <rect key="frame" x="327" y="17" width="20" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="20" id="3ic-pB-dkI"/>
+                                <constraint firstAttribute="height" constant="20" id="ycd-hF-CGE"/>
+                            </constraints>
+                            <state key="normal" image="close"/>
+                            <connections>
+                                <action selector="actionClose:" destination="8Fc-9b-jCA" eventType="primaryActionTriggered" id="jpz-fW-L1k"/>
                             </connections>
                         </button>
                     </subviews>
@@ -153,7 +153,7 @@
         </view>
     </objects>
     <resources>
-        <image name="closebtn" width="140" height="140"/>
+        <image name="close" width="31" height="28"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

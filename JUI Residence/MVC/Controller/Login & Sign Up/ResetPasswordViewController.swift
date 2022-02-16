@@ -30,10 +30,14 @@ class ResetPasswordViewController: BaseViewController {
             displayErrorAlert(alertStr: "Please enter a valid email address", title: "")
             return
         }
-        self.getOtp()
+      //  self.getOtp()
+        let otpVC = self.storyboard?.instantiateViewController(identifier: "OTPViewController") as! OTPViewController
+        otpVC.userEmail = self.txt_Email.text!
+        otpVC.userId = 0
+        self.navigationController?.pushViewController(otpVC, animated: true)
         }
     //MARK: ******  PARSING *********
-    func getOtp(){
+  /*  func getOtp(){
            ActivityIndicatorView.show("Loading")
         ApiService.getOtp_User(parameters: ["email":self.txt_Email.text!], completion: { status, result, error in
             
@@ -75,7 +79,7 @@ class ResetPasswordViewController: BaseViewController {
         })
          
     }
-
+*/
 }
 extension ResetPasswordViewController: UITextFieldDelegate{
     

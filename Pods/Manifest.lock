@@ -1,0 +1,39 @@
+PODS:
+  - Alamofire (4.9.1)
+  - AlamofireImage (3.6.0):
+    - Alamofire (~> 4.9)
+  - CalendarDateRangePickerViewController (0.1.0)
+  - DropDown (2.3.13)
+  - NVActivityIndicatorView (5.1.1):
+    - NVActivityIndicatorView/Base (= 5.1.1)
+  - NVActivityIndicatorView/Base (5.1.1)
+  - Tailor (3.0.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.7)
+  - AlamofireImage (~> 3.3)
+  - CalendarDateRangePickerViewController
+  - DropDown
+  - NVActivityIndicatorView
+  - Tailor
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AlamofireImage
+    - CalendarDateRangePickerViewController
+    - DropDown
+    - NVActivityIndicatorView
+    - Tailor
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  AlamofireImage: be9963c6582d68b39e89191f64c82a7d7bf40fdd
+  CalendarDateRangePickerViewController: 9e82a36a21ad7338f4e21a314469bfabe1f738fb
+  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
+  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
+  Tailor: 4fb574e8815d076abbf2bd7ffdbf4b14103fe17c
+
+PODFILE CHECKSUM: b3eb988a8b511063908326afeaa79e4e94440c41
+
+COCOAPODS: 1.10.1
