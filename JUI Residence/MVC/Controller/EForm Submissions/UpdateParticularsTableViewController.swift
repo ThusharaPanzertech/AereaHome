@@ -45,7 +45,7 @@ class UpdateParticularsTableViewController: BaseTableViewController {
     var dataSource = DataSource_Particulars()
     
         
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         vw_Table1.layer.cornerRadius = 10.0
@@ -128,7 +128,7 @@ class UpdateParticularsTableViewController: BaseTableViewController {
         
         lbl_Ticket.text = updateParticularsData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
-        lbl_UnitNo.text = updateParticularsData.unit.unit
+        lbl_UnitNo.text = updateParticularsData.unit?.unit
         lbl_Email.text = updateParticularsData.submission.email
         lbl_Address.text = updateParticularsData.submission.address
         

@@ -6,16 +6,19 @@
 //
 
 import UIKit
-
+import DropDown
 class EFormPaymentTableViewController: BaseTableViewController {
-    
+    var settingsInfo: eFormSettingsInfo!
     var eForm : String!
+
     let menu: MenuView = MenuView.getInstance
     var isToShowSucces = false
      //Outlets
+    @IBOutlet weak var datePicker:  UIDatePicker!
      @IBOutlet weak var lbl_UserName: UILabel!
      @IBOutlet weak var lbl_UserRole: UILabel!
      @IBOutlet weak var lbl_Title: UILabel!
+    @IBOutlet weak var lbl_PayableTo: UILabel!
      @IBOutlet weak var lbl_SubTitle: UILabel!
     @IBOutlet weak var lbl_SuccessTitle: UILabel!
     @IBOutlet weak var lbl_SuccessSubTitle: UILabel!
@@ -26,10 +29,24 @@ class EFormPaymentTableViewController: BaseTableViewController {
     @IBOutlet var arr_Buttons: [UIButton]!
     @IBOutlet var arr_Views: [UIView]!
     @IBOutlet var arr_TextFields: [UITextField]!
-    @IBOutlet weak var txt_Cheque: UITextField!
-    @IBOutlet weak var txt_Bank: UITextField!
-    @IBOutlet weak var txt_ReceiptNo: UITextField!
-    @IBOutlet weak var txt_Acknowledge: UITextField!
+    
+    @IBOutlet weak var txt_PaymentMode: UITextField!
+    
+    @IBOutlet weak var txt_ChequeAmt: UITextField!
+    @IBOutlet weak var txt_ChequeBank: UITextField!
+    @IBOutlet weak var txt_ChequeNo: UITextField!
+    @IBOutlet weak var txt_ChequeReceiptNo: UITextField!
+    
+    @IBOutlet weak var txt_BankTransferDate: UITextField!
+    @IBOutlet weak var txt_BankTransferAmt: UITextField!
+    @IBOutlet weak var txt_BankTransferReceiptNo: UITextField!
+
+    @IBOutlet weak var txt_CashDate: UITextField!
+    @IBOutlet weak var txt_CashAmt: UITextField!
+    @IBOutlet weak var txt_CashReceiptNo: UITextField!
+    
+    
+ //   @IBOutlet weak var txt_Acknowledge: UITextField!
     @IBOutlet weak var txt_Manager: UITextField!
    
     //@IBOutlet weak var txt_SignDate: UITextField!
@@ -39,6 +56,7 @@ class EFormPaymentTableViewController: BaseTableViewController {
     var signature1 : UIImage!
     var moveInOutData: MoveInOut!
     var renovationData: Renovation!
+    var doorAceessData: DoorAccess!
     var formType : eForm!
     
      override func viewDidLoad() {
@@ -80,9 +98,11 @@ class EFormPaymentTableViewController: BaseTableViewController {
          view_Background.layer.masksToBounds = true
         view_Background1.layer.cornerRadius = 25.0
         view_Background1.layer.masksToBounds = true
-        
+        self.configureDatePicker()
        
-        self.lbl_Title.text = formType == .moveInOut ? "Moving In & Out Application" : "Renovation Work Application"
+        self.lbl_Title.text = formType == .moveInOut ? "Moving In & Out Application" :
+            formType == .renovation ? "Renovation Work Application" :
+            "Resident Access Card & Main Door Access"
         self.lbl_SubTitle.text = "(For official use only)"
         
         for vw in arr_Views{
@@ -98,20 +118,47 @@ class EFormPaymentTableViewController: BaseTableViewController {
                field.attributedPlaceholder = NSAttributedString(string: field.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
                field.backgroundColor = UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
         }
-       
+      
         self.tableView.reloadData()
      }
    
     @objc func done(){self.view.endEditing(true)
     }
 
-
+    
      override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 1{
-           
-            return CGFloat(self.isToShowSucces == true ? 0 :  super.tableView(tableView, heightForRowAt: indexPath))
+            if self.isToShowSucces == false {
+                return doorAceessData != nil ? 260 : 260
+                // super.tableView(tableView, heightForRowAt: indexPath)
+            }
+            return 0
         }
-        else  if indexPath.row == 2{
+        if indexPath.row == 2{
+            if self.isToShowSucces == false {
+            return txt_PaymentMode.text == "Cheque" ?   super.tableView(tableView, heightForRowAt: indexPath) : 0
+            }
+            return 0
+        }
+        else  if indexPath.row == 3
+        {
+            if self.isToShowSucces == false {
+            return txt_PaymentMode.text == "Bank Transfer" ?   super.tableView(tableView, heightForRowAt: indexPath) : 0 }
+            return 0
+        }
+        else if indexPath.row == 4{
+            if self.isToShowSucces == false {
+            return txt_PaymentMode.text == "Cash" ?   super.tableView(tableView, heightForRowAt: indexPath) : 0
+            }
+            return 0
+            }
+        else if indexPath.row == 5{
+            if self.isToShowSucces == false {
+            return    super.tableView(tableView, heightForRowAt: indexPath)
+            }
+            return 0
+            }
+        else  if indexPath.row == 6{
             return self.isToShowSucces == false ? 0 : super.tableView(tableView, heightForRowAt: indexPath)
         }
      
@@ -120,35 +167,160 @@ class EFormPaymentTableViewController: BaseTableViewController {
      override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
          self.showBottomMenu()
+        getEFormSettinfsInfo()
         if formType == .moveInOut{
         if self.moveInOutData.payment != nil{
             self.txt_Manager.text = self.moveInOutData.payment.manager_received
-            self.txt_Acknowledge.text = self.moveInOutData.payment.acknowledged_by
-            self.txt_ReceiptNo.text = self.moveInOutData.payment.receipt_no
-            self.txt_Bank.text = self.moveInOutData.payment.cheque_bank
-            self.txt_Cheque.text = self.moveInOutData.payment.cheque_no
-        
+            if self.moveInOutData.payment.payment_option == 1{
+                txt_PaymentMode.text = "Cheque"
+                txt_ChequeNo.text = self.moveInOutData.payment.cheque_no
+                txt_ChequeBank.text = self.moveInOutData.payment.cheque_bank
+                txt_ChequeAmt.text = self.moveInOutData.payment.cheque_amount
+                txt_ChequeReceiptNo.text = self.moveInOutData.payment.receipt_no
+            }
+           else  if self.moveInOutData.payment.payment_option == 2{
+                txt_PaymentMode.text = "Bank Transfer"
+                txt_BankTransferDate.text = self.moveInOutData.payment.bt_amount_received
+                txt_BankTransferAmt.text = self.moveInOutData.payment.bt_received_date
+                txt_BankTransferReceiptNo.text = self.moveInOutData.payment.receipt_no
+            }
+           else  if self.moveInOutData.payment.payment_option == 3{
+                txt_PaymentMode.text = "Cash"
+                txt_CashDate.text = self.moveInOutData.payment.cash_received_date
+                txt_CashAmt.text = self.moveInOutData.payment.cash_amount_received
+                txt_CashReceiptNo.text = self.moveInOutData.payment.receipt_no
+            }
         let sign1 = self.moveInOutData.payment.signature
         let image = self.convertBase64StringToImage(imageBase64String: sign1)
         if image != nil{
          self.imgView_signature1.image = image
+            self.signature1 = image
          }
+            self.tableView.reloadData()
         }
         }
         else if formType == .renovation{
-          /*  self.txt_Manager.text = self.moveInOutData.payment.manager_received
-            self.txt_Acknowledge.text = self.moveInOutData.payment.acknowledged_by
-            self.txt_ReceiptNo.text = self.moveInOutData.payment.receipt_no
-            self.txt_Bank.text = self.moveInOutData.payment.cheque_bank
-            self.txt_Cheque.text = self.moveInOutData.payment.cheque_no
-        
-        let sign1 = self.moveInOutData.payment.signature
+            if self.renovationData.payment != nil{
+                self.txt_Manager.text = self.renovationData.payment.manager_received
+                if self.renovationData.payment.payment_option == 1{
+                    txt_PaymentMode.text = "Cheque"
+                    txt_ChequeNo.text = self.renovationData.payment.cheque_no
+                    txt_ChequeBank.text = self.renovationData.payment.cheque_bank
+                    txt_ChequeAmt.text = self.renovationData.payment.cheque_amount
+                    txt_ChequeReceiptNo.text = self.renovationData.payment.receipt_no
+                }
+               else  if self.renovationData.payment.payment_option == 2{
+                    txt_PaymentMode.text = "Bank Transfer"
+                    txt_BankTransferDate.text = self.renovationData.payment.bt_amount_received
+                    txt_BankTransferAmt.text = self.renovationData.payment.bt_received_date
+                    txt_BankTransferReceiptNo.text = self.renovationData.payment.receipt_no
+                }
+               else  if self.renovationData.payment.payment_option == 3{
+                    txt_PaymentMode.text = "Cash"
+                    txt_CashDate.text = self.renovationData.payment.cash_received_date
+                    txt_CashAmt.text = self.renovationData.payment.cash_amount_received
+                    txt_CashReceiptNo.text = self.renovationData.payment.receipt_no
+                }
+            let sign1 = self.renovationData.payment.signature
+            let image = self.convertBase64StringToImage(imageBase64String: sign1)
+            if image != nil{
+             self.imgView_signature1.image = image
+                self.signature1 = image
+             }
+                self.tableView.reloadData()
+        }
+        }
+       else if formType == .doorAccess{
+        if self.doorAceessData.payment != nil{
+            self.txt_Manager.text = self.doorAceessData.payment.manager_received
+            if self.doorAceessData.payment.payment_option == 1{
+                txt_PaymentMode.text = "Cheque"
+                txt_ChequeNo.text = self.doorAceessData.payment.cheque_no
+                txt_ChequeBank.text = self.doorAceessData.payment.cheque_bank
+                txt_ChequeAmt.text = self.doorAceessData.payment.cheque_amount
+                txt_ChequeReceiptNo.text = self.doorAceessData.payment.receipt_no
+            }
+           else  if self.doorAceessData.payment.payment_option == 2{
+                txt_PaymentMode.text = "Bank Transfer"
+                txt_BankTransferDate.text = self.doorAceessData.payment.bt_amount_received
+                txt_BankTransferAmt.text = self.doorAceessData.payment.bt_received_date
+                txt_BankTransferReceiptNo.text = self.doorAceessData.payment.receipt_no
+            }
+           else  if self.doorAceessData.payment.payment_option == 3{
+                txt_PaymentMode.text = "Cash"
+                txt_CashDate.text = self.doorAceessData.payment.cash_received_date
+                txt_CashAmt.text = self.doorAceessData.payment.cash_amount_received
+                txt_CashReceiptNo.text = self.doorAceessData.payment.receipt_no
+            }
+        let sign1 = self.doorAceessData.payment.signature
         let image = self.convertBase64StringToImage(imageBase64String: sign1)
         if image != nil{
          self.imgView_signature1.image = image
-         }*/
+            self.signature1 = image
+         }
+            self.tableView.reloadData()
+        }
         }
      }
+    func configureDatePicker(){
+      //Formate Date
+       datePicker.datePickerMode = .date
+        
+//        // Get right now as it's `DateComponents`.
+//        let now = Calendar.current.dateComponents(in: .current, from: Date())
+//
+//        // Create the start of the day in `DateComponents` by leaving off the time.
+//        let today = DateComponents(year: now.year, month: now.month, day: now.day)
+//        let dateToday = Calendar.current.date(from: today)!
+//
+//
+//
+//
+//        datePicker.minimumDate = Date()
+      
+        //ToolBar
+          let toolbar = UIToolbar();
+          toolbar.sizeToFit()
+          let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(donedatePicker));
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+         let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelDatePicker));
+
+        toolbar.setItems([cancelButton,spaceButton,doneButton], animated: false)
+
+   // add toolbar to textField
+        txt_BankTransferDate.inputAccessoryView = toolbar
+    // add datepicker to textField
+        txt_BankTransferDate.inputView = datePicker
+        
+        txt_CashDate.inputAccessoryView = toolbar
+    // add datepicker to textField
+        txt_CashDate.inputView = datePicker
+        
+
+      }
+    
+    @objc func donedatePicker(){
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "dd/MM/yy"
+        
+        if txt_PaymentMode.text == "Cash"{
+            txt_CashDate.text = formatter.string(from: datePicker.date)
+        }
+        else{
+            txt_BankTransferDate.text = formatter.string(from: datePicker.date)
+        }
+            self.view.endEditing(true)
+        
+      
+        
+    }
+
+    @objc func cancelDatePicker(){
+       self.view.endEditing(true)
+     }
+   
      override func viewWillDisappear(_ animated: Bool) {
          super.viewWillDisappear(animated)
          
@@ -169,6 +341,52 @@ func closeMenu(){
          return imgdefault
      }
      //MARK: ******  PARSING *********
+    func getEFormSettinfsInfo(){
+        ActivityIndicatorView.show("Loading")
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        let id  = self.formType == .moveInOut ? moveInOutData.submission.form_type :
+            self.formType == .renovation ? renovationData.submission.form_type :
+            self.formType == .doorAccess ? doorAceessData.submission.form_type :
+            0
+            
+        ApiService.get_eformDetail(parameters: ["login_id":userId, "id": id], completion: { [self] status, result, error in
+           
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let response = (result as? eFormSettingsInfoBase){
+                    self.settingsInfo = response.details
+                    let text = NSMutableAttributedString(string: "payable to ")
+                    text.addAttribute(NSAttributedString.Key.font,
+                                      value: UIFont(name: "Helvetica", size: 16)!,
+                                      range: NSRange(location: 0, length: text.length))
+                   
+
+                    
+                    let payableTo = settingsInfo.payable_to == "" ? "Tiara Land Pte Ltd - Jui Residences MF Account" : settingsInfo.payable_to
+                    let text1 = NSMutableAttributedString(string: "\"\(payableTo)\"")
+                    text1.addAttribute(NSAttributedString.Key.font,
+                                                  value: UIFont(name: "Helvetica-Bold", size: 16)!,
+                                                  range: NSRange(location: 0, length: text1.length))
+                     text.append(text1)
+                    
+                    
+                    text.addAttribute(NSAttributedString.Key.foregroundColor, value: textColor, range: NSRange(location: 0, length: text.length))
+                    
+                    
+                    
+                    
+                    self.lbl_PayableTo.attributedText = text
+                 //   self.dataSource.settingsInfo = response.details
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
+    }
     func submitAppication(){
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -189,23 +407,55 @@ func closeMenu(){
         }
         else if formType == .renovation{
             params.setValue("\(renovationData.submission.id)", forKey: "id")
-           // if renovationData.payment != nil{
-            //    params.setValue("\(renovationData.payment.id)", forKey: "payment_id")
-          //  }
+            if renovationData.payment != nil{
+                params.setValue("\(renovationData.payment.id)", forKey: "payment_id")
+            }
         }
-        params.setValue(txt_Cheque.text!, forKey: "cheque_no")
-        params.setValue(txt_Bank.text!, forKey: "cheque_bank")
-        params.setValue("", forKey: "account_holder_name")
-        params.setValue("", forKey: "account_number")
-        params.setValue("", forKey: "account_type")
-        params.setValue("", forKey: "bank_name")
-        params.setValue("", forKey: "bank_address")
-        params.setValue("", forKey: "swift_code")
-        params.setValue(txt_ReceiptNo.text!, forKey: "receipt_no")
-        params.setValue(txt_Acknowledge.text!, forKey: "acknowledged_by")
+        else if formType == .doorAccess{
+            params.setValue("\(doorAceessData.submission.id)", forKey: "id")
+            if doorAceessData.payment != nil{
+                params.setValue("\(doorAceessData.payment.id)", forKey: "payment_id")
+            }
+        }
+        let paymentMode = txt_PaymentMode.text == "Cheque" ? 1 :
+        txt_PaymentMode.text == "Bank Transfer" ? 2 :
+        txt_PaymentMode.text == "Cash" ? 3 : 0
+        params.setValue("\(paymentMode)", forKey: "payment_option")
+        params.setValue(paymentMode == 1 ? txt_ChequeAmt.text! : "", forKey: "cheque_amount")
+        params.setValue(paymentMode == 1 ? txt_ChequeNo.text! : "", forKey: "cheque_no")
+        params.setValue(paymentMode == 1 ? txt_ChequeBank.text! : "", forKey: "cheque_bank")
+       
+       
+        formatter.dateFormat = "dd/MM/yy"
+        let date_bank = formatter.date(from: txt_BankTransferDate.text! )
+        formatter.dateFormat = "yyyy-MM-dd"
+     let dateStr_bank = formatter.string(from: date_bank ??  Date())
+        
+        params.setValue(paymentMode == 2 ? dateStr_bank : "", forKey: "bt_received_date")
+        params.setValue(paymentMode == 2 ? txt_BankTransferAmt.text! : "", forKey: "bt_amount_received")
+        
+        formatter.dateFormat = "dd/MM/yy"
+        let date_cash = formatter.date(from: txt_CashDate.text! )
+        formatter.dateFormat = "yyyy-MM-dd"
+     let dateStr_cash = formatter.string(from: date_cash ??  Date())
+        
+        
+        params.setValue(paymentMode == 3 ? txt_CashAmt.text! : "", forKey: "cash_amount_received")
+        params.setValue(paymentMode == 3 ? dateStr_cash : "", forKey: "cash_received_date")
+        params.setValue("", forKey: "acknowledged_by")
+        
+        params.setValue(paymentMode == 1 ? txt_ChequeAmt.text! : "", forKey: "cheque_amount")
+        params.setValue(paymentMode == 1 ? txt_ChequeAmt.text! : "", forKey: "cheque_amount")
+        
+        let receipt = paymentMode == 1 ? txt_ChequeReceiptNo.text! :
+            paymentMode == 2 ? txt_BankTransferReceiptNo.text! :
+            txt_CashReceiptNo.text!
+        params.setValue("\(receipt)", forKey: "receipt_no")
+        
+        
         params.setValue(txt_Manager.text!, forKey: "manager_received")
         params.setValue(dateStr_today, forKey: "date_of_signature")
-        
+//
        
         var data : Data!
      if signature1 != nil{
@@ -268,7 +518,34 @@ func closeMenu(){
                 }
             }
         }
-        
+        else if formType == .doorAccess{
+          //
+            ApiService.submit_DoorAccessPayment(signature: data, parameters: params as! [String : Any]) { status, result, error in
+                ActivityIndicatorView.hiding()
+                if status  && result != nil{
+                    if let response = (result as? MoveIOInspectionBase){
+                        if response.response == 1{
+                            self.isToShowSucces =  true
+                            DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                                let indexPath = NSIndexPath(row: 0, section: 0)
+                                self.tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
+                            }
+                        }
+                        else{
+                            self.displayErrorAlert(alertStr: response.message, title: "Alert")
+                        }
+                       
+                    }
+            }
+                else if error != nil{
+                    self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+                }
+                else{
+                    self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+                }
+            }
+        }
      
             }
         
@@ -281,6 +558,20 @@ func closeMenu(){
     }
     @IBAction func actionSubmittedForms(_ sender: UIButton){
         self.navigationController?.popViewController(animated: true)
+    }
+    @IBAction func actionPaymentMode(_ sender:UIButton) {
+        
+        let arrPayment = [ "Cheque", "Bank Transfer", "Cash"]
+        let dropDown_Payment = DropDown()
+        dropDown_Payment.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Payment.dataSource = arrPayment//statusData.map({$0.value})//Array(statusData.values)
+        dropDown_Payment.show()
+        dropDown_Payment.selectionAction = { [unowned self] (index: Int, item: String) in
+            txt_PaymentMode.text = item
+           
+            self.tableView.reloadData()
+            
+        }
     }
     @IBAction func actionSign1(_ sender: UIButton){
         self.view_Signature.delegate = self
@@ -296,30 +587,63 @@ func closeMenu(){
     }
     @IBAction func actionSubmit(_sender: UIButton){
        
-//        self.isToShowSucces =  true
-//        DispatchQueue.main.async {
-//        self.tableView.reloadData()
-//            let indexPath = NSIndexPath(row: 0, section: 0)
-//            self.tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
-//        }
-         
-        
-        guard txt_Cheque.text!.count  > 0 else {
-            displayErrorAlert(alertStr: "Please enter cheque number", title: "")
+        guard txt_PaymentMode.text!.count  > 0 else {
+            displayErrorAlert(alertStr: "Please select the payment mode", title: "")
             return
         }
-        guard txt_Bank.text!.count  > 0 else {
-            displayErrorAlert(alertStr: "Please enter bank details", title: "")
-            return
+        if txt_PaymentMode.text == "Cheque"{
+           
+            
+            guard txt_ChequeAmt.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter cheque amount", title: "")
+                return
+            }
+            guard txt_ChequeBank.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter bank name", title: "")
+                return
+            }
+            guard txt_ChequeNo.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter cheque number", title: "")
+                return
+            }
+            guard txt_ChequeReceiptNo.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter cheque receipt number", title: "")
+                return
+            }
         }
-        guard txt_ReceiptNo.text!.count  > 0 else {
-            displayErrorAlert(alertStr: "Please enter official receipt number", title: "")
-            return
+        else if txt_PaymentMode.text == "Bank Transfer"{
+          
+            guard txt_BankTransferDate.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter bank transfer date", title: "")
+                return
+            }
+            guard txt_BankTransferAmt.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter bank transfer amount", title: "")
+                return
+            }
+            guard txt_BankTransferReceiptNo.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter bank transfer receipt number", title: "")
+                return
+            }
+            
         }
-    guard txt_Acknowledge.text!.count  > 0 else {
-        displayErrorAlert(alertStr: "Please enter acknowledge by resident", title: "")
-        return
-    }
+        else if txt_PaymentMode.text == "Cash"{
+          
+            guard txt_CashAmt.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter amount", title: "")
+                return
+            }
+           
+            guard txt_CashReceiptNo.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter the receipt number", title: "")
+                return
+            }
+            guard txt_CashDate.text!.count  > 0 else {
+                displayErrorAlert(alertStr: "Please enter cash transfer date", title: "")
+                return
+            }
+        }
+     
     guard txt_Manager.text!.count  > 0 else {
         displayErrorAlert(alertStr: "Please enter name of manager received", title: "")
         return

@@ -20,7 +20,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     
     public var delegate: CalendarDateRangePickerViewControllerDelegate!
     
-    let itemsPerRow = 7
+    let itemsPerRow = 8
     let itemHeight: CGFloat = 40
     let collectionViewInsets = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25)
     
@@ -175,13 +175,13 @@ extension CalendarDateRangePickerViewController : UICollectionViewDelegateFlowLa
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let padding = collectionViewInsets.left + collectionViewInsets.right
-        let availableWidth = view.frame.width - padding
+        let availableWidth = UIScreen.main.bounds.size.width - padding
         let itemWidth = round(availableWidth / CGFloat(itemsPerRow))
         return CGSize(width: itemWidth, height: itemHeight)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.size.width, height: 50)
+        return CGSize(width: UIScreen.main.bounds.size.width, height: 50)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

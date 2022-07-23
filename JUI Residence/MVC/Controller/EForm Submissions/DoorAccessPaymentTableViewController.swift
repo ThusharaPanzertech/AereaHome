@@ -32,14 +32,18 @@ class DoorAccessPaymentTableViewController: BaseTableViewController {
     @IBOutlet weak var txt_ReceiptNo: UITextField!
     @IBOutlet weak var txt_Acknowledge: UITextField!
     @IBOutlet weak var txt_Manager: UITextField!
+    @IBOutlet weak var txt_AccHolder: UITextField!
+    @IBOutlet weak var txt_AccType: UITextField!
+    @IBOutlet weak var txt_AccNo: UITextField!
+    @IBOutlet weak var txt_BankName: UITextField!
+    @IBOutlet weak var txt_SwiftCode: UITextField!
+    @IBOutlet weak var txt_BankAddress: UITextField!
    
     //@IBOutlet weak var txt_SignDate: UITextField!
     @IBOutlet weak var imgView_signature1 : UIImageView!
   
     let view_Signature: SignatureView = SignatureView.getInstance
     var signature1 : UIImage!
-    var moveInOutData: MoveInOut!
-    var renovationData: Renovation!
     var doorAccessData: DoorAccess!
     var formType : eForm!
     
@@ -122,34 +126,34 @@ class DoorAccessPaymentTableViewController: BaseTableViewController {
      override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
          self.showBottomMenu()
-      /*  if formType == .moveInOut{
-        if self.moveInOutData.payment != nil{
-            self.txt_Manager.text = self.moveInOutData.payment.manager_received
-            self.txt_Acknowledge.text = self.moveInOutData.payment.acknowledged_by
-            self.txt_ReceiptNo.text = self.moveInOutData.payment.receipt_no
-            self.txt_Bank.text = self.moveInOutData.payment.cheque_bank
-            self.txt_Cheque.text = self.moveInOutData.payment.cheque_no
-        
-        let sign1 = self.moveInOutData.payment.signature
+    
+        if self.doorAccessData.payment != nil{
+            self.txt_Manager.text = self.doorAccessData.payment.manager_received
+            self.txt_Acknowledge.text = self.doorAccessData.payment.acknowledged_by
+            self.txt_ReceiptNo.text = self.doorAccessData.payment.receipt_no
+            self.txt_Bank.text = self.doorAccessData.payment.cheque_bank
+            self.txt_Cheque.text = self.doorAccessData.payment.cheque_no
+            
+            
+            
+            
+            
+            
+//            txt_AccHolder.text = self.doorAccessData.payment.account_holder_name
+//            txt_AccType.text = self.doorAccessData.payment.account_type
+//            txt_AccNo.text = self.doorAccessData.payment.account_number
+//            txt_BankName.text = self.doorAccessData.payment.bank_name
+//            txt_SwiftCode.text = self.doorAccessData.payment.swift_code
+//            txt_BankAddress.text = self.doorAccessData.payment.bank_address
+        let sign1 = self.doorAccessData.payment.signature
         let image = self.convertBase64StringToImage(imageBase64String: sign1)
         if image != nil{
          self.imgView_signature1.image = image
          }
         }
-        }
-        else if formType == .renovation{
-          /*  self.txt_Manager.text = self.moveInOutData.payment.manager_received
-            self.txt_Acknowledge.text = self.moveInOutData.payment.acknowledged_by
-            self.txt_ReceiptNo.text = self.moveInOutData.payment.receipt_no
-            self.txt_Bank.text = self.moveInOutData.payment.cheque_bank
-            self.txt_Cheque.text = self.moveInOutData.payment.cheque_no
         
-        let sign1 = self.moveInOutData.payment.signature
-        let image = self.convertBase64StringToImage(imageBase64String: sign1)
-        if image != nil{
-         self.imgView_signature1.image = image
-         }*/
-        }*/
+       
+       
      }
      override func viewWillDisappear(_ animated: Bool) {
          super.viewWillDisappear(animated)
@@ -172,7 +176,7 @@ func closeMenu(){
      }
      //MARK: ******  PARSING *********
     func submitAppication(){
-     /*   let formatter = DateFormatter()
+       let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd"
         let dateStr_today = formatter.string(from:  Date())
@@ -182,27 +186,20 @@ func closeMenu(){
        
         let params = NSMutableDictionary()
         params.setValue("\(userId)", forKey: "login_id")
-        if formType == .moveInOut{
-        params.setValue("\(moveInOutData.submission.id)", forKey: "id")
-        if moveInOutData.payment != nil{
-            params.setValue("\(moveInOutData.payment.id)", forKey: "payment_id")
+        params.setValue("\(doorAccessData.submission.id)", forKey: "id")
+        if doorAccessData.payment != nil{
+            params.setValue("\(doorAccessData.payment.id)", forKey: "payment_id")
         }
             
-        }
-        else if formType == .renovation{
-            params.setValue("\(renovationData.submission.id)", forKey: "id")
-           // if renovationData.payment != nil{
-            //    params.setValue("\(renovationData.payment.id)", forKey: "payment_id")
-          //  }
-        }
+       
         params.setValue(txt_Cheque.text!, forKey: "cheque_no")
         params.setValue(txt_Bank.text!, forKey: "cheque_bank")
-        params.setValue("", forKey: "account_holder_name")
-        params.setValue("", forKey: "account_number")
-        params.setValue("", forKey: "account_type")
-        params.setValue("", forKey: "bank_name")
-        params.setValue("", forKey: "bank_address")
-        params.setValue("", forKey: "swift_code")
+        params.setValue(txt_AccHolder.text!, forKey: "account_holder_name")
+        params.setValue(txt_AccNo.text!, forKey: "account_number")
+        params.setValue(txt_AccType.text!, forKey: "account_type")
+        params.setValue(txt_BankName.text!, forKey: "bank_name")
+        params.setValue(txt_BankAddress.text!, forKey: "bank_address")
+        params.setValue(txt_SwiftCode.text!, forKey: "swift_code")
         params.setValue(txt_ReceiptNo.text!, forKey: "receipt_no")
         params.setValue(txt_Acknowledge.text!, forKey: "acknowledged_by")
         params.setValue(txt_Manager.text!, forKey: "manager_received")
@@ -214,8 +211,8 @@ func closeMenu(){
         data = signature1.jpegData(compressionQuality: 0.5)! as NSData as Data
      }
     
-        if formType == .moveInOut{
-        ApiService.submit_MoveIOPayment(signature: data, parameters: params as! [String : Any]) { status, result, error in
+       
+        ApiService.submit_DoorAccessPayment(signature: data, parameters: params as! [String : Any]) { status, result, error in
             ActivityIndicatorView.hiding()
             if status  && result != nil{
                 if let response = (result as? MoveIOInspectionBase){
@@ -241,37 +238,8 @@ func closeMenu(){
             }
         }
         
-        }
-        else if formType == .renovation{
-          //
-            ApiService.submit_RenovationPayment(signature: data, parameters: params as! [String : Any]) { status, result, error in
-                ActivityIndicatorView.hiding()
-                if status  && result != nil{
-                    if let response = (result as? RenovationInspectionBase){
-                        if response.response == 1{
-                            self.isToShowSucces =  true
-                            DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                                let indexPath = NSIndexPath(row: 0, section: 0)
-                                self.tableView.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
-                            }
-                        }
-                        else{
-                            self.displayErrorAlert(alertStr: response.message, title: "Alert")
-                        }
-                       
-                    }
-            }
-                else if error != nil{
-                    self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
-                }
-                else{
-                    self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
-                }
-            }
-        }
-        
-     */
+       
+       
             }
         
         
@@ -331,7 +299,7 @@ func closeMenu(){
       
       
         if signature1 == nil{
-            displayErrorAlert(alertStr: "Please enter the name and signature of the owner", title: "")
+            displayErrorAlert(alertStr: "Please enter the name and signature of the management", title: "")
             return
         }
         else{
@@ -480,3 +448,4 @@ extension DoorAccessPaymentTableViewController: UITextFieldDelegate{
         
     }
 }
+

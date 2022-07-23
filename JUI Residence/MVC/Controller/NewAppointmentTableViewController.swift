@@ -23,6 +23,9 @@ class NewAppointmentTableViewController: BaseTableViewController {
     let alertView: AlertView = AlertView.getInstance
     let alertView_message: MessageAlertView = MessageAlertView.getInstance
     let menu: MenuView = MenuView.getInstance
+    @IBOutlet weak var view_CancelInvitation: UIView!
+    @IBOutlet weak var view_CancelContent: UIView!
+    @IBOutlet weak var txt_Reason: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -100,7 +103,7 @@ class NewAppointmentTableViewController: BaseTableViewController {
         let param = [
             "login_id" : userId,
             "id" : keyCollectionId,
-            "reason": ""
+            "reason": txt_Reason.text!
         ] as [String : Any]
 
         ApiService.approve_decline_KeyCollection(isToApprove : isToApprove ,parameters: param, completion: { status, result, error in
@@ -153,6 +156,22 @@ func closeMenu(){
         table_KeyCollection.dataSource = dataSource
         table_KeyCollection.delegate = dataSource
         dataSource.parentVc = self
+        
+        txt_Reason.layer.borderWidth = 1.0
+        txt_Reason.layer.borderColor = UIColor.lightGray.cgColor
+        txt_Reason.layer.masksToBounds = true
+        txt_Reason.layer.cornerRadius = 3.0
+        let toolbarDone = UIToolbar.init()
+        toolbarDone.sizeToFit()
+        let barBtnDone = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.done,
+                                              target: self, action: #selector(doneButtonAction))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        toolbarDone.items = [spaceButton, barBtnDone] // You can even add cancel button too
+        txt_Reason.inputAccessoryView = toolbarDone
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.doneButtonAction))
+        view_CancelInvitation.addGestureRecognizer(tap)
+        txt_Reason.backgroundColor = .white
     }
 
     //MARK: UIButton Action
@@ -162,6 +181,39 @@ func closeMenu(){
     @IBAction func actionDecline(_ sender: UIButton){
         alertView.delegate = self
         alertView.showInView(self.view, title: "Are you sure you want to\n decline the following key\n collection appointment?", okTitle: "Yes", cancelTitle: "Back")
+    }
+    func showCancelAlert(){
+        txt_Reason.text = ""
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: { [self] in
+        }, completion: { [self] finished in
+            self.view.addSubview(self.view_CancelInvitation)
+            self.view_CancelInvitation.frame = self.view.bounds
+            self.tableView.isScrollEnabled = false
+        
+        })
+            
+    }
+    @IBAction func actionCancel(_ sender: UIButton){
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: { [self] in
+        }, completion: { [self] finished in
+           
+            self.view_CancelInvitation.removeFromSuperview()
+            self.tableView.isScrollEnabled = true
+        })
+    }
+    @IBAction func actionDeclineRequest(_ sender: UIButton){
+        if txt_Reason.text.isEmpty {
+            displayErrorAlert(alertStr: "Please enter reason", title: "")
+        }
+        else {
+            let stripped = txt_Reason.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if stripped.isEmpty{
+                displayErrorAlert(alertStr: "Please enter a valid reason", title: "")
+            }
+            else{
+                approve_decline_KeyCollection(isToApprove: false)
+            }
+        }
     }
     //MARK: MENU ACTIONS
     @IBAction func actionInbox(_ sender: UIButton){
@@ -236,7 +288,8 @@ extension NewAppointmentTableViewController: AlertViewDelegate{
     }
     
     func onOkClicked() {
-        self.approve_decline_KeyCollection(isToApprove: false)
+        self.showCancelAlert()
+        //self.approve_decline_KeyCollection(isToApprove: false)
     }
     
     
@@ -311,7 +364,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
        
         cell.lbl_AppointmentDate.text = dateStr
         
-        
+        cell.lbl_Status.text = "New"
         cell.lbl_AppointmentTime.text =  apptInfo.submission_info.appt_time
            
         cell.view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
@@ -335,6 +388,11 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         let apptInfo = self.array_KeyCollection[sender.tag]
         (self.parentVc as! NewAppointmentTableViewController).keyCollectionId = apptInfo.submission_info.id
         (self.parentVc as! NewAppointmentTableViewController).actionDecline(sender)
+       
+  
+//        let apptInfo = self.array_KeyCollection[sender.tag]
+//        (self.parentVc as! NewAppointmentTableViewController).keyCollectionId = apptInfo.submission_info.id
+//        (self.parentVc as! NewAppointmentTableViewController).actionDecline(sender)
     }
   
    

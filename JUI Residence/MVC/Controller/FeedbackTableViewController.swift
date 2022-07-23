@@ -32,7 +32,7 @@ class FeedbackTableViewController: BaseTableViewController {
     var startDate = ""
     var endDate = ""
     var feedbackOptions = [String: String]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -194,7 +194,7 @@ func closeMenu(){
     func searchFeedbacks(){
         let filterByDict = ["Earliest Date" : "created_at","Category": "fb_option","Status": "status"]
         let filter = filterByDict[txt_FilterBy.text!] ?? "created_at"
-            if txt_Category.text == "" && txt_Unit.text == "" && txt_DateRange.text == "" && txt_Ticket.text == "" {
+        if txt_Category.text == "" && txt_Unit.text == "" && txt_DateRange.text == "" && txt_Ticket.text == "" && txt_FilterBy.text == ""{
                 self.getFeedbackSummary()
             }
             else{
@@ -203,7 +203,7 @@ func closeMenu(){
             if let fbId = feedbackOptions.first(where: { $0.value == txt_Category.text })?.key {
                 fb_Id = fbId
             }
-            if let unitId = unitsData.first(where: { $0.value == txt_Unit.text })?.key {
+            if let unitId = unitsData.first(where: { $0.unit == txt_Unit.text }) {
            //     unit_Id = unitId
             }
                 
@@ -248,7 +248,15 @@ func closeMenu(){
                 ] as [String : Any]
             }
             
-            
+                else if txt_FilterBy.text != ""{
+                    param = [
+                        "login_id" : userId,
+                        "option": "date",
+                       // "category" : "",
+                        "filter" : filter,
+                        
+                    ] as [String : Any]
+                }
                 ApiService.search_feedback(parameters: param, completion: { status, result, error in
                    
                     ActivityIndicatorView.hiding()
@@ -256,7 +264,7 @@ func closeMenu(){
                          if let response = (result as? FeedbackModalBase){
                             self.array_Feedbacks = response.data
                             if(self.array_Feedbacks.count > 0){
-                                self.array_Feedbacks = self.array_Feedbacks.sorted(by: { $0.submissions.created_at > $1.submissions.created_at })
+                               // self.array_Feedbacks = self.array_Feedbacks.sorted(by: { $0.submissions.created_at > $1.submissions.created_at })
                             }
                             self.dataSource.array_Feedbacks = self.array_Feedbacks
                             if self.array_Feedbacks.count == 0{
@@ -281,8 +289,8 @@ func closeMenu(){
     
     //MARK: UIBUTTON ACTION
     @IBAction func actionUnit(_ sender:UIButton) {
-        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
-        let arrUnit = sortedArray.map { $0.value }
+       // let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
+        let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
         dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
@@ -299,6 +307,7 @@ func closeMenu(){
         @IBAction func actionNewDefects(_ sender: UIButton){
             let defectTVC = self.storyboard?.instantiateViewController(identifier: "NewDefectsTableViewController") as! NewDefectsTableViewController
             defectTVC.appointmentType = .feedback
+            defectTVC.unitsData = self.unitsData
             self.navigationController?.pushViewController(defectTVC, animated: true)
         }
     @IBAction func actionFilterBy(_ sender:UIButton) {
@@ -407,7 +416,7 @@ func closeMenu(){
 }
 class DataSource_FeedbackList: NSObject, UITableViewDataSource, UITableViewDelegate {
     var feedbackOptions = [String: String]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var parentVc: UIViewController!
     var array_Feedbacks = [FeedbackModal]()
 func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -427,7 +436,13 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         cell.lbl_Status.text = feedback.submissions.status == 0 ? "Open" :
             feedback.submissions.status == 1 ? "Closed" : "In Progress"
         cell.lbl_SubmittedBy.text = feedback.user_info?.name
-        cell.lbl_UnitNo.text = unitsData["\(feedback.user_info?.unit_no ?? 0)"]
+        if let unitId = unitsData.first(where: { $0.id == feedback.user_info?.unit_no }) {
+            cell.lbl_UnitNo.text = "#" + unitId.unit
+        }
+        else{
+        cell.lbl_UnitNo.text = ""
+        }
+        //unitsData["\(feedback.user_info?.unit_no ?? 0)"]
         cell.lbl_Category.text = feedback.option?.feedback_option
         cell.selectionStyle = .none
         let formatter = DateFormatter()
@@ -443,7 +458,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
        
         cell.lbl_SubmittedDate.text = dateStr
         
-        
+        cell.img_Arrow.image = indexPath.row == selectedRowIndex_Feedback ? UIImage(named: "up_arrow") : UIImage(named: "down_arrow")
         cell.lbl_UpdatedOn.text =  dateStrUpdated
         cell.btn_Edit.tag = indexPath.row
            

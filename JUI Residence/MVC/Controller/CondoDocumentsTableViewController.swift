@@ -15,6 +15,8 @@ class CondoDocumentsTableViewController: BaseTableViewController {
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var collection_CondoDoc: UICollectionView!
+    
+    var array_Condos = [CondoCategory]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let fname = Users.currentUser?.user?.name ?? ""
@@ -52,6 +54,7 @@ class CondoDocumentsTableViewController: BaseTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.showBottomMenu()
+        self.getCondoCategory()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -72,6 +75,19 @@ func closeMenu(){
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 150
 
+    }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 1{
+            let rowCount = array_Condos.count / 2 + array_Condos.count % 2
+            
+            let cellWidth = (kScreenSize.width - 90)/CGFloat(2.0)
+
+            return CGFloat((Int(cellWidth) * rowCount) + 200)
+           
+        }
+       
+        return super.tableView(tableView, heightForRowAt: indexPath)
+    
     }
     //MARK:UICOLLECTION VIEW LAYOUT
     func setUpCollectionViewLayout(){
@@ -94,6 +110,32 @@ func closeMenu(){
         let editCondoTVC = kStoryBoardMenu.instantiateViewController(identifier: "EditCondoDocTableViewController") as! EditCondoDocTableViewController
         editCondoTVC.isToAdd = true
         self.navigationController?.pushViewController(editCondoTVC, animated: true)
+    }
+    //MARK: ******  PARSING *********
+    func getCondoCategory(){
+        ActivityIndicatorView.show("Loading")
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        //
+        ApiService.get_CondoCategory(parameters: ["login_id":userId], completion: { status, result, error in
+           
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                 if let response = (result as? CondoCategoryBase){
+                    self.array_Condos = response.data
+                    if(self.array_Condos.count > 0){
+                        self.array_Condos = self.array_Condos.sorted(by: { $0.created_at > $1.created_at })
+                    }
+                     self.collection_CondoDoc.reloadData()
+                    self.tableView.reloadData()
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
     }
     //MARK: MENU ACTIONS
     @IBAction func actionInbox(_ sender: UIButton){
@@ -160,13 +202,15 @@ extension CondoDocumentsTableViewController: UICollectionViewDelegate, UICollect
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return array_Condos.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "documentCell", for: indexPath) as! DocumentCollectionViewCell
         cell.view_Outer.layer.cornerRadius = 6.0
         cell.view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.gray, radius: 3.0, opacity: 0.35)
 
+        let doc = array_Condos[indexPath.item]
+        cell.lbl_DocumentName.text = doc.docs_category
         cell.view_Outer.tag = indexPath.item
         cell.btn_Icon.tag = indexPath.item
         cell.btn_Icon.addTarget(self, action: #selector(HomeTableViewController.actionIcon(_:)), for: .primaryActionTriggered)
@@ -179,6 +223,7 @@ extension CondoDocumentsTableViewController: UICollectionViewDelegate, UICollect
         self.view.endEditing(true)
         let editCondoVC = kStoryBoardMenu.instantiateViewController(identifier: "EditCondoDocTableViewController") as! EditCondoDocTableViewController
         editCondoVC.isToAdd = false
+        editCondoVC.condoDoc = array_Condos[sender.tag]
         self.navigationController?.pushViewController(editCondoVC, animated: true)
        
     }
@@ -187,6 +232,7 @@ extension CondoDocumentsTableViewController: UICollectionViewDelegate, UICollect
         self.view.endEditing(true)
         let editCondoVC = kStoryBoardMenu.instantiateViewController(identifier: "EditCondoDocTableViewController") as! EditCondoDocTableViewController
         editCondoVC.isToAdd = false
+        editCondoVC.condoDoc = array_Condos[(sender! as UITapGestureRecognizer).view!.tag]
         self.navigationController?.pushViewController(editCondoVC, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

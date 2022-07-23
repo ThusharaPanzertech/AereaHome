@@ -32,7 +32,7 @@ class UserManagementTableViewController: BaseTableViewController {
     @IBOutlet weak var view_Footer: UIView!
    
     @IBOutlet weak var imgView_Profile: UIImageView!
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -224,8 +224,8 @@ class UserManagementTableViewController: BaseTableViewController {
         if let roleId = roles.first(where: { $0.value == txt_Role.text })?.key {
             role_Id = roleId
         }
-        if let unitId = unitsData.first(where: { $0.value == txt_Unit.text })?.key {
-            unit_Id = unitId
+        if let unitId = unitsData.first(where: { $0.unit == txt_Unit.text }) {
+            unit_Id = "\(unitId.id)"
         }
         ActivityIndicatorView.show("Loading")
         let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
@@ -338,8 +338,8 @@ class UserManagementTableViewController: BaseTableViewController {
         }
     }
     @IBAction func actionUnit(_ sender:UIButton) {
-        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
-        let arrUnit = sortedArray.map { $0.value }
+       // let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
+        let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
         dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
@@ -447,7 +447,7 @@ class DataSource_UserManagement: NSObject, UITableViewDataSource, UITableViewDel
     var array_Users = [UserModal]()
     var filePath = ""
     var roles = [String: String]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 
         return 1;
@@ -461,8 +461,14 @@ class DataSource_UserManagement: NSObject, UITableViewDataSource, UITableViewDel
             let cell = tableView.dequeueReusableCell(withIdentifier: "manageUserCell") as! AccessRolesTableViewCell
         let user = array_Users[indexPath.row]
         cell.lbl_FirstName.text = user.cardInfo.name
-        let unitno = "\(user.cardInfo.unit_no ?? 0)"
-        cell.lbl_UnitNo.text = unitsData[unitno]
+        let unitno = user.cardInfo.unit_no ?? 0
+        if let unitId = unitsData.first(where: { $0.id == unitno}) {
+            cell.lbl_UnitNo.text = unitId.unit
+        }
+        else{
+        cell.lbl_UnitNo.text = ""
+        }
+       // cell.lbl_UnitNo.text = unitsData[unitno]
         cell.lbl_AssignedRole.text = self.roles["\(user.cardInfo.role_id ?? 0)"]
         cell.lbl_Email.text = user.cardInfo.email
         cell.lbl_Password.text = user.cardInfo.account_enabled == 1 ? "Yes" : "No"

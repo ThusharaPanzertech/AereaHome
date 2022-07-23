@@ -53,7 +53,7 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
 
     var vehicleRegData: VehicleReg!
    
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -125,7 +125,7 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
         lbl_Ticket.text = vehicleRegData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_OwnerName.text = vehicleRegData.submission.owner_name
-        lbl_UnitNo.text = vehicleRegData.unit.unit
+        lbl_UnitNo.text = vehicleRegData.unit?.unit
         lbl_ContactNo.text = vehicleRegData.submission.contact_no
         lbl_Email.text = vehicleRegData.submission.email
         

@@ -18,7 +18,7 @@ let kUpdateParticulars = "Update of Particulars"
 class EFormTypesTableViewController: BaseTableViewController {
 
     let menu: MenuView = MenuView.getInstance
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
      //Outlets
      @IBOutlet weak var lbl_UserName: UILabel!
      @IBOutlet weak var lbl_UserRole: UILabel!

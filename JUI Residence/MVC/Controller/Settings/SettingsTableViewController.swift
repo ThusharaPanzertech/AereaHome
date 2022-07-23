@@ -18,7 +18,8 @@ import UIKit
 
 class SettingsTableViewController: BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
-    var array_Permissions = [String]()
+    var array_Permissions = [Permissions]()
+    var array_Modules = [Module]()
     var dictImages = [String:String]()
     @IBOutlet weak var lbl_Title: UILabel!
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -31,12 +32,13 @@ class SettingsTableViewController: BaseTableViewController {
     
     @IBOutlet weak var imgView_Profile: UIImageView!
     
-    
+    var array_Settings = [DashboardMenu]()
     var heightSet = false
     var tableHeight: CGFloat = 0
     var timer = Timer()
     override func viewDidLoad() {
         super.viewDidLoad()
+        getLoginInfo()
         imgView_Profile.addborder()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
@@ -56,12 +58,97 @@ class SettingsTableViewController: BaseTableViewController {
         self.lbl_UserName.text = "\(fname) \(lname)"
         let role = Users.currentUser?.role?.name ?? ""
         self.lbl_UserRole.text = role
-        array_Permissions = [kAppointmentSettings,kManageRole,kManageUnit,kFeedbackOptions,kDefectLocation,kFacilityType,kVisitingPurpose]
-        dictImages = [kAppointmentSettings:"appointment",kManageRole:"manage_role",kManageUnit:"manage_unit",kFeedbackOptions:"defects_list",kDefectLocation:"defect_inspection",kFacilityType:"facility_booking", kVisitingPurpose:"feedback"]
+       // array_Permissions = [kAppointmentSettings,kManageRole,kManageUnit,kFeedbackOptions,kDefectLocation,kFacilityType,kVisitingPurpose]
+        dictImages = [kAppointmentSettings:"appointment",kManageRole:"manage_role",kManageUnit:"manage_unit",kFeedbackOptions:"defects_list",kDefectLocation:"defect_inspection",kFacilityType:"facility_booking", kVisitingPurpose:"feedback", kBuildingManagement : "manage_building",
+                           kEformSettings : "eform_settings",
+                          kPaymentSettings: "payment_settings", kOthers: "others", kManageProperty: "manage_property"]
         
       //  self.setUpTimer()
         self.setUpCollectionViewLayout()
     }
+    //MARK: ******  PARSING *********
+    func getLoginInfo(){
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        self.array_Settings.removeAll()
+        ApiService.get_DashboardInfo(userId:"\(userId)" , completion: { status, result, error in
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let userBase = (result as? DashboardInfoModalBase){
+                    if userBase.response == 1{
+                        self.array_Settings = userBase.settings
+                        DispatchQueue.main.async {
+                                    self.heightSet = false
+                                    self.collection_HomeIcon.reloadData()
+                                    self.tableView.reloadData()
+                                }
+                        }
+                    else{
+                        self.view.endEditing(true)
+                        self.displayErrorAlert(alertStr: "", title: userBase.message)
+                    }
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Oops")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Oops")
+            }
+        })
+    }
+    /*func getLoginInfo(){
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        
+        ApiService.get_User_With(userId:"\(userId)" , completion: { status, result, error in
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let userBase = (result as? LoginInfoModalBase){
+                    if userBase.response == true{
+                        
+                        
+                       
+                        let permissionarray = userBase.data.permissions
+                        self.array_Permissions.removeAll()
+                        
+                            for obj in permissionarray{
+                                let module = self.array_Modules.first(where:{ $0.id == Int(obj.module_id)})
+                                if module != nil{
+                                    if obj.view == 1 && module!.menu_position == 2{
+                                   
+                                    self.array_Permissions.append(obj)
+                                   
+                                }
+                                }
+                           
+                                self.array_Modules = userBase.modules
+                                DispatchQueue.main.async {
+                                    self.heightSet = false
+                                    self.collection_HomeIcon.reloadData()
+                                    self.tableView.reloadData()
+                           
+                           
+                                }
+                        }
+                        
+                        
+                       
+                    }
+                    else{
+                        self.view.endEditing(true)
+                        self.displayErrorAlert(alertStr: "", title: userBase.message)
+                    }
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Oops")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Oops")
+            }
+        
+        })
+          
+    }*/
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view_Background.roundCorners(corners: [.topLeft, .topRight], radius: 25.0)
@@ -204,14 +291,14 @@ extension SettingsTableViewController: UICollectionViewDelegate, UICollectionVie
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return array_Permissions.count
+        return array_Settings.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeIconCollectionViewCell
        // cell.lbl_NotificationCount.layer.cornerRadius = 10.0
        // cell.lbl_NotificationCount.layer.masksToBounds = true
        // cell.lbl_NotificationCount.isHidden = true
-        let obj = self.array_Permissions[indexPath.item]
+       // let obj = self.array_Permissions[indexPath.item]
         cell.view_Outer.layer.cornerRadius = 6.0
 //        cell.view_Outer.layer.masksToBounds = true
 //        cell.view_Outer.layer.borderColor = UIColor.black.cgColor
@@ -219,9 +306,21 @@ extension SettingsTableViewController: UICollectionViewDelegate, UICollectionVie
        // cell.view_Outer.dropShadow()
         cell.view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.gray, radius: 3.0, opacity: 0.35)
       //  cell.view_Outer.dropShadow(color: .lightGray, opacity: 1, offSet: CGSize(width: -1, height: 1), radius: 2, scale: true)
-
-        cell.lbl_Heading.text = obj
-        let permission = array_Permissions[indexPath.row]
+        let permission = array_Settings[indexPath.row]
+       // cell.lbl_Heading.text = per
+   //     let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
+        cell.lbl_Heading.text = permission.menu_group
+        
+       // if module != nil{
+            let img = dictImages[(permission.menu_group.trimmingTrailingSpaces)]
+            cell.img_Icon.image = UIImage(named: img ?? "announcement")
+//        }
+//        else{
+//            cell.img_Icon.image = UIImage(named:"announcement")
+//        }
+ 
+       // cell.lbl_Heading.text = obj
+      //  let permission = array_Permissions[indexPath.row]
         /*let module = self.array_Modules.first(where:{ $0.id == Int(obj.module_id)})
         cell.lbl_Heading.text = module?.name
         if module?.name == "Announcement"{
@@ -246,18 +345,32 @@ extension SettingsTableViewController: UICollectionViewDelegate, UICollectionVie
         cell.btn_Icon.addTarget(self, action: #selector(HomeTableViewController.actionIcon(_:)), for: .primaryActionTriggered)
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         cell.view_Outer.addGestureRecognizer(tap)
-        let img = dictImages[permission]
-        cell.img_Icon.image = UIImage(named: img ?? "announcement")
+//        let img = dictImages[permission]
+//        cell.img_Icon.image = UIImage(named: img ?? "announcement")
         return cell
     }
     @objc @IBAction func actionIcon(_ sender: UIButton){
+        let permission = array_Settings[sender.tag]
+        let settingsSubmenuTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsSubMenuTableViewController") as! SettingsSubMenuTableViewController
+        settingsSubmenuTVC.settingsMenu = permission
+        self.navigationController?.pushViewController(settingsSubmenuTVC, animated: true)
+        
+        
+        
+        /*
+//        self.view.endEditing(true)
+//        let permission = array_Permissions[sender.tag]
+//
+//       // let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
+//      //  if module != nil{
+//       //     switch module?.name.trimmingTrailingSpaces {
+//        switch permission {
         self.view.endEditing(true)
-        let permission = array_Permissions[sender.tag]
-      
-       // let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
-      //  if module != nil{
-       //     switch module?.name.trimmingTrailingSpaces {
-        switch permission {
+        let permission = array_Settings[sender.tag]
+//        let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
+//        if module != nil{
+//
+        switch permission.menu_group.trimmingTrailingSpaces {
         case kAppointmentSettings:
             self.actionAppointmentSettings(UIButton())
         case kManageRole:
@@ -277,18 +390,21 @@ extension SettingsTableViewController: UICollectionViewDelegate, UICollectionVie
                 break
             }
             
+            */
             
-            
-       // }
+        ///}
     }
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        // handling code
-        self.view.endEditing(true)
-        let permission = array_Permissions[(sender! as UITapGestureRecognizer).view!.tag]
-        //let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
-       // if module != nil{
-           //switch module?.name.trimmingTrailingSpaces {
-        switch permission{
+        let permission = array_Settings[(sender! as UITapGestureRecognizer).view!.tag]
+        let settingsSubmenuTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsSubMenuTableViewController") as! SettingsSubMenuTableViewController
+        settingsSubmenuTVC.settingsMenu = permission
+        self.navigationController?.pushViewController(settingsSubmenuTVC, animated: true)
+        
+      /*  self.view.endEditing(true)
+       let permission = array_Settings[(sender! as UITapGestureRecognizer).view!.tag]
+       // let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
+     //   if module != nil{
+        switch permission.menu_group.trimmingTrailingSpaces {
             case kAppointmentSettings:
                 self.actionAppointmentSettings(UIButton())
             case kManageRole:
@@ -308,7 +424,7 @@ extension SettingsTableViewController: UICollectionViewDelegate, UICollectionVie
                 break
             }
             
-            
+            */
             
        // }
     }

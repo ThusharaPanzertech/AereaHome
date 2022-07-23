@@ -20,6 +20,7 @@ enum eForm{
 class EFormSummaryTableViewController: BaseTableViewController {
     
     //Outlets
+    var settingsInfo: eFormSettingsInfo!
     let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
     @IBOutlet weak var view_Footer: UIView!
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -44,7 +45,7 @@ class EFormSummaryTableViewController: BaseTableViewController {
     var arr_UpdateAddress = [UpdateAddress]()
     var arr_UpdateParticulars = [UpdateParticulars]()
     var arr_VehicleReg = [VehicleReg]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         lbl_Title.text = formName
@@ -77,7 +78,7 @@ class EFormSummaryTableViewController: BaseTableViewController {
         super.viewWillAppear(animated)
         self.getEFormSummary(isToSearch: false, param: ["login_id":userId])
        
-        
+       
         
         self.showBottomMenu()
     }
@@ -305,6 +306,8 @@ func closeMenu(){
             }
         })
     }
+    
+   
     func searchEForms(){
        
             if txt_Ticket.text == "" && txt_Unit.text == "" && txt_Name.text == "" && txt_Status.text == "" {
@@ -335,7 +338,9 @@ func closeMenu(){
                         txt_Status.text ==  "Cancelled" ? 1 :
                         txt_Status.text ==  "In Progress" ? 2 :
                         txt_Status.text ==  "Approved" ? 3 :
-                        txt_Status.text ==  "Rejected" ? 4 : 0
+                        txt_Status.text ==  "Rejected" ? 4 :
+                        txt_Status.text ==  "Payment Pending" ? 5 :
+                        txt_Status.text ==  "Refunded" ? 6 : 0
                        
                     
                 ] as [String : Any]
@@ -367,8 +372,8 @@ func closeMenu(){
     }
     //MARK: UIBUTTON ACTION
     @IBAction func actionUnit(_ sender:UIButton) {
-        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
-        let arrUnit = sortedArray.map { $0.value }
+        //  let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
+        let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
         dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
@@ -384,7 +389,9 @@ func closeMenu(){
     }
     @IBAction func actionStatus(_ sender:UIButton) {
         
-        let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected"]
+        let arrStatus =  formType == .moveInOut || formType == .renovation || formType == .doorAccess ?
+        [ "New", "Approved", "In Progress", "Cancelled", "Rejected", "Payment Pending", "Refunded" ] :
+            [ "New", "Approved", "In Progress", "Cancelled", "Rejected"]
         let dropDown_Status = DropDown()
         dropDown_Status.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Status.dataSource = arrStatus//statusData.map({$0.value})//Array(statusData.values)
@@ -472,6 +479,7 @@ class DataSource_EFormSubmissions: NSObject, UITableViewDataSource, UITableViewD
     var arr_UpdateAddress = [UpdateAddress]()
     var arr_UpdateParticulars = [UpdateParticulars]()
     var arr_VehicleReg = [VehicleReg]()
+    var settingsInfo: eFormSettingsInfo!
 func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 
     return 1;
@@ -526,7 +534,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 info.submission.status == 4 ? "Rejected" :
                 info.submission.status == 5 ? "Payment Pending" :
                 info.submission.status == 6 ? "Refunded" : ""
-            cell.lbl_UnitNo.text = info.unit.unit
+            cell.lbl_UnitNo.text = info.unit?.unit
             cell.lbl_SubmittedDate.text = moving_dateStr
             cell.lbl_TenancyStart.text = moving_startStr
             cell.lbl_TenancyEnd.text = moving_endStr
@@ -559,7 +567,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 info.submission.status == 4 ? "Rejected" :
                 info.submission.status == 5 ? "Payment Pending" :
                 info.submission.status == 6 ? "Refunded" : ""
-            cell.lbl_UnitNo.text = info.unit.unit
+            cell.lbl_UnitNo.text = info.unit?.unit
             cell.lbl_SubmittedDate.text = moving_dateStr
             cell.lbl_TenancyStart.text = moving_startStr
             cell.lbl_TenancyEnd.text =  moving_endStr
@@ -587,7 +595,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 info.submission.status == 4 ? "Rejected" :
                 info.submission.status == 5 ? "Payment Pending" :
                 info.submission.status == 6 ? "Refunded" : ""
-            cell.lbl_UnitNo.text = info.unit.unit
+            cell.lbl_UnitNo.text = info.unit?.unit
             cell.lbl_SubmittedDate.text = moving_dateStr
             cell.lbl_TenancyStart.text = moving_startStr
             cell.lbl_TenancyEnd.text =  moving_endStr
@@ -595,7 +603,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         }
         else if formType == .doorAccess {
             cell.btn_Payment.isHidden = false
-            cell.btn_Inspection.isHidden = true
+            cell.btn_Inspection.isHidden = false
             let info = arr_DoorAccess[indexPath.row]
             
             let moving_date = formatter.date(from: info.submission.request_date)
@@ -615,7 +623,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 info.submission.status == 4 ? "Rejected" :
                 info.submission.status == 5 ? "Payment Pending" :
                 info.submission.status == 6 ? "Refunded" : ""
-            cell.lbl_UnitNo.text = info.unit.unit
+            cell.lbl_UnitNo.text = info.unit?.unit
             cell.lbl_SubmittedDate.text = moving_dateStr
             cell.lbl_TenancyStart.text = moving_startStr
             cell.lbl_TenancyEnd.text = moving_endStr
@@ -643,7 +651,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 info.submission.status == 4 ? "Rejected" :
                 info.submission.status == 5 ? "Payment Pending" :
                 info.submission.status == 6 ? "Refunded" : ""
-            cell.lbl_UnitNo.text = info.unit.unit
+            cell.lbl_UnitNo.text = info.unit?.unit
             cell.lbl_SubmittedDate.text = moving_dateStr
             cell.lbl_TenancyStart.text = moving_startStr
             cell.lbl_TenancyEnd.text = moving_endStr
@@ -671,7 +679,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 info.submission.status == 4 ? "Rejected" :
                 info.submission.status == 5 ? "Payment Pending" :
                 info.submission.status == 6 ? "Refunded" : ""
-            cell.lbl_UnitNo.text = info.unit.unit
+            cell.lbl_UnitNo.text = info.unit?.unit
             cell.lbl_SubmittedDate.text = moving_dateStr
             cell.lbl_TenancyStart.text = moving_startStr
             cell.lbl_TenancyEnd.text = moving_endStr
@@ -750,6 +758,13 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             self.parentVc.navigationController?.pushViewController(moveIODetailsTVC, animated: true)
            
         }
+        else  if formType == .doorAccess {
+            
+            let moveIODetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "DoorAccessAcknowledgementTableViewController") as! DoorAccessAcknowledgementTableViewController
+            moveIODetailsTVC.doorAccessData = arr_DoorAccess[sender.tag]
+            self.parentVc.navigationController?.pushViewController(moveIODetailsTVC, animated: true)
+           
+        }
        
     }
     @IBAction func actionPayment(_ sender:UIButton){
@@ -758,6 +773,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             let moveIODetailsTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "EFormPaymentTableViewController") as! EFormPaymentTableViewController
             moveIODetailsTVC.moveInOutData = arr_MoveInOut[sender.tag]
             moveIODetailsTVC.formType = .moveInOut
+            //moveIODetailsTVC.settingsInfo = self.settingsInfo
             self.parentVc.navigationController?.pushViewController(moveIODetailsTVC, animated: true)
            
         }
@@ -770,11 +786,14 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
            
         }
         else  if formType == .doorAccess {
-            
-            let doorAccessTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "DoorAccessPaymentTableViewController") as! DoorAccessPaymentTableViewController
-            doorAccessTVC.doorAccessData = arr_DoorAccess[sender.tag]
+            let doorAccessTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "EFormPaymentTableViewController") as! EFormPaymentTableViewController
+            doorAccessTVC.doorAceessData = arr_DoorAccess[sender.tag]
+            doorAccessTVC.formType = .doorAccess
             self.parentVc.navigationController?.pushViewController(doorAccessTVC, animated: true)
-           
+//            let doorAccessTVC = self.parentVc.storyboard?.instantiateViewController(identifier: "DoorAccessPaymentTableViewController") as! DoorAccessPaymentTableViewController
+//            doorAccessTVC.doorAccessData = arr_DoorAccess[sender.tag]
+//            self.parentVc.navigationController?.pushViewController(doorAccessTVC, animated: true)
+//
         }
     }
     @IBAction func actionEdit(_ sender:UIButton){

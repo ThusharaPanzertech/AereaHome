@@ -9,7 +9,11 @@ import UIKit
 
 class HomeTableViewController: BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
-    var array_Permissions = [String]()
+   // var array_Permissions = [Permissions]()
+   // var array_Modules = [Module]()
+    var array_Menus = [DashboardMenu]()
+    var array_Property = [Property]()
+    //[String]()
     var dictImages = [String:String]()
     @IBOutlet weak var lbl_Title: UILabel!
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -22,7 +26,7 @@ class HomeTableViewController: BaseTableViewController {
     
     @IBOutlet weak var imgView_Profile: UIImageView!
     
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var heightSet = false
     var tableHeight: CGFloat = 0
     var timer = Timer()
@@ -41,12 +45,14 @@ class HomeTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
+        self.getLoginInfo()
         getUserSummary()
         getUnitList()
+        getPropertyList()
         imgView_Profile.addborder()
-        array_Permissions = [kUserManagement,kAnnouncement,kKeyCollection,kDefectList,kDefectInspection,kFacilities,kFeedback, kCondoDocument, kResidentsFileUpload, kVisitorManagement, kManagePassword, kEFormSubmission]
-        dictImages = [kUserManagement:"user_management",kAnnouncement:"announcemenmt",kKeyCollection:"key_collection",kDefectList:"defects_list",kDefectInspection:"defect_inspection",kFacilities:"facility_booking", kFeedback:"feedback",
-                      kCondoDocument: "condo_document", kResidentsFileUpload: "resident_file", kVisitorManagement: "visitor_management", kManagePassword: "manage_password", kEFormSubmission: "condo_document"]
+       // array_Permissions = [kUserManagement,kAnnouncement,kKeyCollection,kDefectList,kDefectInspection,kFacilities,kFeedback, kCondoDocument, kResidentsFileUpload, kVisitorManagement, kManagePassword, kEFormSubmission]
+        dictImages = [kManageRole:"manage_role",kUserManagement:"user_management",kAnnouncement:"announcemenmt",kKeyCollection:"key_collection",kDefectList:"defects_list",kDefectInspection:"defect_inspection",kFacilities:"facility_booking", kFeedback:"feedback",
+                   kCondoDocument: "condo_document", kResidentsFileUpload: "resident_file", kVisitorManagement: "visitor_management", kManagePassword: "manage_password", kEFormSubmission: "condo_document",kDigitalAccess:"digital_access",kStaffDigitalAccess: "digital_access", kCardAcess: "card_access", kDeviceManagement: "device_mgmt", kSettings: "settings"]
         
       //  self.setUpTimer()
         self.setUpCollectionViewLayout()
@@ -82,6 +88,97 @@ class HomeTableViewController: BaseTableViewController {
         self.closeMenu()
     }
     //MARK: ******  PARSING *********
+    func getLoginInfo(){
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        self.array_Menus.removeAll()
+      //  self.array_Settings.removeAll()
+        ApiService.get_DashboardInfo(userId:"\(userId)" , completion: { status, result, error in
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let userBase = (result as? DashboardInfoModalBase){
+                    if userBase.response == 1{
+                        self.array_Menus = userBase.menu
+               //         self.array_Settings = userBase.settings
+                        DispatchQueue.main.async {
+                                    self.heightSet = false
+                                    self.collection_HomeIcon.reloadData()
+                                    self.tableView.reloadData()
+                                }
+                        }
+                    else{
+                        self.view.endEditing(true)
+                        self.displayErrorAlert(alertStr: "", title: userBase.message)
+                    }
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Oops")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Oops")
+            }
+        })
+ /*       ApiService.get_User_With(userId:"\(userId)" , completion: { status, result, error in
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let userBase = (result as? LoginInfoModalBase){
+                    if userBase.response == true{
+                        
+                        
+                       
+                        let permissionarray = userBase.data.permissions
+                        self.array_Permissions.removeAll()
+                        self.array_Modules = userBase.modules
+                            for obj in permissionarray{
+                                let module = self.array_Modules.first(where:{ $0.id == Int(obj.module_id)})
+                                if module != nil{
+                                    if obj.view == 1 && module!.menu_position == 1{
+                                   
+                                    self.array_Permissions.append(obj)
+                                }}
+                                DispatchQueue.main.async {
+                                    self.heightSet = false
+                                    self.collection_HomeIcon.reloadData()
+                                    self.tableView.reloadData()
+                                }
+                        }
+                    }
+                    else{
+                        self.view.endEditing(true)
+                        self.displayErrorAlert(alertStr: "", title: userBase.message)
+                    }
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Oops")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Oops")
+            }
+        }) */
+    }
+    func getPropertyList(){
+        //ActivityIndicatorView.show("Loading")
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        //
+        ApiService.get_PropertyList(parameters: ["login_id":userId], completion: { status, result, error in
+           
+         //   ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                 if let response = (result as? PropertyListBase){
+                    self.array_Property = response.data
+                     kCurrentPropertyId = response.current_property
+                   
+                }
+        }
+            else if error != nil{
+             //   self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+             //   self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
+    }
     func getUnitList(){
         ActivityIndicatorView.show("Loading")
         let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
@@ -179,6 +276,7 @@ class HomeTableViewController: BaseTableViewController {
     }
     @IBAction func actionDefectList(_ sender: UIButton){
         let defectListTVC = self.storyboard?.instantiateViewController(identifier: "DefectsListTableViewController") as! DefectsListTableViewController
+        defectListTVC.unitsData = self.unitsData
         self.navigationController?.pushViewController(defectListTVC, animated: true)
     }
     @IBAction func actionAppointmentJointInspection(_ sender: UIButton){
@@ -207,6 +305,28 @@ class HomeTableViewController: BaseTableViewController {
         let residentTVC = kStoryBoardMenu.instantiateViewController(identifier: "EFormTypesTableViewController") as! EFormTypesTableViewController
         residentTVC.unitsData = self.unitsData
         self.navigationController?.pushViewController(residentTVC, animated: true)
+    }
+    @IBAction func actionManageRole(_ sender: UIButton){
+       let rolesTVC = self.storyboard?.instantiateViewController(identifier: "RolesTableViewController") as! RolesTableViewController
+        self.navigationController?.pushViewController(rolesTVC, animated: true)
+    }
+    @IBAction func actionStaffDigitalAccess(_ sender: UIButton){
+        let permission = array_Menus[sender.tag]
+        let settingsSubmenuTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsSubMenuTableViewController") as! SettingsSubMenuTableViewController
+        settingsSubmenuTVC.settingsMenu = permission
+        self.navigationController?.pushViewController(settingsSubmenuTVC, animated: true)
+         }
+    @IBAction func actionCardManagement(_ sender: UIButton){
+        let cardTVC = kStoryBoardMenu.instantiateViewController(identifier: "CardSummaryTableViewController") as! CardSummaryTableViewController
+        cardTVC.isCardAccess = true
+        cardTVC.unitsData = self.unitsData
+        self.navigationController?.pushViewController(cardTVC, animated: true)
+    }
+    @IBAction func actionDeviceManagement(_ sender: UIButton){
+        let deviceTVC = kStoryBoardMenu.instantiateViewController(identifier: "CardSummaryTableViewController") as! CardSummaryTableViewController
+        deviceTVC.isCardAccess = false
+        deviceTVC.unitsData = self.unitsData
+        self.navigationController?.pushViewController(deviceTVC, animated: true)
     }
     func goToSettings(){
         let settingsTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsTableViewController") as! SettingsTableViewController
@@ -256,14 +376,14 @@ extension HomeTableViewController: UICollectionViewDelegate, UICollectionViewDat
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return array_Permissions.count
+        return array_Menus.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeIconCollectionViewCell
        // cell.lbl_NotificationCount.layer.cornerRadius = 10.0
        // cell.lbl_NotificationCount.layer.masksToBounds = true
        // cell.lbl_NotificationCount.isHidden = true
-        let obj = self.array_Permissions[indexPath.item]
+       // let obj = self.array_Permissions[indexPath.item]
         cell.view_Outer.layer.cornerRadius = 6.0
 //        cell.view_Outer.layer.masksToBounds = true
 //        cell.view_Outer.layer.borderColor = UIColor.black.cgColor
@@ -272,44 +392,46 @@ extension HomeTableViewController: UICollectionViewDelegate, UICollectionViewDat
         cell.view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.gray, radius: 3.0, opacity: 0.35)
       //  cell.view_Outer.dropShadow(color: .lightGray, opacity: 1, offSet: CGSize(width: -1, height: 1), radius: 2, scale: true)
 
-        cell.lbl_Heading.text = obj
-        let permission = array_Permissions[indexPath.row]
-        /*let module = self.array_Modules.first(where:{ $0.id == Int(obj.module_id)})
-        cell.lbl_Heading.text = module?.name
-        if module?.name == "Announcement"{
-            let count = UserInfoModalBase.currentUser?.data.notifications?.announcement
-            if count != nil{
-            if count! > 0{
-                cell.lbl_NotificationCount.isHidden = false
-                cell.lbl_NotificationCount.text = "\(count!)"
-            }
-            }
-        }
-        if module != nil{
-            let img = dictImages[(module?.name.trimmingTrailingSpaces)!]
+//        cell.lbl_Heading.text = obj
+        let menu = array_Menus[indexPath.row]
+       // cell.lbl_Heading.text = per
+       // let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
+        cell.lbl_Heading.text = menu.menu_group//module?.name
+        
+      //  if module != nil{
+        let img = dictImages[menu.menu_group]//[(module?.name.trimmingTrailingSpaces)!]
             cell.img_Icon.image = UIImage(named: img ?? "announcement")
-        }
-        else{
-            cell.img_Icon.image = UIImage(named:"announcement")
-        }
- */
+       // }
+       // else{
+       //     cell.img_Icon.image = UIImage(named:"announcement")
+       // }
+ 
+        
+        
+        
         cell.view_Outer.tag = indexPath.item
         cell.btn_Icon.tag = indexPath.item
         cell.btn_Icon.addTarget(self, action: #selector(HomeTableViewController.actionIcon(_:)), for: .primaryActionTriggered)
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         cell.view_Outer.addGestureRecognizer(tap)
-        let img = dictImages[permission]
-        cell.img_Icon.image = UIImage(named: img ?? "announcement")
+//        let img = dictImages[permission]
+//        cell.img_Icon.image = UIImage(named: img ?? "announcement")
         return cell
+    }
+    func showSubscriptionAlert(title:String){
+        self.displayErrorAlert(alertStr: "\(title) is currently not available in your subscription. Please contact us to find out more on how to unlock this function for your property.", title: "")
     }
     @objc @IBAction func actionIcon(_ sender: UIButton){
         self.view.endEditing(true)
-        let permission = array_Permissions[sender.tag]
       
-       // let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
-      //  if module != nil{
-       //     switch module?.name.trimmingTrailingSpaces {
-        switch permission {
+        
+       
+        let menu = array_Menus[sender.tag]
+        if menu.menus_lists.count > 0{
+            let permission = menu.menus_lists[0].permission
+            if permission == 1 || menu.menu_group == kEFormSubmission{
+        switch menu.menu_group{//module?.name.trimmingTrailingSpaces {
+       // switch permission {
         case kUserManagement:
             self.actionUserManagement(UIButton())
             case kAnnouncement:
@@ -330,10 +452,24 @@ extension HomeTableViewController: UICollectionViewDelegate, UICollectionViewDat
             self.actionResidentFileUpload(UIButton())
         case kEFormSubmission:
             self.actionEForms(UIButton())
+        case kCardAcess:
+            self.actionCardManagement(UIButton())
+        case kDeviceManagement:
+            self.actionDeviceManagement(UIButton())
+        case kSettings:
+            self.goToSettings()
+        case kManageRole:
+            self.actionManageRole(UIButton())
+        case kStaffDigitalAccess:
+            self.actionStaffDigitalAccess(sender)
             default:
                 break
             }
-            
+            }
+            else if permission == 2{
+                self.showSubscriptionAlert(title:menu.menu_group)
+            }
+        }
             
             
        // }
@@ -341,11 +477,11 @@ extension HomeTableViewController: UICollectionViewDelegate, UICollectionViewDat
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
         // handling code
         self.view.endEditing(true)
-        let permission = array_Permissions[(sender! as UITapGestureRecognizer).view!.tag]
-        //let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
-       // if module != nil{
-           //switch module?.name.trimmingTrailingSpaces {
-        switch permission{
+        let menu = array_Menus[(sender! as UITapGestureRecognizer).view!.tag]
+       // let module = self.array_Modules.first(where:{ $0.id == Int(permission.module_id)})
+      //  if module != nil{
+        switch menu.menu_group{//module?.name.trimmingTrailingSpaces {
+       // switch permission{
             case kAnnouncement:
                 self.actionAnnouncement(UIButton())
             case kUnitTakeOver:
@@ -360,8 +496,16 @@ extension HomeTableViewController: UICollectionViewDelegate, UICollectionViewDat
                 self.actionFeedback(UIButton())
             case kCondoDocument:
                 self.actionCondoDocument(UIButton())
-        case kResidentsFileUpload:
-            self.actionResidentFileUpload(UIButton())
+            case kResidentsFileUpload:
+                self.actionResidentFileUpload(UIButton())
+            case kSettings:
+                self.goToSettings()
+        case kManageRole:
+            self.actionManageRole(UIButton())
+        case kStaffDigitalAccess:
+            let btn = UIButton()
+            btn.tag = (sender! as UITapGestureRecognizer).view!.tag
+            self.actionStaffDigitalAccess(btn)
             default:
                 break
             }

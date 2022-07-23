@@ -32,7 +32,7 @@ class MoveIODetailsTableViewController: BaseTableViewController {
     @IBOutlet weak var lbl_CompanyContactNo: UILabel!
     @IBOutlet weak var lbl_WorkStart: UILabel!
     @IBOutlet weak var lbl_WorkEnd: UILabel!
-    
+   
     
     
     
@@ -47,7 +47,7 @@ class MoveIODetailsTableViewController: BaseTableViewController {
 
     var moveInOutData: MoveInOut!
    
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -122,7 +122,7 @@ class MoveIODetailsTableViewController: BaseTableViewController {
         lbl_Ticket.text = moveInOutData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_ResidentName.text = moveInOutData.submission.resident_name
-        lbl_UnitNo.text = moveInOutData.unit.unit
+        lbl_UnitNo.text = moveInOutData.unit?.unit
         lbl_ContactNo.text = moveInOutData.submission.contact_no
         lbl_Email.text = moveInOutData.submission.email
         lbl_CompanyName.text = moveInOutData.submission.mover_comp
@@ -233,7 +233,9 @@ func closeMenu(){
                 txt_Status.text ==  "Cancelled" ? 1 :
                 txt_Status.text ==  "In Progress" ? 2 :
                 txt_Status.text ==  "Approved" ? 3 :
-                txt_Status.text ==  "Rejected" ? 4 : 0
+                txt_Status.text ==  "Rejected" ? 4 :
+                txt_Status.text ==  "Payment Pending" ? 5 :
+                txt_Status.text ==  "Refunded" ? 6 : 0
                
           
         ] as [String : Any]
@@ -269,7 +271,7 @@ func closeMenu(){
     //MARK: UIBUTTON ACTION
     @IBAction func actionStatus(_ sender:UIButton) {
         
-        let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected"]
+        let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected", "Payment Pending", "Refunded"]
         let dropDown_Status = DropDown()
         dropDown_Status.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Status.dataSource = arrStatus//statusData.map({$0.value})//Array(statusData.values)

@@ -47,6 +47,7 @@
 		F65F983C2700BD080083BEAC /* AddPropertyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F983B2700BD080083BEAC /* AddPropertyTableViewController.swift */; };
 		F65F983F2700C5AA0083BEAC /* AddEditUnitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F983E2700C5AA0083BEAC /* AddEditUnitTableViewController.swift */; };
 		F65F98412700CFCE0083BEAC /* ManageUnitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F98402700CFCE0083BEAC /* ManageUnitTableViewController.swift */; };
+		F66029412847D11F0060AE7F /* DefectHandoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66029402847D11F0060AE7F /* DefectHandoverTableViewController.swift */; };
 		F6644ACF27B557A800ECB265 /* RenovationDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6644ACE27B557A800ECB265 /* RenovationDetailsTableViewController.swift */; };
 		F6644AD127B5746F00ECB265 /* DoorAccessDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6644AD027B5746F00ECB265 /* DoorAccessDetailsTableViewController.swift */; };
 		F6644AD327B57B2700ECB265 /* UpdateAddressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6644AD227B57B2700ECB265 /* UpdateAddressTableViewController.swift */; };
@@ -63,6 +64,7 @@
 		F668073C278DE00E00B3537F /* FeedbackOptionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F668073B278DE00E00B3537F /* FeedbackOptionsTableViewController.swift */; };
 		F668EC3E27969C7400AF1F40 /* VisitingPurposeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F668EC3D27969C7400AF1F40 /* VisitingPurposeTableViewController.swift */; };
 		F668EC402796BD8F00AF1F40 /* AddEditVisitingPurposeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F668EC3F2796BD8F00AF1F40 /* AddEditVisitingPurposeTableViewController.swift */; };
+		F6692796285C6DCD0005762B /* AddEditCard_DeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6692795285C6DCD0005762B /* AddEditCard_DeviceTableViewController.swift */; };
 		F66C7F4527014D68000B12D7 /* AddRoleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C7F4427014D68000B12D7 /* AddRoleTableViewController.swift */; };
 		F66C7F47270159EC000B12D7 /* EditRoleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C7F46270159EC000B12D7 /* EditRoleTableViewController.swift */; };
 		F66C7F4A2701BA55000B12D7 /* ManageAppointmentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C7F492701BA55000B12D7 /* ManageAppointmentTableViewController.swift */; };
@@ -91,18 +93,31 @@
 		F67AA09C27BA5C76004B6701 /* SignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AA09A27BA5C75004B6701 /* SignatureView.swift */; };
 		F67AA09D27BA5C76004B6701 /* SignatureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F67AA09B27BA5C76004B6701 /* SignatureView.xib */; };
 		F67AA0A027BA5E45004B6701 /* YPDrawSignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AA09F27BA5E45004B6701 /* YPDrawSignatureView.swift */; };
+		F67E88FC27BFAC5A00943D8D /* DoorAccessAcknowledgementTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67E88FB27BFAC5A00943D8D /* DoorAccessAcknowledgementTableViewController.swift */; };
 		F680A7F02779E67B009F2639 /* EditFacilityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F680A7EF2779E67B009F2639 /* EditFacilityTableViewController.swift */; };
 		F680A7F2277A0517009F2639 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F680A7F1277A0517009F2639 /* Menu.storyboard */; };
 		F680A7F4277A07BB009F2639 /* CondoDocumentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F680A7F3277A07BB009F2639 /* CondoDocumentsTableViewController.swift */; };
 		F680A7F6277A1D5D009F2639 /* EditCondoDocTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F680A7F5277A1D5D009F2639 /* EditCondoDocTableViewController.swift */; };
 		F69F278E26A0440E0098140D /* Configs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69F278D26A0440E0098140D /* Configs.swift */; };
 		F69F279026A044930098140D /* HomeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69F278F26A044930098140D /* HomeTableViewController.swift */; };
+		F69FFBA8281BEC0700D046FA /* ResidentFileDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69FFBA7281BEC0700D046FA /* ResidentFileDetailsTableViewController.swift */; };
+		F69FFBAA281C1B1F00D046FA /* NewResidentFileUploadsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69FFBA9281C1B1E00D046FA /* NewResidentFileUploadsTableViewController.swift */; };
+		F6A061102877F3980052D90F /* SettingsSubMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A0610F2877F3980052D90F /* SettingsSubMenuTableViewController.swift */; };
+		F6A0611828787B970052D90F /* PaymentSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A0611728787B970052D90F /* PaymentSettingsTableViewController.swift */; };
+		F6A18DAD2887C96900866F3A /* Staff_FaceUploadTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A18DAC2887C96900866F3A /* Staff_FaceUploadTableViewController.swift */; };
+		F6A18DAF288848E800866F3A /* DeviceListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A18DAE288848E800866F3A /* DeviceListTableViewController.swift */; };
+		F6AA1CC12883031000669E42 /* FaceUploadTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AA1CC02883031000669E42 /* FaceUploadTableViewController.swift */; };
+		F6AE0BBD288991A30024FEA4 /* DoorMasterSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6AE0BBC288991A30024FEA4 /* DoorMasterSDK.framework */; };
+		F6AE0BBE288991A30024FEA4 /* DoorMasterSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6AE0BBC288991A30024FEA4 /* DoorMasterSDK.framework */; };
+		F6AE0BBF288991A30024FEA4 /* DoorMasterSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6AE0BBC288991A30024FEA4 /* DoorMasterSDK.framework */; };
+		F6AF18BA28539A2800B52349 /* CardSummaryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AF18B928539A2700B52349 /* CardSummaryTableViewController.swift */; };
 		F6B01A1C269D94FB0059E5DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B01A1B269D94FB0059E5DC /* AppDelegate.swift */; };
 		F6B01A23269D94FB0059E5DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6B01A21269D94FB0059E5DC /* Main.storyboard */; };
 		F6B01A25269D95020059E5DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6B01A24269D95020059E5DC /* Assets.xcassets */; };
 		F6B01A28269D95020059E5DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6B01A26269D95020059E5DC /* LaunchScreen.storyboard */; };
 		F6B01A33269D95020059E5DC /* JUI_ResidenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B01A32269D95020059E5DC /* JUI_ResidenceTests.swift */; };
 		F6B01A3E269D95020059E5DC /* JUI_ResidenceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B01A3D269D95020059E5DC /* JUI_ResidenceUITests.swift */; };
+		F6B68720287D34E8008CD909 /* HolidaySettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B6871F287D34E8008CD909 /* HolidaySettingsTableViewController.swift */; };
 		F6B79FDC26F99EE900969494 /* Big Caslon Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F6B79FDB26F99EE900969494 /* Big Caslon Medium.ttf */; };
 		F6B79FE326F9ADF100969494 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B79FDE26F9ADF100969494 /* InitialViewController.swift */; };
 		F6B79FE426F9ADF100969494 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B79FDF26F9ADF100969494 /* SignInViewController.swift */; };
@@ -112,6 +127,11 @@
 		F6B79FE926F9B2DB00969494 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B79FE826F9B2DB00969494 /* Utilities.swift */; };
 		F6B79FEC26F9B54800969494 /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B79FEB26F9B54800969494 /* FileDownloader.swift */; };
 		F6B79FEE26F9D13B00969494 /* TimeSlotCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B79FED26F9D13B00969494 /* TimeSlotCollectionViewCell.swift */; };
+		F6D3CFDB283E92CF000702F0 /* EditJointInspectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D3CFDA283E92CF000702F0 /* EditJointInspectionTableViewController.swift */; };
+		F6DCCB92287FE27C0035D342 /* Staff_FaceListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DCCB91287FE27C0035D342 /* Staff_FaceListTableViewController.swift */; };
+		F6DCCB9428804AFB0035D342 /* UploadOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6DCCB9328804AFB0035D342 /* UploadOptionsView.xib */; };
+		F6DCCB9628804B490035D342 /* UploadOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DCCB9528804B490035D342 /* UploadOptionsView.swift */; };
+		F6DCCB9828805A8A0035D342 /* Face_RequirementsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DCCB9728805A8A0035D342 /* Face_RequirementsTableViewController.swift */; };
 		F6E3A714272679C900C6D65A /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E3A713272679C900C6D65A /* ActivityIndicatorView.swift */; };
 		F6E3A71627267A4E00C6D65A /* ApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E3A71527267A4E00C6D65A /* ApiService.swift */; };
 		F6E3A71827267E0000C6D65A /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E3A71727267DFF00C6D65A /* ServiceManager.swift */; };
@@ -183,6 +203,7 @@
 		F65F983B2700BD080083BEAC /* AddPropertyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPropertyTableViewController.swift; sourceTree = "<group>"; };
 		F65F983E2700C5AA0083BEAC /* AddEditUnitTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditUnitTableViewController.swift; sourceTree = "<group>"; };
 		F65F98402700CFCE0083BEAC /* ManageUnitTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageUnitTableViewController.swift; sourceTree = "<group>"; };
+		F66029402847D11F0060AE7F /* DefectHandoverTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectHandoverTableViewController.swift; sourceTree = "<group>"; };
 		F6644ACE27B557A800ECB265 /* RenovationDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenovationDetailsTableViewController.swift; sourceTree = "<group>"; };
 		F6644AD027B5746F00ECB265 /* DoorAccessDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorAccessDetailsTableViewController.swift; sourceTree = "<group>"; };
 		F6644AD227B57B2700ECB265 /* UpdateAddressTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateAddressTableViewController.swift; sourceTree = "<group>"; };
@@ -199,6 +220,7 @@
 		F668073B278DE00E00B3537F /* FeedbackOptionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackOptionsTableViewController.swift; sourceTree = "<group>"; };
 		F668EC3D27969C7400AF1F40 /* VisitingPurposeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitingPurposeTableViewController.swift; sourceTree = "<group>"; };
 		F668EC3F2796BD8F00AF1F40 /* AddEditVisitingPurposeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditVisitingPurposeTableViewController.swift; sourceTree = "<group>"; };
+		F6692795285C6DCD0005762B /* AddEditCard_DeviceTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditCard_DeviceTableViewController.swift; sourceTree = "<group>"; };
 		F66C7F4427014D68000B12D7 /* AddRoleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRoleTableViewController.swift; sourceTree = "<group>"; };
 		F66C7F46270159EC000B12D7 /* EditRoleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRoleTableViewController.swift; sourceTree = "<group>"; };
 		F66C7F492701BA55000B12D7 /* ManageAppointmentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageAppointmentTableViewController.swift; sourceTree = "<group>"; };
@@ -227,12 +249,23 @@
 		F67AA09A27BA5C75004B6701 /* SignatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureView.swift; sourceTree = "<group>"; };
 		F67AA09B27BA5C76004B6701 /* SignatureView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignatureView.xib; sourceTree = "<group>"; };
 		F67AA09F27BA5E45004B6701 /* YPDrawSignatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YPDrawSignatureView.swift; sourceTree = "<group>"; };
+		F67E88FB27BFAC5A00943D8D /* DoorAccessAcknowledgementTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorAccessAcknowledgementTableViewController.swift; sourceTree = "<group>"; };
 		F680A7EF2779E67B009F2639 /* EditFacilityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFacilityTableViewController.swift; sourceTree = "<group>"; };
 		F680A7F1277A0517009F2639 /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
 		F680A7F3277A07BB009F2639 /* CondoDocumentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CondoDocumentsTableViewController.swift; sourceTree = "<group>"; };
 		F680A7F5277A1D5D009F2639 /* EditCondoDocTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCondoDocTableViewController.swift; sourceTree = "<group>"; };
 		F69F278D26A0440E0098140D /* Configs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configs.swift; sourceTree = "<group>"; };
 		F69F278F26A044930098140D /* HomeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewController.swift; sourceTree = "<group>"; };
+		F69FFBA7281BEC0700D046FA /* ResidentFileDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResidentFileDetailsTableViewController.swift; sourceTree = "<group>"; };
+		F69FFBA9281C1B1E00D046FA /* NewResidentFileUploadsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewResidentFileUploadsTableViewController.swift; sourceTree = "<group>"; };
+		F6A0610F2877F3980052D90F /* SettingsSubMenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSubMenuTableViewController.swift; sourceTree = "<group>"; };
+		F6A0611728787B970052D90F /* PaymentSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSettingsTableViewController.swift; sourceTree = "<group>"; };
+		F6A18DAC2887C96900866F3A /* Staff_FaceUploadTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Staff_FaceUploadTableViewController.swift; sourceTree = "<group>"; };
+		F6A18DAE288848E800866F3A /* DeviceListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListTableViewController.swift; sourceTree = "<group>"; };
+		F6AA1CC02883031000669E42 /* FaceUploadTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceUploadTableViewController.swift; sourceTree = "<group>"; };
+		F6AE0BBB28897C3C0024FEA4 /* JUI Residence-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JUI Residence-Bridging-Header.h"; sourceTree = "<group>"; };
+		F6AE0BBC288991A30024FEA4 /* DoorMasterSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DoorMasterSDK.framework; sourceTree = "<group>"; };
+		F6AF18B928539A2700B52349 /* CardSummaryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSummaryTableViewController.swift; sourceTree = "<group>"; };
 		F6B01A18269D94FB0059E5DC /* Aerea Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aerea Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6B01A1B269D94FB0059E5DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F6B01A22269D94FB0059E5DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -245,6 +278,7 @@
 		F6B01A39269D95020059E5DC /* JUI ResidenceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JUI ResidenceUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6B01A3D269D95020059E5DC /* JUI_ResidenceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JUI_ResidenceUITests.swift; sourceTree = "<group>"; };
 		F6B01A3F269D95020059E5DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F6B6871F287D34E8008CD909 /* HolidaySettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidaySettingsTableViewController.swift; sourceTree = "<group>"; };
 		F6B79FDB26F99EE900969494 /* Big Caslon Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Big Caslon Medium.ttf"; sourceTree = "<group>"; };
 		F6B79FDE26F9ADF100969494 /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		F6B79FDF26F9ADF100969494 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -254,6 +288,11 @@
 		F6B79FE826F9B2DB00969494 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		F6B79FEB26F9B54800969494 /* FileDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		F6B79FED26F9D13B00969494 /* TimeSlotCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSlotCollectionViewCell.swift; path = ../../../../JuiResidenceUser/JuiResidenceUser/MVC/View/TimeSlotCollectionViewCell.swift; sourceTree = "<group>"; };
+		F6D3CFDA283E92CF000702F0 /* EditJointInspectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditJointInspectionTableViewController.swift; sourceTree = "<group>"; };
+		F6DCCB91287FE27C0035D342 /* Staff_FaceListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Staff_FaceListTableViewController.swift; sourceTree = "<group>"; };
+		F6DCCB9328804AFB0035D342 /* UploadOptionsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UploadOptionsView.xib; sourceTree = "<group>"; };
+		F6DCCB9528804B490035D342 /* UploadOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadOptionsView.swift; sourceTree = "<group>"; };
+		F6DCCB9728805A8A0035D342 /* Face_RequirementsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Face_RequirementsTableViewController.swift; sourceTree = "<group>"; };
 		F6E3A713272679C900C6D65A /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		F6E3A71527267A4E00C6D65A /* ApiService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiService.swift; sourceTree = "<group>"; };
 		F6E3A71727267DFF00C6D65A /* ServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
@@ -267,6 +306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBDD4EBA53D89E7AFB47E9C8 /* Pods_JUI_Residence.framework in Frameworks */,
+				F6AE0BBD288991A30024FEA4 /* DoorMasterSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4B3ECE6D9E40792E918455A /* Pods_JUI_ResidenceTests.framework in Frameworks */,
+				F6AE0BBE288991A30024FEA4 /* DoorMasterSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				117E02843B2830CB842156B6 /* Pods_JUI_Residence_JUI_ResidenceUITests.framework in Frameworks */,
+				F6AE0BBF288991A30024FEA4 /* DoorMasterSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +385,7 @@
 				F67AA09827BA5A6E004B6701 /* EFormPaymentTableViewController.swift */,
 				F673F9D327BB86100071A49E /* MoveIOInspectionTableViewController.swift */,
 				F633188A27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift */,
+				F67E88FB27BFAC5A00943D8D /* DoorAccessAcknowledgementTableViewController.swift */,
 			);
 			path = "EForm Submissions";
 			sourceTree = "<group>";
@@ -359,8 +402,11 @@
 				F66C7F4327014D4C000B12D7 /* Role */,
 				F65F983D2700C58C0083BEAC /* Unit */,
 				F60C27D326AB10A100A668B6 /* SettingsTableViewController.swift */,
+				F6A0610F2877F3980052D90F /* SettingsSubMenuTableViewController.swift */,
 				F65F9839270066B80083BEAC /* ServiceSummaryTableViewController.swift */,
 				F65F983B2700BD080083BEAC /* AddPropertyTableViewController.swift */,
+				F6A0611728787B970052D90F /* PaymentSettingsTableViewController.swift */,
+				F6B6871F287D34E8008CD909 /* HolidaySettingsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -470,6 +516,7 @@
 		F682B5E826AA9B3400DBEBDE /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				F6AE0BA2288946B70024FEA4 /* Frameworks */,
 				F67AA09E27BA5E39004B6701 /* Signature */,
 				F6680725278BFFEF00B3537F /* WWCalendarTimeSelector */,
 				F682B5E926AA9B4100DBEBDE /* Font */,
@@ -526,6 +573,8 @@
 				F670EB8F2771E47600669D1B /* MessageAlertView.xib */,
 				F67AA09A27BA5C75004B6701 /* SignatureView.swift */,
 				F67AA09B27BA5C76004B6701 /* SignatureView.xib */,
+				F6DCCB9328804AFB0035D342 /* UploadOptionsView.xib */,
+				F6DCCB9528804B490035D342 /* UploadOptionsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -549,6 +598,8 @@
 				F678435C2775AA9C002DB377 /* NewAppointmentTableViewController.swift */,
 				F66F503926B052280005FDB4 /* DefectsListTableViewController.swift */,
 				F66F503B26B06D410005FDB4 /* SubmittedDefectsListTableViewController.swift */,
+				F66029402847D11F0060AE7F /* DefectHandoverTableViewController.swift */,
+				F6D3CFDA283E92CF000702F0 /* EditJointInspectionTableViewController.swift */,
 				F65A0D242778AC0600E7B429 /* NewDefectsTableViewController.swift */,
 				F66F503D26B0ED930005FDB4 /* FacilityBookingTableViewController.swift */,
 				F680A7EF2779E67B009F2639 /* EditFacilityTableViewController.swift */,
@@ -557,8 +608,29 @@
 				F680A7F3277A07BB009F2639 /* CondoDocumentsTableViewController.swift */,
 				F680A7F5277A1D5D009F2639 /* EditCondoDocTableViewController.swift */,
 				F606B1D5277AF73100B00CA9 /* ResidentFileUploadTableViewController.swift */,
+				F69FFBA9281C1B1E00D046FA /* NewResidentFileUploadsTableViewController.swift */,
+				F69FFBA7281BEC0700D046FA /* ResidentFileDetailsTableViewController.swift */,
+				F6DCCB90287FE24E0035D342 /* Staff Digital Acess */,
+				F6AF18B82853999700B52349 /* CardAccess */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		F6AE0BA2288946B70024FEA4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F6AE0BBC288991A30024FEA4 /* DoorMasterSDK.framework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
+		F6AF18B82853999700B52349 /* CardAccess */ = {
+			isa = PBXGroup;
+			children = (
+				F6AF18B928539A2700B52349 /* CardSummaryTableViewController.swift */,
+				F6692795285C6DCD0005762B /* AddEditCard_DeviceTableViewController.swift */,
+			);
+			path = CardAccess;
 			sourceTree = "<group>";
 		};
 		F6B01A0F269D94FB0059E5DC = {
@@ -597,6 +669,7 @@
 				F6B01A24269D95020059E5DC /* Assets.xcassets */,
 				F6B01A26269D95020059E5DC /* LaunchScreen.storyboard */,
 				F6B01A29269D95020059E5DC /* Info.plist */,
+				F6AE0BBB28897C3C0024FEA4 /* JUI Residence-Bridging-Header.h */,
 			);
 			path = "JUI Residence";
 			sourceTree = "<group>";
@@ -639,6 +712,18 @@
 				F6B79FEB26F9B54800969494 /* FileDownloader.swift */,
 			);
 			path = ServiceManager;
+			sourceTree = "<group>";
+		};
+		F6DCCB90287FE24E0035D342 /* Staff Digital Acess */ = {
+			isa = PBXGroup;
+			children = (
+				F6DCCB91287FE27C0035D342 /* Staff_FaceListTableViewController.swift */,
+				F6DCCB9728805A8A0035D342 /* Face_RequirementsTableViewController.swift */,
+				F6AA1CC02883031000669E42 /* FaceUploadTableViewController.swift */,
+				F6A18DAC2887C96900866F3A /* Staff_FaceUploadTableViewController.swift */,
+				F6A18DAE288848E800866F3A /* DeviceListTableViewController.swift */,
+			);
+			path = "Staff Digital Acess";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -761,6 +846,7 @@
 				F60C27D126AAAAA500A668B6 /* Lato-BlackItalic.ttf in Resources */,
 				F60C27CC26AAAAA500A668B6 /* Lato-LightItalic.ttf in Resources */,
 				F60C27C926AAAAA500A668B6 /* Lato-Thin.ttf in Resources */,
+				F6DCCB9428804AFB0035D342 /* UploadOptionsView.xib in Resources */,
 				F6B01A25269D95020059E5DC /* Assets.xcassets in Resources */,
 				F66F504426B19EF20005FDB4 /* MenuView.xib in Resources */,
 				F65F9837270004270083BEAC /* Settings.storyboard in Resources */,
@@ -900,6 +986,7 @@
 				F6B79FEC26F9B54800969494 /* FileDownloader.swift in Sources */,
 				F668073A278D070200B3537F /* RolesTableViewController.swift in Sources */,
 				F66C7F47270159EC000B12D7 /* EditRoleTableViewController.swift in Sources */,
+				F6A18DAD2887C96900866F3A /* Staff_FaceUploadTableViewController.swift in Sources */,
 				F66F503E26B0ED930005FDB4 /* FacilityBookingTableViewController.swift in Sources */,
 				F654CD8E26AED565008A0417 /* AppointmentUnitTakeOverTableViewController.swift in Sources */,
 				F654CD8626AEA34F008A0417 /* AnnouncementHistoryTableViewController.swift in Sources */,
@@ -907,6 +994,7 @@
 				F668EC3E27969C7400AF1F40 /* VisitingPurposeTableViewController.swift in Sources */,
 				F6552F90278346DB00BDE403 /* AppointmentSettingsTableViewController.swift in Sources */,
 				F680A7F02779E67B009F2639 /* EditFacilityTableViewController.swift in Sources */,
+				F6692796285C6DCD0005762B /* AddEditCard_DeviceTableViewController.swift in Sources */,
 				F67AA09C27BA5C76004B6701 /* SignatureView.swift in Sources */,
 				F65A0D252778AC0600E7B429 /* NewDefectsTableViewController.swift in Sources */,
 				F66C7F532701ED60000B12D7 /* AddEditFacilityTableViewController.swift in Sources */,
@@ -915,12 +1003,15 @@
 				F6B79FE726F9ADF100969494 /* OTPViewController.swift in Sources */,
 				F6B79FEE26F9D13B00969494 /* TimeSlotCollectionViewCell.swift in Sources */,
 				F6680733278C002600B3537F /* Int+Timepiece.swift in Sources */,
+				F67E88FC27BFAC5A00943D8D /* DoorAccessAcknowledgementTableViewController.swift in Sources */,
+				F6DCCB92287FE27C0035D342 /* Staff_FaceListTableViewController.swift in Sources */,
 				F6680735278C002600B3537F /* WWCalendarTimeSelector.swift in Sources */,
 				F6680736278C002600B3537F /* NSDate+Timepiece.swift in Sources */,
 				F6E3A71827267E0000C6D65A /* ServiceManager.swift in Sources */,
 				F6680738278C002600B3537F /* Duration.swift in Sources */,
 				F6B79FE526F9ADF100969494 /* ResetPasswordViewController.swift in Sources */,
 				F670EB8E2771E46100669D1B /* MessageAlertView.swift in Sources */,
+				F6A061102877F3980052D90F /* SettingsSubMenuTableViewController.swift in Sources */,
 				F675F72A277F4E35009ADB3A /* MonthYearPickerView.swift in Sources */,
 				F69F279026A044930098140D /* HomeTableViewController.swift in Sources */,
 				F69F278E26A0440E0098140D /* Configs.swift in Sources */,
@@ -931,16 +1022,22 @@
 				F67AA09927BA5A6E004B6701 /* EFormPaymentTableViewController.swift in Sources */,
 				F6728A1C2728DB2F001A1630 /* FeedbackDetailsTableViewController.swift in Sources */,
 				F680A7F4277A07BB009F2639 /* CondoDocumentsTableViewController.swift in Sources */,
+				F66029412847D11F0060AE7F /* DefectHandoverTableViewController.swift in Sources */,
 				F66C7F4527014D68000B12D7 /* AddRoleTableViewController.swift in Sources */,
+				F69FFBAA281C1B1F00D046FA /* NewResidentFileUploadsTableViewController.swift in Sources */,
 				F6E3A714272679C900C6D65A /* ActivityIndicatorView.swift in Sources */,
 				F6680737278C002600B3537F /* String+Timepiece.swift in Sources */,
+				F6AA1CC12883031000669E42 /* FaceUploadTableViewController.swift in Sources */,
 				F6680731278C002600B3537F /* NSDateComponents+Timepiece.swift in Sources */,
+				F6A0611828787B970052D90F /* PaymentSettingsTableViewController.swift in Sources */,
 				F654CD9026AED71E008A0417 /* AppointmentUnitTakeOverTableViewCell.swift in Sources */,
 				F606B1D6277AF73100B00CA9 /* ResidentFileUploadTableViewController.swift in Sources */,
 				F67AA0A027BA5E45004B6701 /* YPDrawSignatureView.swift in Sources */,
 				F66C7F4A2701BA55000B12D7 /* ManageAppointmentTableViewController.swift in Sources */,
+				F6D3CFDB283E92CF000702F0 /* EditJointInspectionTableViewController.swift in Sources */,
 				F60C27D426AB10A100A668B6 /* SettingsTableViewController.swift in Sources */,
 				F676903127B6642800A15748 /* VehicleRegDetailsTableViewController.swift in Sources */,
+				F6AF18BA28539A2800B52349 /* CardSummaryTableViewController.swift in Sources */,
 				F65F983C2700BD080083BEAC /* AddPropertyTableViewController.swift in Sources */,
 				F6644AD327B57B2700ECB265 /* UpdateAddressTableViewController.swift in Sources */,
 				F6680730278C002600B3537F /* Extentions.swift in Sources */,
@@ -964,6 +1061,7 @@
 				F6B01A1C269D94FB0059E5DC /* AppDelegate.swift in Sources */,
 				F678435D2775AA9C002DB377 /* NewAppointmentTableViewController.swift in Sources */,
 				F654CD8826AEA3E2008A0417 /* AnnouncementHistoryTableViewCell.swift in Sources */,
+				F69FFBA8281BEC0700D046FA /* ResidentFileDetailsTableViewController.swift in Sources */,
 				F6644ACF27B557A800ECB265 /* RenovationDetailsTableViewController.swift in Sources */,
 				F65F983F2700C5AA0083BEAC /* AddEditUnitTableViewController.swift in Sources */,
 				F6B79FE926F9B2DB00969494 /* Utilities.swift in Sources */,
@@ -971,8 +1069,11 @@
 				F6644AD127B5746F00ECB265 /* DoorAccessDetailsTableViewController.swift in Sources */,
 				F680A7F6277A1D5D009F2639 /* EditCondoDocTableViewController.swift in Sources */,
 				F6B79FE626F9ADF100969494 /* SetPasswordViewController.swift in Sources */,
+				F6B68720287D34E8008CD909 /* HolidaySettingsTableViewController.swift in Sources */,
 				F654CD8426AE7BF3008A0417 /* AnnouncementTableViewController.swift in Sources */,
 				F628EDBF27B17411006E1C78 /* EFormTypesTableViewController.swift in Sources */,
+				F6A18DAF288848E800866F3A /* DeviceListTableViewController.swift in Sources */,
+				F6DCCB9828805A8A0035D342 /* Face_RequirementsTableViewController.swift in Sources */,
 				F6E5007E26B21881006F71F8 /* MenuView.swift in Sources */,
 				F6E3A71627267A4E00C6D65A /* ApiService.swift in Sources */,
 				F66C7F4D2701CF44000B12D7 /* AddEditFeedbackTableViewController.swift in Sources */,
@@ -980,6 +1081,7 @@
 				F633188B27BD608B00DD2945 /* DoorAccessPaymentTableViewController.swift in Sources */,
 				F65135DB269EEE1400B63491 /* BaseViewController.swift in Sources */,
 				F654CD8A26AEC3F9008A0417 /* AnnouncementDetailsTableViewController.swift in Sources */,
+				F6DCCB9628804B490035D342 /* UploadOptionsView.swift in Sources */,
 				F670EB8A2771A6DC00669D1B /* AlertView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1158,8 +1260,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+				);
 				INFOPLIST_FILE = "JUI Residence/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1167,6 +1279,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.panzertech.aereaHomeOps;
 				PRODUCT_NAME = "Aerea Manager";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/thusharaharish/Documents/JUI Residence/JUI Residence/JUI Residence-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1179,8 +1292,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+				);
 				INFOPLIST_FILE = "JUI Residence/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1188,6 +1311,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.panzertech.aereaHomeOps;
 				PRODUCT_NAME = "Aerea Manager";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/thusharaharish/Documents/JUI Residence/JUI Residence/JUI Residence-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1201,6 +1325,16 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+				);
 				INFOPLIST_FILE = "JUI ResidenceTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1224,6 +1358,16 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+				);
 				INFOPLIST_FILE = "JUI ResidenceTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1246,6 +1390,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+				);
 				INFOPLIST_FILE = "JUI ResidenceUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1267,6 +1421,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6VNV86QZD5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+					"$(PROJECT_DIR)/JUI\\ Residence/Externals/Frameworks",
+				);
 				INFOPLIST_FILE = "JUI ResidenceUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

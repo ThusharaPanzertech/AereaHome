@@ -55,6 +55,10 @@ class EditFacilityTableViewController: BaseTableViewController {
       
         setUpUI()
         getFacilityTimeSlots()
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "dd/MM/yy"
+            txt_NewDate.text = formatter.string(from: Date())
        
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -174,7 +178,7 @@ func closeMenu(){
         
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "dd/mm/yy"
+        formatter.dateFormat = "dd/MM/yy"
         let date = formatter.date(from: txt_NewDate.text!)
         formatter.dateFormat = "yyyy-MM-dd"
         let dateStr = formatter.string(from: date ?? Date())
@@ -209,7 +213,7 @@ func closeMenu(){
         let id = facility.submissions.id
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "dd/mm/yy"
+        formatter.dateFormat = "dd/MM/yy"
         let date = formatter.date(from: txt_NewDate.text!)
         formatter.dateFormat = "yyyy-MM-dd"
         let dateStr = formatter.string(from: date ?? Date())

@@ -25,7 +25,7 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
     @IBOutlet weak var table_AppointmentUnitTakeOver: UITableView!
     @IBOutlet var arrTextFields: [UITextField]!
     var array_KeyCollection = [KeyCollectionModal]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var dataSource = DataSource_AppointmentUnitTakeOver()
     let menu: MenuView = MenuView.getInstance
     var appointment: Appointment!
@@ -99,11 +99,25 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         txt_Month.inputAccessoryView = toolbar
      // add datepicker to textField
         txt_Month.inputView = expiryDatePicker
+        
 
     }
     @objc func donedatePicker(){
         view.endEditing(true)
         if appointment == .keyCollection{
+            
+            if txt_Month.text == ""{
+                if (txt_Month.inputView as! MonthYearPickerView).years.count > 0{
+                    let month = (txt_Month.inputView as! MonthYearPickerView).month
+                    let year = (txt_Month.inputView as! MonthYearPickerView).years[0]
+                    
+                let string = String(format: "%02d/%d", month, year)
+                NSLog(string) // should show something like 05/2015
+                self.txt_Status.text = ""
+                self.txt_Month.text = string
+                self.txt_UnitNo.text = ""
+                }
+            }
         self.searchKeyCollectionSummary()
         }
     }
@@ -119,13 +133,15 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
                  if let response = (result as? KeyCollectionSummaryBase){
                     self.array_KeyCollection = response.data
                     
-                    self.dataSource.array_KeyCollection = self.array_KeyCollection
+                   
                     if self.array_KeyCollection.count == 0{
 
                     }
                     else{
                        // self.view_NoRecords.removeFromSuperview()
+                        self.array_KeyCollection = self.array_KeyCollection.sorted(by: { $0.submission_info.created_at > $1.submission_info.created_at })
                     }
+                     self.dataSource.array_KeyCollection = self.array_KeyCollection
                     DispatchQueue.main.async {
                         self.table_AppointmentUnitTakeOver.reloadData()
                         self.tableView.reloadData()
@@ -297,8 +313,9 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         }
     }
     @IBAction func actionUnit(_ sender:UIButton) {
-        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
-        let arrUnit = sortedArray.map { $0.value }
+//        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
+//        let arrUnit = sortedArray.map { $0.value }
+        let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
         dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Unit.dataSource = arrUnit//Array(unitsData.values)
@@ -393,7 +410,7 @@ class DataSource_AppointmentUnitTakeOver: NSObject, UITableViewDataSource, UITab
     var parentVc: UIViewController!
     var appointment: Appointment!
     var array_KeyCollection = [KeyCollectionModal]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     
 func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 

@@ -34,7 +34,7 @@ class FeedbackDetailsTableViewController:  BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     var array_Images = [String]()
     var feedback: FeedbackModal!
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -141,7 +141,13 @@ func closeMenu(){
         txt_Status.text = feedback.submissions.status == 0 ? "Open" :
             feedback.submissions.status == 1 ? "Closed" : "In Progress"
         lbl_BookedBy.text = feedback.user_info?.name
-        lbl_UnitNo.text = unitsData["\(feedback.user_info?.unit_no ?? 0)"]
+        if let unitId = unitsData.first(where: { $0.id == feedback.user_info?.unit_no }) {
+            lbl_UnitNo.text = "#" + unitId.unit
+        }
+        else{
+          lbl_UnitNo.text = ""
+        }
+       // lbl_UnitNo.text = unitsData["\(feedback.user_info?.unit_no ?? 0)"]
         lbl_Category.text = feedback.option?.feedback_option
         txt_Comment.text = feedback.submissions.remarks
         
@@ -156,7 +162,7 @@ func closeMenu(){
         let dateStrUpdated = formatter.string(from: dateUpdated ?? Date())
         lbl_Date.text = dateStr
         lbl_SubmittedDate.text = dateStrUpdated
-        formatter.dateFormat = "HH:mm a"
+        formatter.dateFormat = "hh:mm a"
         let timeStr = formatter.string(from: date ?? Date())
         lbl_Time.text = timeStr
         lbl_Subject.text = feedback.submissions.subject

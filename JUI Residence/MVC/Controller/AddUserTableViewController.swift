@@ -42,7 +42,7 @@ class AddUserTableViewController: BaseTableViewController {
     var isToEdit: Bool!
     var user: UserModal!
     var userData: Users!
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var roles = [String: String]()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,17 +118,17 @@ class AddUserTableViewController: BaseTableViewController {
         self.view.endEditing(true)
     }
     @IBAction func actionUnit(_ sender:UIButton) {
-        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
-        let arrUnit = sortedArray.map { $0.value }
+//        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
+        let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
         dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Unit.dataSource = arrUnit//Array(unitsData.values)
         dropDown_Unit.show()
         dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_UnitNo.text = item
-            if let key = unitsData.first(where: { $0.value == item })?.key {
-                print(key)
-            }
+//            if let key = unitsData.first(where: { $0.unit == item })?.key {
+//                print(key)
+//            }
         }
     }
     @IBAction func actionRoles(_ sender:UIButton) {
@@ -219,8 +219,8 @@ class AddUserTableViewController: BaseTableViewController {
         if let roleId = roles.first(where: { $0.value == txt_AssignedRole.text })?.key {
             role_Id = roleId
         }
-        if let unitId = unitsData.first(where: { $0.value == txt_UnitNo.text })?.key {
-            unit_Id = unitId
+        if let unitId = unitsData.first(where: { $0.unit == txt_UnitNo.text }){
+            unit_Id = "\(unitId.id)"
         }
         let param = [
             "login_id" : userId,
@@ -273,8 +273,8 @@ class AddUserTableViewController: BaseTableViewController {
         if let roleId = roles.first(where: { $0.value == txt_AssignedRole.text })?.key {
             role_Id = roleId
         }
-        if let unitId = unitsData.first(where: { $0.value == txt_UnitNo.text })?.key {
-            unit_Id = unitId
+        if let unitId = unitsData.first(where: { $0.unit == txt_UnitNo.text }) {
+            unit_Id = "\(unitId.id)"
         }
         let id = userData.user != nil ? userData.user!.id : 0
         let param = [

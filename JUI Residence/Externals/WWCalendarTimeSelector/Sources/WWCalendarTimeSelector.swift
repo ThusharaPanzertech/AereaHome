@@ -53,6 +53,15 @@ let themeColorMain = UIColor(red: 143/255, green: 127/255, blue: 101/255, alpha:
             showYear = false
         }
     }
+    public func test(){
+//        if let indexToDelete = multipleDates.firstIndex(of: date) {
+//            // delete...
+//            indexPath = IndexPath(row: indexToDelete, section: 0)
+//            optionCurrentDates.remove(date)
+//
+//            selMultipleDatesTable.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: true)
+//
+    }
     
     fileprivate func countComponents() -> Int {
         return (showDateMonth ? 1 : 0) +

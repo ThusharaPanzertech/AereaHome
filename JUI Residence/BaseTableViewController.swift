@@ -308,7 +308,7 @@ class BaseTableViewController: UITableViewController, UIGestureRecognizerDelegat
     }
     
     @objc func doneButtonAction(){
-        
+        self.view.endEditing(true)
     }
     
     func displayToastMessage(_ message : String) {

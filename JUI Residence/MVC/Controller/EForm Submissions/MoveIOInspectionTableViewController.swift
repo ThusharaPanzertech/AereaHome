@@ -6,7 +6,7 @@
 //
 
 import UIKit
-var arr_DamageDesc : [[String: Any]] = [[kDesc:"", kImage: ""]]
+var arr_DamageDesc : [[String: Any]] = [[kId: "", kDesc:"", kImage: ""]]
 class MoveIOInspectionTableViewController:  BaseTableViewController {
    
     var eForm : String!
@@ -68,6 +68,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
     
      override func viewDidLoad() {
          super.viewDidLoad()
+        arr_DamageDesc.removeAll()
         self.configureDatePicker()
         let toolbar = UIToolbar();
         toolbar.sizeToFit()
@@ -185,8 +186,8 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
      }
      override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 1{
-            table_Ht.constant =  CGFloat( 320 * arr_DamageDesc.count)
-            return CGFloat(self.isToShowSucces == true ? 0 :   1550 + 330 * arr_DamageDesc.count)
+            table_Ht.constant =  CGFloat( 330 * arr_DamageDesc.count)
+            return CGFloat(self.isToShowSucces == true ? 0 :   1580 + 330 * arr_DamageDesc.count)
         }
         else  if indexPath.row == 2{
             return self.isToShowSucces == false ? 0 : super.tableView(tableView, heightForRowAt: indexPath)
@@ -200,7 +201,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
         if formType == .moveInOut{
         if moveInOutData.inspection != nil{
             self.txt_Management.text = moveInOutData.inspection.manager_received
-            self.txt_ActualDate.text = moveInOutData.inspection.date_of_completion
+            
             self.txt_UnitInspection.text = moveInOutData.inspection.inspected_by
             
             if moveInOutData.inspection.unit_in_order_or_not == 1{
@@ -238,7 +239,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
            
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            formatter.dateFormat = "yyyy-MM-dd"
             let moving_date = formatter.date(from:moveInOutData.inspection.date_of_completion)
             formatter.dateFormat = "dd/MM/yyyy"
                 let moving_dateStr = formatter.string(from: moving_date ?? Date())
@@ -248,21 +249,23 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
             let image = self.convertBase64StringToImage(imageBase64String: sign1)
             if image != nil{
              self.imgView_signature1.image = image
+                signature_management = image
              }
             let sign2 = self.moveInOutData.inspection.resident_signature
             let image1 = self.convertBase64StringToImage(imageBase64String: sign2)
             if image1 != nil{
              self.imgView_signature4.image = image1
+                signature_owner1 = image1
              }
             arr_DamageDesc.removeAll()
             for obj in moveInOutData.defects{
                 let image = self.convertBase64StringToImage(imageBase64String: obj.image_base64)
-                let damage = [kDesc:obj.notes, kImage: image ?? UIImage(named: "add_photo")!] as [String : Any]
+                let damage = [kId: "\(obj.id)",kDesc:obj.notes, kImage: image ?? UIImage(named: "add_photo")!] as [String : Any]
                 arr_DamageDesc.append(damage)
                 
             }
             if arr_DamageDesc.count == 0{
-                arr_DamageDesc = [[kDesc:"", kImage: ""]]
+                arr_DamageDesc = [[kId: "",kDesc:"", kImage: ""]]
             }
             
             self.table_Damages.reloadData()
@@ -270,12 +273,12 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
         }
         
         else  if formType == .renovation{
-          /*  if moveInOutData.inspection != nil{
-                self.txt_Management.text = moveInOutData.inspection.manager_received
-                self.txt_ActualDate.text = moveInOutData.inspection.date_of_completion
-                self.txt_UnitInspection.text = moveInOutData.inspection.inspected_by
+            if renovationData.inspection != nil{
+                self.txt_Management.text = renovationData.inspection.manager_received
+                self.txt_ActualDate.text = renovationData.inspection.date_of_completion
+                self.txt_UnitInspection.text = renovationData.inspection.inspected_by
                 
-                if moveInOutData.inspection.unit_in_order_or_not == 1{
+                if renovationData.inspection.unit_in_order_or_not == 1{
                     self.btn_UnitInOrder.isSelected = true
                     for field in arr_AmtTextFields{
                         field.isEnabled = false
@@ -286,7 +289,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
                         field.alpha = 0.7
                     }
                 }
-                else if moveInOutData.inspection.unit_in_order_or_not == 2{
+                else if renovationData.inspection.unit_in_order_or_not == 2{
                     self.btn_NotInOrder.isSelected = true
                     for field in arr_AmtTextFields{
                         field.isEnabled = true
@@ -299,48 +302,50 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
                 }
                 
                 //self.txt_ReceivedBy.text = moveInOutData.inspection.amount_received_by
-                self.txt_AmtDeducted.text = moveInOutData.inspection.amount_deducted
-                self.txt_AmtBalance.text = moveInOutData.inspection.refunded_amount
+                self.txt_AmtDeducted.text = renovationData.inspection.amount_deducted
+                self.txt_AmtBalance.text = renovationData.inspection.refunded_amount
               //  self.txt_OwnerName.text = moveInOutData.inspection.amount_received_by
-                self.txt_NRIC1.text = moveInOutData.inspection.resident_nric
-                self.txt_AmtClaimable.text = moveInOutData.inspection.amount_claimable
-                self.txt_AmtRecvd.text = moveInOutData.inspection.actual_amount_received
-                self.txt_AcknowledgeBy.text = moveInOutData.inspection.acknowledged_by
+                self.txt_NRIC1.text = renovationData.inspection.resident_nric
+                self.txt_AmtClaimable.text = renovationData.inspection.amount_claimable
+                self.txt_AmtRecvd.text = renovationData.inspection.actual_amount_received
+                self.txt_AcknowledgeBy.text = renovationData.inspection.acknowledged_by
              //   self.txt_NRIC2.text = moveInOutData.inspection.resident_nric
                
                 let formatter = DateFormatter()
                 formatter.locale = Locale(identifier: "en_US_POSIX")
-                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let moving_date = formatter.date(from:moveInOutData.inspection.date_of_completion)
+                formatter.dateFormat = "yyyy-MM-dd"
+                let moving_date = formatter.date(from:renovationData.inspection.date_of_completion)
                 formatter.dateFormat = "dd/MM/yyyy"
                     let moving_dateStr = formatter.string(from: moving_date ?? Date())
                 self.txt_ActualDate.text = moving_dateStr
                 
-                let sign1 = self.moveInOutData.inspection.manager_signature
+                let sign1 = self.renovationData.inspection.manager_signature
                 let image = self.convertBase64StringToImage(imageBase64String: sign1)
                 if image != nil{
                  self.imgView_signature1.image = image
+                    signature_management = image
                  }
-                let sign2 = self.moveInOutData.inspection.resident_signature
+                let sign2 = self.renovationData.inspection.resident_signature
                 let image1 = self.convertBase64StringToImage(imageBase64String: sign2)
                 if image1 != nil{
                  self.imgView_signature4.image = image1
+                    signature_owner1 = image1
                  }
                 arr_DamageDesc.removeAll()
-                for obj in moveInOutData.defects{
+                for obj in renovationData.defects{
                     let image = self.convertBase64StringToImage(imageBase64String: obj.image_base64)
-                    let damage = [kDesc:obj.notes, kImage: image ?? UIImage(named: "add_photo")!] as [String : Any]
+                    let damage = [kId: "\(obj.id)",kDesc:obj.notes, kImage: image ?? UIImage(named: "add_photo")!] as [String : Any]
                     arr_DamageDesc.append(damage)
                     
                 }
                 if arr_DamageDesc.count == 0{
-                    arr_DamageDesc = [[kDesc:"", kImage: ""]]
+                    arr_DamageDesc = [[kId: "",kDesc:"", kImage: ""]]
                 }
                 
                 self.table_Damages.reloadData()
                
             }
-             */
+          
             }
      }
      override func viewWillDisappear(_ animated: Bool) {
@@ -385,9 +390,9 @@ func closeMenu(){
         }
         else  if formType == .renovation{
             params.setValue("\(renovationData.submission.id)", forKey: "id")
-//            if moveInOutData.inspection != nil{
-//                params.setValue("\(moveInOutData.inspection.id)", forKey: "inspection_id")
-//            }
+            if renovationData.inspection != nil{
+                params.setValue("\(renovationData.inspection.id)", forKey: "inspection_id")
+            }
             }
       
         params.setValue(moving_dateStr, forKey: "date_of_completion")
@@ -416,6 +421,9 @@ func closeMenu(){
         }
         for (indx, obj) in arr_DamageDesc.enumerated(){
             params.setValue(obj[kDesc], forKey: "description_\(indx + 1)")
+            if obj[kId] as! String != ""{
+                params.setValue(obj[kId], forKey: "file_id_\(indx + 1)")
+            }
             arrData.append(["name":"file_\(indx + 1)","image":((obj[kImage] as! UIImage).jpegData(compressionQuality: 0.5)! as NSData) as Data])
         }
         
@@ -492,7 +500,7 @@ func closeMenu(){
     
      //MARK: UIBUTTON ACTIONS
     @IBAction func actionAddNew(_ sender: UIButton){
-        let new_Defect  = [kDesc:"", kImage: ""]
+        let new_Defect  = [kId: "", kDesc:"", kImage: ""]
         arr_DamageDesc.append(new_Defect)
         //self.dataSource.array_Defects = self.array_Defects
         table_Damages.reloadData()

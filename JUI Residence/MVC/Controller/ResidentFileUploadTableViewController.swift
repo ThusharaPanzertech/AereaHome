@@ -19,9 +19,9 @@ class ResidentFileUploadTableViewController: BaseTableViewController {
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var btn_NewAppointment: UIButton!
     @IBOutlet weak var view_Footer: UIView!
-    @IBOutlet weak var table_AppointmentUnitTakeOver: UITableView!
+    @IBOutlet weak var table_ResidentFile: UITableView!
     @IBOutlet var arrTextFields: [UITextField]!
-    
+    var array_ResidentFileUpload = [ResidentFileModal]()
     var dataSource = DataSource_ResidentFile()
     let menu: MenuView = MenuView.getInstance
     
@@ -45,8 +45,8 @@ class ResidentFileUploadTableViewController: BaseTableViewController {
         self.lbl_UserName.text = "\(fname) \(lname)"
         let role = Users.currentUser?.role?.name ?? ""
         self.lbl_UserRole.text = role
-        table_AppointmentUnitTakeOver.dataSource = dataSource
-        table_AppointmentUnitTakeOver.delegate = dataSource
+        table_ResidentFile.dataSource = dataSource
+        table_ResidentFile.delegate = dataSource
         dataSource.parentVc = self
         setUpUI()
        
@@ -80,14 +80,14 @@ class ResidentFileUploadTableViewController: BaseTableViewController {
         
         if indexPath.row == 1{
             
-                return  (3 * 210)  + 310
+            return  CGFloat((array_ResidentFileUpload.count * 210)  + 310)
             
         }
         return super.tableView(tableView, heightForRowAt: indexPath)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        getResidentFileSummary()
         self.showBottomMenu()
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,10 +107,44 @@ class ResidentFileUploadTableViewController: BaseTableViewController {
         let imgdefault = ""//UserInfoModalBase.currentUser?.data.property.defect_bg ?? ""
         return imgdefault
     }
+    
+    //MARK: ******  PARSING *********
+    func getResidentFileSummary(){
+        ActivityIndicatorView.show("Loading")
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        //
+        ApiService.get_ResidentFileSummary(parameters: ["login_id":userId], completion: { status, result, error in
+           
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                 if let response = (result as? ResidentFileSummaryBase){
+                    self.array_ResidentFileUpload = response.data
+                    
+                    self.dataSource.array_ResidentFileUpload = self.array_ResidentFileUpload
+                    if self.array_ResidentFileUpload.count == 0{
+
+                    }
+                    else{
+                       // self.view_NoRecords.removeFromSuperview()
+                    }
+                    DispatchQueue.main.async {
+                        self.table_ResidentFile.reloadData()
+                        self.tableView.reloadData()
+                    }
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
+    }
 //MARK: UIBUTTON ACTION
     @IBAction func actionNewUpload(_ sender: UIButton){
-//        let announcementTVC = self.storyboard?.instantiateViewController(identifier: "NewAppointmentTableViewController") as! NewAppointmentTableViewController
-//        self.navigationController?.pushViewController(announcementTVC, animated: true)
+        let newUploadsTVC = self.storyboard?.instantiateViewController(identifier: "NewResidentFileUploadsTableViewController") as! NewResidentFileUploadsTableViewController
+        self.navigationController?.pushViewController(newUploadsTVC, animated: true)
     }
     //MARK: MENU ACTIONS
     @IBAction func actionInbox(_ sender: UIButton){
@@ -176,23 +210,40 @@ class ResidentFileUploadTableViewController: BaseTableViewController {
 class DataSource_ResidentFile: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var parentVc: UIViewController!
+    var array_ResidentFileUpload = [ResidentFileModal]()
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1;
     }
 
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return  5
+         return array_ResidentFileUpload.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "appointmentUnitCell") as! AppointmentUnitTakeOverTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "residentCell") as! ResidentFileTableViewCell
         cell.view_Outer.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
-       // cell.lbl_AppointmentDate.text = "11/08/2021"
-      //  cell.lbl_AppointmentTime.text = "9:00 AM"
-      //  cell.lbl_Status.text = "Pending".uppercased()
-       //     cell.lbl_UnitNo.text = "06-\(indexPath.row + 1)"
-          
+      
+        let fileInfo = array_ResidentFileUpload[indexPath.row]
+        
+        cell.lbl_UploadBy.text = fileInfo.user.name
+        //cell.lbl_BookedBy.text = fileInfo.submission.getname?.name  ?? "-"
+        cell.lbl_UnitNo.text = "\(fileInfo.user.getunit?.unit ?? "")"
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let date = formatter.date(from: fileInfo.submission.created_at)
+        formatter.dateFormat = "dd/MM/yy"
+        let dateStr = formatter.string(from: date ?? Date())
+        
+       
+        cell.lbl_UploadDate.text = dateStr
+        
+       // cell.lbl_UploadBy.text = fileInfo
+        
+        cell.lbl_Status.text = fileInfo.submission.status == 0 ? "New" :
+            fileInfo.submission.status == 1  ? "Processing" : fileInfo.submission.status == 2 ? "Processed" : ""
+        cell.lbl_Category.text = fileInfo.cat?.docs_category
         cell.view_Outer.tag = indexPath.row
         cell.btn_Edit.tag = indexPath.row
         cell.btn_Edit.addTarget(self, action: #selector(self.actionEdit(_:)), for: .touchUpInside)
@@ -208,17 +259,23 @@ class DataSource_ResidentFile: NSObject, UITableViewDataSource, UITableViewDeleg
         return  210
     }
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-//        DispatchQueue.main.async {
-//            (self.parentVc as! AppointmentUnitTakeOverTableViewController).tableView.reloadData()
-//        (self.parentVc as! AppointmentUnitTakeOverTableViewController).table_AppointmentUnitTakeOver.reloadData()
-//
-//        }
+        let filedata = array_ResidentFileUpload[(sender! as UITapGestureRecognizer).view!.tag]
+
+            let infoVC = kStoryBoardMenu.instantiateViewController(identifier: "ResidentFileDetailsTableViewController") as! ResidentFileDetailsTableViewController
+        infoVC.residentFileData = filedata
+        self.parentVc.navigationController?.pushViewController(infoVC, animated: true)
+          
         
     }
     
     @IBAction func actionEdit(_ sender:UIButton){
        
-       
+        let filedata = array_ResidentFileUpload[sender.tag]
+
+            let infoVC = kStoryBoardMenu.instantiateViewController(identifier: "ResidentFileDetailsTableViewController") as! ResidentFileDetailsTableViewController
+        infoVC.residentFileData = filedata
+        self.parentVc.navigationController?.pushViewController(infoVC, animated: true)
+          
        
        
     }

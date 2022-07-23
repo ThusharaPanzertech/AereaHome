@@ -30,6 +30,7 @@ class AnnouncementHistoryTableViewController: BaseTableViewController {
     var startDate = ""
     var endDate = ""
     var roles = [String: String]()
+    var array_roles = [Role]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -136,7 +137,7 @@ class AnnouncementHistoryTableViewController: BaseTableViewController {
             if status  && result != nil{
                  if let response = (result as? RolesBase){
                     self.roles = response.roles
-                   
+                     self.array_roles = response.data
                    
                 }
         }
@@ -236,20 +237,37 @@ class AnnouncementHistoryTableViewController: BaseTableViewController {
           dateRangePickerViewController.delegate = self
           //dateRangePickerViewController.selectedStartDate = Date()
          // dateRangePickerViewController.selectedEndDate = Date()
-          
-           let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+        var components = Calendar.current.dateComponents([.year], from: Date())
+        if let startDateOfYear = Calendar.current.date(from: components) {
+            components.year = 1
+            components.day = -1
+            let lastDateOfYear = Calendar.current.date(byAdding: components, to: startDateOfYear)
+            dateRangePickerViewController.minimumDate = startDateOfYear
+             dateRangePickerViewController.maximumDate = lastDateOfYear
+        }
+        //   let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
         
-           let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
+        //let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
         
         
-        dateRangePickerViewController.minimumDate = minimumDate
-        dateRangePickerViewController.maximumDate = maximumDate
+     //   dateRangePickerViewController.minimumDate = minimumDate
+     //   dateRangePickerViewController.maximumDate = maximumDate
+        
+       
+
+        
+        
           let navigationController = UINavigationController(rootViewController: dateRangePickerViewController)
+        //dateRangePickerViewController.collectionView.scrollToItem(at:IndexPath(item: 3, section: 16), at: .bottom, animated: false)
           self.navigationController?.present(navigationController, animated: true, completion: nil)
+       
     }
     @IBAction func actionRoles(_ sender:UIButton) {
-        let sortedArray = roles.sorted { $0.key < $1.key }
-        let arrRoles = sortedArray.map { $0.value }
+//        let sortedArray = roles.sorted { $0.key < $1.key }
+//        let arrRoles = sortedArray.map { $0.value }
+        
+      //  let sortedArray = roles.sorted { $0.key < $1.key }
+        let arrRoles = array_roles.map { $0.name! }
         let dropDown_Roles = DropDown()
         dropDown_Roles.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Roles.dataSource = arrRoles//Array(roles.values)

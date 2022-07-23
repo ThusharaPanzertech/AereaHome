@@ -47,7 +47,7 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
 
     var doorAccessData: DoorAccess!
    
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -119,7 +119,7 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
         lbl_Ticket.text = doorAccessData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_OwnerName.text = doorAccessData.submission.owner_name
-        lbl_UnitNo.text = doorAccessData.unit.unit
+        lbl_UnitNo.text = doorAccessData.unit?.unit
         lbl_ContactNo.text = doorAccessData.submission.contact_no
         lbl_Email.text = doorAccessData.submission.email
         lbl_DeclaredBy.text = doorAccessData.submission.declared_by
@@ -263,7 +263,9 @@ func closeMenu(){
                 txt_Status.text ==  "Cancelled" ? 1 :
                 txt_Status.text ==  "In Progress" ? 2 :
                 txt_Status.text ==  "Approved" ? 3 :
-                txt_Status.text ==  "Rejected" ? 4 : 0
+                txt_Status.text ==  "Rejected" ? 4 :
+                txt_Status.text ==  "Payment Pending" ? 5 :
+                txt_Status.text ==  "Refunded" ? 6 : 0
                
           
         ] as [String : Any]
@@ -299,7 +301,7 @@ func closeMenu(){
     //MARK: UIBUTTON ACTION
     @IBAction func actionStatus(_ sender:UIButton) {
         
-        let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected"]
+        let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected", "Payment Pending", "Refunded"]
         let dropDown_Status = DropDown()
         dropDown_Status.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Status.dataSource = arrStatus//statusData.map({$0.value})//Array(statusData.values)

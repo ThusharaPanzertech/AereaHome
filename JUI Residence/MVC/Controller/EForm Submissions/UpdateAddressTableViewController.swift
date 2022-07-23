@@ -41,7 +41,7 @@ class UpdateAddressTableViewController: BaseTableViewController {
 
     var updateAddressData: UpdateAddress!
    
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -109,7 +109,7 @@ class UpdateAddressTableViewController: BaseTableViewController {
         
         lbl_Ticket.text = updateAddressData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
-        lbl_UnitNo.text = updateAddressData.unit.unit
+        lbl_UnitNo.text = updateAddressData.unit?.unit
         lbl_ContactNo.text = updateAddressData.submission.contact_no
         lbl_Email.text = updateAddressData.submission.email
         lbl_DeclaredBy.text = updateAddressData.submission.declared_by

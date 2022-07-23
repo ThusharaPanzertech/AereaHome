@@ -20,6 +20,8 @@ class AppointmentUnitTakeOverTableViewCell: UITableViewCell {
     @IBOutlet var arrViews: [UIView]!
     @IBOutlet weak var btn_Approve: UIButton!
     @IBOutlet weak var btn_Decline: UIButton!
+    
+  
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -69,21 +71,26 @@ class SubmittedDefectsListTableViewCell: UITableViewCell {
     @IBOutlet weak var lbl_Location: UILabel!
     @IBOutlet weak var lbl_DefectType: UILabel!
     @IBOutlet weak var lbl_Remarks: UILabel!
-    @IBOutlet weak var txt_Status: UILabel!
-    @IBOutlet weak var collection_Images: UICollectionView!
-    @IBOutlet weak var txt_Comments: UITextView!
-    
+    @IBOutlet weak var txt_Comment: UITextField!
+    @IBOutlet weak var txtView_Other: UITextView!
+    @IBOutlet weak var btn_Comment: UIButton!
+    @IBOutlet weak var img_Photo: UIImageView!
+    @IBOutlet weak var lbl_Indx: UILabel!
   
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         view_Outer.layer.cornerRadius = 10.0
-        txt_Comments.layer.cornerRadius = 20.0
-        txt_Comments.layer.masksToBounds = true
-        txt_Comments.textColor = UIColor(red: 93/255, green: 93/255, blue: 93/255, alpha: 1.0)
+        txt_Comment.layer.cornerRadius = 20.0
+        txt_Comment.layer.masksToBounds = true
+        if txtView_Other != nil{
+            txtView_Other.layer.cornerRadius = 20.0
+            txtView_Other.layer.masksToBounds = true
+        }
+       
     }
-
+   
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -95,14 +102,23 @@ class DefectsListTableViewCell: UITableViewCell {
     //Outlets
     @IBOutlet weak var view_Outer: UIView!
     @IBOutlet weak var lbl_TicketNo: UILabel!
+    @IBOutlet weak var lbl_Reference: UILabel!
     @IBOutlet weak var lbl_Status: UILabel!
     @IBOutlet weak var lbl_UnitNo: UILabel!
     @IBOutlet weak var lbl_SubmittedDate: UILabel!
+    @IBOutlet weak var lbl_CompletedDate: UILabel!
+    @IBOutlet weak var lbl_ApptDate: UILabel!
+    @IBOutlet weak var lbl_ApptTime: UILabel!
     @IBOutlet weak var btn_Edit: UIButton!
     @IBOutlet weak var lbl_SubmittedBy: UILabel!
     @IBOutlet weak var btn_Approve: UIButton!
     @IBOutlet weak var btn_Decline: UIButton!
-  
+    @IBOutlet weak var lblNew: UILabel!
+    
+    @IBOutlet weak var btn_Pdf: UIButton!
+    @IBOutlet weak var btn_Inspection: UIButton!
+    @IBOutlet weak var btn_Handover: UIButton!
+    @IBOutlet weak var btn_Delete: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -138,7 +154,7 @@ class FeedbackTableViewCell: UITableViewCell {
     @IBOutlet weak var btn_Read: UIButton!
     @IBOutlet weak var btn_Hold: UIButton!
   
-    
+    @IBOutlet weak var img_Arrow: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -446,6 +462,93 @@ class EFormInspectionTableViewCell: UITableViewCell {
         txt_Remarks.layer.masksToBounds = true
         view_AddImage.layer.cornerRadius = 20.0
         view_AddImage.layer.masksToBounds = true
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class ResidentFileTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var lbl_UploadBy: UILabel!
+    @IBOutlet weak var lbl_UploadDate: UILabel!
+    @IBOutlet weak var lbl_UpdatedAt: UILabel!
+    @IBOutlet weak var btn_Edit: UIButton!
+    @IBOutlet weak var view_Outer: UIView!
+    @IBOutlet weak var lbl_Category: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet var arrViews: [UIView]!
+    @IBOutlet weak var btn_Approve: UIButton!
+    @IBOutlet weak var btn_Decline: UIButton!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10
+        if btn_Approve != nil{
+            btn_Approve.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+            btn_Approve.layer.cornerRadius = 8.0
+            btn_Decline.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+            btn_Decline.layer.cornerRadius = 8.0
+        }
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class CardSummaryTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_CardNo: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+ 
+    @IBOutlet weak var btn_Edit: UIButton!
+  
+  
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+        
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class DeviceSummaryTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_DeviceNo: UILabel!
+    @IBOutlet weak var lbl_SerialNo: UILabel!
+    @IBOutlet weak var lbl_Model: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet weak var lbl_Location: UILabel!
+ 
+    @IBOutlet weak var btn_Edit: UIButton!
+    @IBOutlet weak var btn_Refresh: UIButton!
+    @IBOutlet weak var btn_Delete: UIButton!
+  
+  
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

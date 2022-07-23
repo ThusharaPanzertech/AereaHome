@@ -27,7 +27,7 @@ class FacilityBookingTableViewController: BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     @IBOutlet weak var table_FacilityList: UITableView!
     var dataSource = DataSource_FacilityList()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var array_Facilities = [FacilityModal]()
     var startDate = ""
     var endDate = ""
@@ -57,7 +57,7 @@ class FacilityBookingTableViewController: BaseTableViewController {
         dataSource.parentVc = self
         dataSource.unitsData = self.unitsData
         setUpUI()
-       
+        getFacilityTypes()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -170,10 +170,10 @@ func closeMenu(){
         })
     }
     func searchFacility(){
-        let filterByDict = ["Earliest Date" : "created_at","Facility": "fb_option","Status": "status"]
+        let filterByDict = ["Earliest Date" : "created_at","Facility": "type_id","Status": "status"]
         let filter = filterByDict[txt_FilterBy.text!] ?? "created_at"
        
-            if txt_Facility.text == "" && txt_Unit.text == "" && txt_DateRange.text == "" && txt_Status.text == "" {
+        if txt_Facility.text == "" && txt_Unit.text == "" && txt_DateRange.text == "" && txt_Status.text == "" && txt_FilterBy.text == ""{
                 self.getFacilitySummary()
             }
             else{
@@ -224,7 +224,15 @@ func closeMenu(){
                     
                 ] as [String : Any]
             }
-            
+                else if txt_FilterBy.text != ""{
+                    param = [
+                        "login_id" : userId,
+                        "option": "category",
+                        "category" : "",
+                        "filter" : filter,
+                        
+                    ] as [String : Any]
+                }
             
                 ApiService.search_facility(parameters: param, completion: { status, result, error in
                    
@@ -233,7 +241,7 @@ func closeMenu(){
                          if let response = (result as? FacilityModalBase){
                             self.array_Facilities = response.data
                             if(self.array_Facilities.count > 0){
-                                self.array_Facilities = self.array_Facilities.sorted(by: { $0.submissions.created_at > $1.submissions.created_at })
+//                                self.array_Facilities = self.array_Facilities.sorted(by: { $0.submissions.created_at > $1.submissions.created_at })
                             }
                             self.dataSource.array_Facilities = self.array_Facilities
                             if self.array_Facilities.count == 0{
@@ -263,8 +271,8 @@ func closeMenu(){
             self.navigationController?.pushViewController(defectTVC, animated: true)
         }
     @IBAction func actionUnit(_ sender:UIButton) {
-        let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
-        let arrUnit = sortedArray.map { $0.value }
+      //  let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
+        let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
         dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
@@ -398,7 +406,7 @@ func closeMenu(){
     }
 }
 class DataSource_FacilityList: NSObject, UITableViewDataSource, UITableViewDelegate {
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var facilityOptions = [String: String]()
     var parentVc: UIViewController!
     var array_Facilities = [FacilityModal]()
@@ -433,7 +441,13 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         }
         let facility = array_Facilities[indexPath.row]
         cell.lbl_Facility.text = facility.type?.facility_type
-        cell.lbl_UnitNo.text = unitsData["\(facility.user_info?.unit_no ?? 0)"]
+        if let unitId = unitsData.first(where: { $0.id == facility.user_info?.unit_no ?? 0 }) {
+            cell.lbl_UnitNo.text = "#" + unitId.unit
+        }
+        else{
+            cell.lbl_UnitNo.text = ""
+        }
+       // cell.lbl_UnitNo.text = unitsData["\(facility.user_info?.unit_no ?? 0)"]
         cell.lbl_BookingTime.text = facility.submissions.booking_time
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")

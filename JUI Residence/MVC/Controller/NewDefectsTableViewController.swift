@@ -17,7 +17,7 @@ class NewDefectsTableViewController: BaseTableViewController {
     var array_Facilities = [FacilityModal]()
     var array_Feedbacks = [FeedbackModal]()
     var feedbackOptions = [String: String]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var facilityOptions = [String: String]()
     @IBOutlet weak var lbl_Title: UILabel!
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -25,11 +25,14 @@ class NewDefectsTableViewController: BaseTableViewController {
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var table_DefectsList: UITableView!
+    @IBOutlet weak var view_CancelInvitation: UIView!
+    @IBOutlet weak var view_CancelContent: UIView!
+    @IBOutlet weak var txt_Reason: UITextView!
     var dataSource = DataSource_NewDefectsList()
     let alertView: AlertView = AlertView.getInstance
     let alertView_message: MessageAlertView = MessageAlertView.getInstance
     let menu: MenuView = MenuView.getInstance
-    
+    var facilityId = 0
     var appointmentType: AppointmentType!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +58,7 @@ class NewDefectsTableViewController: BaseTableViewController {
         table_DefectsList.delegate = dataSource
         dataSource.parentVc = self
         dataSource.appointmentType = self.appointmentType
+        dataSource.unitsData = self.unitsData
         setUpUI()
         if appointmentType == .feedback{
             getNewFeedbacks()
@@ -84,7 +88,7 @@ func closeMenu(){
     func setUpUI(){
        
         lbl_Title.text = self.appointmentType == .defect ? "Defect List" :
-            self.appointmentType == .facility ? "Faciloties" :
+            self.appointmentType == .facility ? "Facilities" :
             "Feedbacks"
         
         view_Background.layer.cornerRadius = 25.0
@@ -93,10 +97,46 @@ func closeMenu(){
         imgView_Profile.addborder()
        
 
+        txt_Reason.layer.borderWidth = 1.0
+        txt_Reason.layer.borderColor = UIColor.lightGray.cgColor
+        txt_Reason.layer.masksToBounds = true
+        txt_Reason.layer.cornerRadius = 3.0
+        let toolbarDone = UIToolbar.init()
+        toolbarDone.sizeToFit()
+        let barBtnDone = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.done,
+                                              target: self, action: #selector(doneButtonAction))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        toolbarDone.items = [spaceButton, barBtnDone] // You can even add cancel button too
+        txt_Reason.inputAccessoryView = toolbarDone
         
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.doneButtonAction))
+        view_CancelInvitation.addGestureRecognizer(tap)
+        txt_Reason.backgroundColor = .white
     }
-    //MARK:********   PARSING ********
-    
+    //MARK: ********   PARSING ********
+    func getFeedbackDetail(id: Int){
+        ActivityIndicatorView.show("Loading")
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        ApiService.get_FeedbackDetail(parameters: ["login_id":userId ?? "0", "id": id], completion: { status, result, error in
+           
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let response = (result as? FeedbackDetailBase){
+                    let feedback = response.feedback
+                    let feedbackDetailsVC = self.storyboard?.instantiateViewController(identifier: "FeedbackDetailsTableViewController") as! FeedbackDetailsTableViewController
+                    feedbackDetailsVC.feedback = feedback
+                    feedbackDetailsVC.unitsData = self.unitsData
+                    self.navigationController?.pushViewController(feedbackDetailsVC, animated: true)
+                }
+        }
+            else if error != nil{
+              //  self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Oops")
+            }
+            else{
+              //  self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Oops")
+            }
+        })
+    }
     func getNewFeedbacks(){
         ActivityIndicatorView.show("Loading")
         let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
@@ -161,17 +201,57 @@ func closeMenu(){
             }
         })
     }
+    func approve_decline_Facility(isToApprove:Bool){
+       
+        ActivityIndicatorView.show("Loading")
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        //
+     
+        let param = [
+            "login_id" : userId,
+            "id" : facilityId,
+            "reason": isToApprove ? "" : txt_Reason.text!
+        ] as [String : Any]
+
+        ApiService.approve_decline_Facility(isToApprove : isToApprove ,parameters: param, completion: { status, result, error in
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                 if let response = (result as? DeleteUserBase){
+                    if response.response == 1{
+                        DispatchQueue.main.async {
+                            let msg = isToApprove ? "Facility booking has\n been confirmed" : "Facility booking has\n been cancelled"
+                            self.alertView_message.delegate = self
+                            self.alertView_message.showInView(self.view_Background, title: msg, okTitle: "Home", cancelTitle: "View Facility Bookings")
+                        }
+                    }
+                    else{
+                        self.displayErrorAlert(alertStr: response.message, title: "Alert")
+                    }
+                   
+                   
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
+    }
     
     //MARK: UIButton Action
     @IBAction func actionApprove(_ sender: UIButton){
-        let title = self.appointmentType == .defect ? "Defect List" : "Facility booking"
-        alertView_message.delegate = self
-        alertView_message.showInView(self.view, title: "\(title) has been\n approved", okTitle: "Home", cancelTitle: "View \(title)")
+        self.approve_decline_Facility(isToApprove: true)
+//        let title = self.appointmentType == .defect ? "Defect List" : "Facility booking"
+//        alertView_message.delegate = self
+//        alertView_message.showInView(self.view, title: "\(title) has been\n approved", okTitle: "Home", cancelTitle: "View \(title)")
     }
     @IBAction func actionDecline(_ sender: UIButton){
-        let title = self.appointmentType == .defect ? "Defect List" : "Facility booking"
-        alertView.delegate = self
-        alertView.showInView(self.view_Background, title: "Are you sure you want to\n decline the following key\n \(title)?", okTitle: "Yes", cancelTitle: "Back")
+        self.approve_decline_Facility(isToApprove: false)
+//        let title = self.appointmentType == .defect ? "Defect List" : "Facility booking"
+//        alertView.delegate = self
+//        alertView.showInView(self.view_Background, title: "Are you sure you want to\n decline the following key\n \(title)?", okTitle: "Yes", cancelTitle: "Back")
     }
     @IBAction func actionRead(_ sender: UIButton){
         alertView_message.delegate = self
@@ -190,6 +270,39 @@ func closeMenu(){
     @IBAction func actionDeclineFacility(_ sender: UIButton){
         alertView.delegate = self
         alertView.showInView(self.view_Background, title: "Are you sure you want to\n decline the following\n facility booking?", okTitle: "Yes", cancelTitle: "Back")
+    }
+    func showCancelAlert(){
+        txt_Reason.text = ""
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: { [self] in
+        }, completion: { [self] finished in
+            self.view.addSubview(self.view_CancelInvitation)
+            self.view_CancelInvitation.frame = self.view.bounds
+            self.tableView.isScrollEnabled = false
+        
+        })
+            
+    }
+    @IBAction func actionCancel(_ sender: UIButton){
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: { [self] in
+        }, completion: { [self] finished in
+           
+            self.view_CancelInvitation.removeFromSuperview()
+            self.tableView.isScrollEnabled = true
+        })
+    }
+    @IBAction func actionDeclineFacilityRequest(_ sender: UIButton){
+        if txt_Reason.text.isEmpty {
+            displayErrorAlert(alertStr: "Please enter reason", title: "")
+        }
+        else {
+            let stripped = txt_Reason.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if stripped.isEmpty{
+                displayErrorAlert(alertStr: "Please enter a valid reason", title: "")
+            }
+            else{
+                approve_decline_Facility(isToApprove: false)
+            }
+        }
     }
     
     //MARK: MENU ACTIONS
@@ -259,7 +372,7 @@ class DataSource_NewDefectsList: NSObject, UITableViewDataSource, UITableViewDel
     var array_Facilities = [FacilityModal]()
     var feedbackOptions = [String: String]()
     var facilityOptions = [String: String]()
-    var unitsData = [String: String]()
+    var unitsData = [Unit]()
     var parentVc: UIViewController!
     var appointmentType: AppointmentType!
 func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -289,7 +402,14 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             
             let facility = array_Facilities[indexPath.row]
             cell.lbl_Facility.text = facility.type?.facility_type
-            cell.lbl_UnitNo.text = unitsData["\(facility.user_info?.unit_no ?? 0)"]
+            if let unitId = unitsData.first(where: { $0.id == facility.user_info?.unit_no ?? 0 }) {
+                cell.lbl_UnitNo.text = "#" + unitId.unit
+            }
+            else{
+            cell.lbl_UnitNo.text = ""
+            }
+            
+           // cell.lbl_UnitNo.text = unitsData["\(facility.user_info?.unit_no ?? 0)"]
             cell.lbl_BookingTime.text = facility.submissions.booking_time
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -317,7 +437,16 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
             cell.lbl_Status.text = feedback.submissions.status == 0 ? "Open" :
                 feedback.submissions.status == 1 ? "Closed" : "In Progress"
             cell.lbl_SubmittedBy.text = feedback.user_info?.name
-            cell.lbl_UnitNo.text = unitsData["\(feedback.user_info?.unit_no ?? 0)"]
+            let unitno = feedback.user_info?.unit_no ?? 0
+            if let unitId = unitsData.first(where: { $0.id == unitno }) {
+                cell.lbl_UnitNo.text = "#" + unitId.unit
+            }
+            else{
+            cell.lbl_UnitNo.text = ""
+            }
+            
+            
+         //   cell.lbl_UnitNo.text = unitsData["\(feedback.user_info?.unit_no ?? 0)"]
             cell.lbl_Category.text = feedback.option?.feedback_option
             cell.selectionStyle = .none
             let formatter = DateFormatter()
@@ -345,17 +474,25 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
       
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 280
+        return appointmentType == .feedback ? 350 : 280
     }
     @IBAction func approve(_ sender: UIButton){
+        let facility = self.array_Facilities[sender.tag]
+        (self.parentVc as! NewDefectsTableViewController).facilityId = facility.submissions.id
         (self.parentVc as! NewDefectsTableViewController).actionApprove(sender)
     }
     
     @IBAction func decline(_ sender: UIButton){
-        (self.parentVc as! NewDefectsTableViewController).actionDecline(sender)
+        let facility = self.array_Facilities[sender.tag]
+        (self.parentVc as! NewDefectsTableViewController).facilityId = facility.submissions.id
+        (self.parentVc as! NewDefectsTableViewController).actionDeclineFacility(sender)
+       
+     //   (self.parentVc as! NewDefectsTableViewController).actionDecline(sender)
     }
     @IBAction func read(_ sender: UIButton){
-        (self.parentVc as! NewDefectsTableViewController).actionRead(sender)
+        let fb = array_Feedbacks[sender.tag]
+        (self.parentVc as! NewDefectsTableViewController).getFeedbackDetail(id: fb.submissions.id)
+        //actionRead(sender)
     }
     
     @IBAction func hold(_ sender: UIButton){
@@ -379,8 +516,9 @@ extension NewDefectsTableViewController: AlertViewDelegate{
         alertView_message.showInView(self.view_Background, title: "Defect List has\n been declined", okTitle: "Home", cancelTitle: "View Defect List")
         }
         else if self.appointmentType == .facility{
-            alertView_message.delegate = self
-            alertView_message.showInView(self.view_Background, title: "Facility booking has\n been declined", okTitle: "Home", cancelTitle: "View Facility Bookings")
+            self.showCancelAlert()
+//            alertView_message.delegate = self
+//            alertView_message.showInView(self.view_Background, title: "Facility booking has\n been declined", okTitle: "Home", cancelTitle: "View Facility Bookings")
         }
     }
     

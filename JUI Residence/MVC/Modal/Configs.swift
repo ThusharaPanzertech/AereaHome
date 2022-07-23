@@ -16,40 +16,56 @@ let kStoryBoardMain = UIStoryboard(name: "Main", bundle: nil)
 let kStoryBoardMenu = UIStoryboard(name: "Menu", bundle: nil)
 let kStoryBoardSettings = UIStoryboard(name: "Settings", bundle: nil)
 
+var kCurrentPropertyId = 0
+
 let kAnnouncement = "Announcement"
 let kKeyCollection = "Key Collection"
 let kUnitTakeOver = "Appointment For Unit Take Over"
 let kJointInspection = "Appointment For Joint Inspection"
-let kDefectList = "Defect List"
-let kDefectInspection = "Defects Inspection"
+let kDefectList = "Defects"
+let kDefectInspection = "Defect Inspection"
 let kFacilities = "Facility Booking"
 let kFeedback = "Feedback"
 let kCondoDocument = "Condo Document"
-let kResidentsFileUpload = "Residents File Upload"
+let kResidentsFileUpload = "Resident File Upload"
 let kVisitorManagement = "Visitor Management"
 let kUserManagement = "User Management"
 let kSite = "Site Configurations"
 let kModule = "Module Configuration"
-
+let kDigitalAccess = "Digital Access"
+let kStaffDigitalAccess = "Staff Digital Access"
 let kMenu = "Menu Management"
+let kCardAcess = "Access Card Management"
+let kDeviceManagement = "Device Management"
+let kBuildingManagement = "Building Management"
+let kEformSettings = "E-form Settings"
+let kEformSettings1 = "Eforms Settings"
+let kPaymentSettings = "Payment Settings"
+let kUploadFace = "Upload Face ID"
+let kStaffDoorOpen = "Staff Door Open"
+let kStaffRemoteDoorOpen = "Staff Remote Door Open"
+let kStaffBluetoothDoorOpen = "Staff Bluetooth Door Open"
+let kHolidaySettings = "Holiday Settings"
+let kOthers = "Others"
 let themeColor = UIColor(red: 143/255, green: 127/255, blue: 101/255, alpha: 1.0)
 
-let kManageProperty = "Manage Property"
-let kManageRole = "Manage Role"
-let kManageUnit = "Manage Unit"
+let kManageProperty = "Property Management"
+let kManageRole = "Role Management"
+let kManageUnit = "Unit Management"
 let kManageUnitTakeOver = "Manage Unit Take Over"
 let kManageJointInsp = "Manage Joint Inspection"
 let kFeedbackOptions = "Feedback Options"
-let kDefectLocation = "Defect Location"
+let kDefectLocation = "Defects Location"
 let kFacilityType = "Facility Type"
 let kManagePassword = "Manage Password"
-let kEFormSubmission = "E-Form Submissions"
+let kEFormSubmission = "Eforms"
+let kSettings = "Settings"
 
-
-let kAppointmentSettings = "Appointment Settings"
+let kAppointmentSettings = "Inspection Appointment Settings"
 let kVisitingPurpose = "Visiting Purpose"
+let kAppDashboardSettings = "App Dashboard Menu Settings"
 
-
+let kId = "Id"
 let kDesc = "Description"
 var kImage = "Image"
 let isDevelopment = true
@@ -61,6 +77,8 @@ struct API {
     static let kLogin                   = "login"
     static let kVerifyOTP = "verifyotp"
     static let kResendOtp = "resendotp"
+    static let kGetUserInfo = "logininfo"
+    static let kGetDashboardInfo = "dashboardmenu"
     static let kGetAnnouncement = "announcements"
     static let kSearchAnnouncement = "searchannouncement"
     static let kCreateAnnouncement = "createannouncement"
@@ -68,6 +86,7 @@ struct API {
     static let kGetUserList = "usersummarylist"
     static let kGetUserData = "userinfo"
     static let kGetUnits = "unitlist"
+    static let kGetPropertyList = "getpropertylist"
     static let kGetRoles = "roleslist"
     static let kCreateUser = "createuser"
     static let kUpdateUser = "updateuser"
@@ -79,10 +98,11 @@ struct API {
     static let kDeleteKeyCollection = "deletekeycollection"
     static let kEditKeyCollection = "editkeycollection"
     static let kApproveKeyCollection = "confirmkeycollection"
-    static let kDeclineKeyCollection = "declinekeycollection"
+    static let kDeclineKeyCollection = "cancelkeycollection"
     
     static let kGetFeedbackOptions = "feedbackoptions"
     static let kGetFeedbackSummary = "feedbacklist"
+    static let kGetFeedbackDetail = "feedbackinfo"
     static let kFeedbackSearch = "searchfeedback"
     static let kGetNewFeedback = "feedbacknewlist"
     static let kEditFeedback = "editfeedback"
@@ -95,6 +115,26 @@ struct API {
     static let kEditFacility = "editfacility"
     static let kCancelFacility = "cancelfacility"
     static let kGetFacilityTimeSlots = "facilitytimeslot"
+    static let kApproveFacility = "confirmfacility"
+    static let kDeclineFacility  = "cancelfacility"
+    
+    
+    static let kGetDefectsSummary = "defectslist"
+    static let kDefectSearch = "defectssearch"
+    static let kDeleteDefect = "deletedefect"
+    static let kGetDefectDetail          = "defectsinfo"
+    static let kUpdateDefectInspectionSignature = "defectsupdate"
+    static let kGetInspectionTimings = "defecttimeslot"
+    static let kEditInspectionAppt = "defectsinspectionupdate"
+    static let kUpdateHandoverSignature = "defectshandoverupdate"
+    
+    static let kGetResidentFileSummary = "resFileSummary"
+    static let kGetResidentFileSummaryNew = "resFileSummaryNew"
+    static let kResidentFileSearch = "resFileSearch"
+    static let kGetNewResidentFileUploads = "resFileSummaryNew"
+    static let kEditResidentFile = "resFileEdit"
+  //  static let kCancelResidentFile = "cancelfacility"
+    
     
     static let kSettings_PropertyInfo = "propertyinfo"
     static let kSettings_PropertyEdit = "propertyedit"
@@ -137,6 +177,7 @@ struct API {
     
     
     
+    static let kEForm_SettingsInfo = "eformsettingsinfo"
     static let kEForm_MoveInOutSummary = "moveinoutsummary"
     static let kEForm_MoveInOutSearch = "moveinoutsearch"
     static let kEForm_MoveInOutDelete = "moveinoutdelete"
@@ -155,6 +196,8 @@ struct API {
     static let kEForm_DoorAccessSearch = "dooraccesssearch"
     static let kEForm_DoorAccessDelete = "dooraccessdelete"
     static let kEForm_DoorAccessUpdate = "dooraccessedit"
+    static let kEForm_DoorAccessPayment = "dooraccesspaymentsave"
+    static let kEForm_DoorAccessAcknowledgement = "dooracknowledgementsave"
     
     static let kEForm_VehicleRegSummary = "regvehiclesummary"
     static let kEForm_VehicleRegSearch = "regvehiclesearch"
@@ -170,7 +213,48 @@ struct API {
     static let kEForm_UpdateParticularsSearch = "updateparticularsearch"
     static let kEForm_UpdateParticularsDelete = "updateparticulardelete"
     static let kEForm_UpdateParticularsUpdate = "updateparticularedit"
+    
+    static let kGetCardSummary = "cardsummarylist"
+    static let kSearchCardSummary = "searchcard"
+    static let kDeleteCard = "deletecard"
+    static let kAddCard = "createcard"
+    static let kEditCard = "editcard"
 
+    static let kGetDeviceSummary = "devicesummarylist"
+    static let kSearchDeviceSummary = "searchdevice"
+    static let kGetDeviceLocation = "getlocation"
+    static let kAddDevice = "createdevice"
+    static let kEditDevice = "editdevice"
+    static let kDeleteDevice = "deletedevice"
+    static let kRestarteDevice = "restartdevice"
+    
+    static let kGetCondoCategory = "docsCatSummary"
+    static let kGetCondoDetail = "docsCatInfo"
+    static let kCreateCondoDoc = "docsCatCreate"
+    static let kEditCondoDoc = "docsCatEdit"
+    static let kDeleteCondoDoc = "docsCatDelete"
+    static let kDeleteCondoFiles = "docsDeleteFile"
+    
+    
+    static let kGetPaymentInfo = "paymentinfo"
+    static let kSubmitPaymentInfo = "paymentedit"
+    
+    static let kGetHolidayInfo = "holidayinfo"
+    static let kSubmitHolidayInfo = "holidayedit"
+    
+    static let kGetFaceIds = "stafffaceids"
+    static let kDeleteFaceId = "faceiddelete"
+    static let kGetStaffRolesList = "getroleslist"
+    static let kGetBuildingSummaryList = "buildingsummarylist"
+    static let kGetBuildingUnitsList = "unitsearch"
+    static let kGetFaceOptions = "uploadoptions"
+    static let kGetUserByRole = "getstafflist"
+    static let kUploadStaffFace = "uploadstafffaceid"
+    
+    static let kGetBluetoothDevices = "staffbluetoothdevices"
+    static let kGetRemoteDevices = "staffremotedevices"
+    static let kGetThinmooToken = "getaccesstoken"
+    
 }
 enum Appointment{
     case keyCollection
@@ -181,4 +265,12 @@ enum MenuType {
     case home
     case settings
     case logout
+}
+extension String {
+    var trimmingTrailingSpaces: String {
+        if let range = rangeOfCharacter(from: .whitespacesAndNewlines, options: [.anchored, .backwards]) {
+            return String(self[..<range.lowerBound]).trimmingTrailingSpaces
+        }
+        return self
+    }
 }

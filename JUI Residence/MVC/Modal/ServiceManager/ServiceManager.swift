@@ -235,16 +235,21 @@ class ServiceManager: NSObject {
             case .success(let jsonData):
               //  print("Success with JSON: \(jsonData)")
                 let dictionary = jsonData as! NSDictionary
-                if  let status = dictionary.object(forKey: "response") as? Bool
+                if  let status = dictionary.object(forKey: "response") as? Int
                 {
-                if(status){
+                    if(status == 1){
                       completion(true,response,nil)
-                }else{
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : dictionary.value(forKey: "message")! as! String])
-                    _ = dictionary.value(forKey: "message")! as? String
+                    }else{
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : dictionary.value(forKey: "message")! as! String])
+                        _ = dictionary.value(forKey: "message")! as? String
                     
-                   completion(false,nil,error)
+                    completion(false,nil,error)
                 }
+//                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : dictionary.value(forKey: "message")! as! String])
+//                    _ = dictionary.value(forKey: "message")! as? String
+//
+//                   completion(false,nil,error)
+                //}
                 }
                 else{
                     if  let status = dictionary.object(forKey: "response") as? String

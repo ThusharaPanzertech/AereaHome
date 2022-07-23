@@ -26,7 +26,7 @@ class ManageUnitTableViewController: BaseTableViewController {
       @IBOutlet weak var view_Footer: UIView!
      
       @IBOutlet weak var imgView_Profile: UIImageView!
-      var unitsData = [String: String]()
+    var unitsData = [Unit]()
       override func viewDidLoad() {
           super.viewDidLoad()
           let fname = Users.currentUser?.user?.name ?? ""
