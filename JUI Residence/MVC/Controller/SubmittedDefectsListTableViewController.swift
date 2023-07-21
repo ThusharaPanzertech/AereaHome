@@ -10,7 +10,8 @@ import DropDown
 
 class SubmittedDefectsListTableViewController: BaseTableViewController {
     //Outlets
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var lbl_UserRole: UILabel!
     @IBOutlet weak var view_Background: UIView!
@@ -41,7 +42,12 @@ class SubmittedDefectsListTableViewController: BaseTableViewController {
     var isSignatureDrawn = false
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         self.mgmtCommentsStatusArray.removeAll()
+        lbl_SwitchProperty.text = kCurrentPropertyName
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -55,10 +61,14 @@ class SubmittedDefectsListTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+        
+        
+        
+        
+        let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         table_DefectsList.dataSource = dataSource
         table_DefectsList.delegate = dataSource
@@ -70,7 +80,9 @@ class SubmittedDefectsListTableViewController: BaseTableViewController {
         //addShadow(offset: CGSize.init(width: 0, height: 3), color: themeColor, radius: 10.0, opacity: 0.35)
        
         setUpUI()
-        getDefectDetail()
+       
+            getDefectDetail()
+       
         self.getDefectLocation()
         
     }
@@ -98,16 +110,21 @@ class SubmittedDefectsListTableViewController: BaseTableViewController {
       
         imgView_Profile.addborder()
        
-        self.lbl_TicketNo.text = defect.lists.ticket
-        if let unitId = unitsData.first(where: { $0.id == defect.user_info?.unit_no ?? 0 }) {
-            lbl_UnitNo.text = "#" + unitId.unit
-        }
-        else{
-         lbl_UnitNo.text = ""
-        }
-        //lbl_UnitNo.text = unitsData["\(defect.user_info?.unit_no ?? 0)"] != nil ? "#" + unitsData["\(defect.user_info?.unit_no ?? 0)"]! : ""
-        txt_Status.text =  defect.lists.status == 0 ? "Open" : defect.lists.status == 1  ? "Closed" : defect.lists.status == 2 ?  "In Progress" : defect.lists.status == 3 ? "On Schedule" : defect.lists.status == 4  ? "Done" : ""
-        if defect.inspection != nil{
+        let data = defect == nil ? defectDetail : defect.lists
+        let inspection = defect == nil ? defectDetail.inspection : defect.inspection
+        self.lbl_TicketNo.text = data!.ticket
+        let unit = defect == nil ? defectDetail.unit_no : defect.user_info?.unit_no ?? 0
+            if let unitId = unitsData.first(where: { $0.id == unit }) {
+                lbl_UnitNo.text = "#" + unitId.unit
+            }
+            else{
+                lbl_UnitNo.text = ""
+            }
+        
+       
+        txt_Status.text =  data!.status == 0 ? "Open" : data!.status == 1  ? "Closed" : data!.status == 2 ?  "In Progress" : data!.status == 3 ? "On Schedule" : data!.status == 4  ? "Done" : ""
+        lbl_Reason.text = "-"
+        if inspection != nil{
             btn_editAppt.isHidden = false
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -156,7 +173,8 @@ func closeMenu(){
     func getDefectDetail(){
         ActivityIndicatorView.show("Loading")
         let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
-        ApiService.get_DefectDetail(parameters: ["login_id":userId ?? "0", "id": self.defect.lists.id], completion: { status, result, error in
+        let id = defect == nil ? defectDetail.id : self.defect.lists.id
+        ApiService.get_DefectDetail(parameters: ["login_id":userId , "id": id], completion: { status, result, error in
            
             ActivityIndicatorView.hiding()
             if status  && result != nil{
@@ -291,26 +309,33 @@ func closeMenu(){
             if status  && result != nil{
                 if let responseBase = (result as? SignatureUpdateModal){
                     if responseBase.response == 1{
-                        let alert = UIAlertController(title: "Signature updated successfully", message: "", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
-                            self.navigationController?.popViewController(animated: true)
-                        }))
+                        self.alertView_message.delegate = self
+                        self.alertView_message.showInView(self.view_Background, title: "Joint inspection status changes has been saved", okTitle: "Home", cancelTitle: "View Defect Lists")
                         
-                        self.present(alert, animated: true, completion: nil)
-                        
-                    }
-                    if responseBase.response == 2 || responseBase.message == "Ticket Closed"{
-                        let alert = UIAlertController(title: "Ticket Closed", message: "", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
-                            self.navigationController?.popViewController(animated: true)
-                        }))
-                        
-                        self.present(alert, animated: true, completion: nil)
-                        
+                        //                        let alert = UIAlertController(title: "Signature updated successfully", message: "", preferredStyle: UIAlertController.Style.alert)
+                        //                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+                        //                            self.navigationController?.popViewController(animated: true)
+                        //                        }))
+                        //
+                        //                        self.present(alert, animated: true, completion: nil)
                         
                     }
                     else{
-                        self.displayErrorAlert(alertStr: "", title: responseBase.message)
+                        if responseBase.response == 2 || responseBase.message == "Ticket Closed"{
+                            self.alertView_message.delegate = self
+                            self.alertView_message.showInView(self.view_Background, title: "Ticket Closed", okTitle: "Home", cancelTitle: "View Defect Lists")
+                            //                        let alert = UIAlertController(title: "Ticket Closed", message: "", preferredStyle: UIAlertController.Style.alert)
+                            //                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+                            //                            self.navigationController?.popViewController(animated: true)
+                            //                        }))
+                            //
+                            //                        self.present(alert, animated: true, completion: nil)
+                            
+                            
+                        }
+                        else{
+                            self.displayErrorAlert(alertStr: "", title: responseBase.message)
+                        }
                     }
                 }
         }
@@ -331,6 +356,23 @@ func closeMenu(){
         }
     }
     //MARK: UIButton ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
        
         let dropDown_Status = DropDown()
@@ -362,7 +404,9 @@ func closeMenu(){
             }
             else{
                 self.view_Signature.delegate = self
-                self.view_Signature.showInView(self.view, parent:self, tag: 1, name: "")
+                  let fname = Users.currentUser?.moreInfo?.first_name ?? ""
+                let lname = Users.currentUser?.moreInfo?.last_name ?? ""
+                self.view_Signature.showInView(self.view, parent:self, tag: 1, name:  "\(fname) \(lname)")
             }
         }
        
@@ -390,7 +434,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -422,6 +467,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -475,11 +537,11 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         else{
             cell.lbl_DefectType.text = ""
         }
+        cell.btn_Photo.tag = indexPath.row
         if let url = URL(string: "\(kImageFilePath)/" + defect.upload) {
             cell.img_Photo.af_setImage(withURL: url)
-      //      cell.btn_Photo.addTarget(self, action: #selector(self.actionShowPhoto(_:)), for: .touchUpInside)
-          
-              
+            cell.btn_Photo.addTarget(self, action: #selector(self.actionShowPhoto(_:)), for: .touchUpInside)
+           
         } else {
            
         }
@@ -491,7 +553,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
                 cell.txt_Comment.text = "Need to rectify"
             }
             else   if option!["status"] == "3"{
-                cell.txt_Comment.text = "Not a issue"
+                cell.txt_Comment.text = "Not an issue"
             }
             else{
                 cell.txt_Comment.text = ""
@@ -503,11 +565,26 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 350
     }
+    @IBAction func actionShowPhoto(_ sender: UIButton){
+        
+        let defect = defectDetail.submissions[sender.tag]
+        let imgPreviewVC = kStoryBoardMain.instantiateViewController(withIdentifier: "PhotoViewController") as! PhotoViewController
+        var selectedIndex = 0
+        var arr = [String]()
+        
+        if let url = URL(string: "\(kImageFilePath)/" + defect.upload) {
+        
+        imgPreviewVC.arrayImages = ["\(kImageFilePath)/" + defect.upload]
+        imgPreviewVC.index = 0//sender.tag
+        imgPreviewVC.modalPresentationStyle = .fullScreen
+            self.parentVc.present(imgPreviewVC, animated: false, completion: nil)
+        }
+        }
     @IBAction func actionComment(_ sender:UIButton) {
        
         let dropDown_Status = DropDown()
         dropDown_Status.anchorView = sender // UIView or UIBarButtonItem
-        dropDown_Status.dataSource = ["Need to rectify", "Not a issue"]// Array(unitsData.values)
+        dropDown_Status.dataSource = ["Need to rectify", "Not an issue"]// Array(unitsData.values)
         dropDown_Status.show()
         dropDown_Status.selectionAction = { [unowned self] (index: Int, item: String) in
             var indx = 0
@@ -563,9 +640,12 @@ extension SubmittedDefectsListTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

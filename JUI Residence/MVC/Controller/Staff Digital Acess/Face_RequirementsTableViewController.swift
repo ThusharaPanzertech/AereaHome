@@ -6,13 +6,14 @@
 //
 
 import UIKit
-
+import DropDown
 class Face_RequirementsTableViewController:  BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     let alertView_upload: UploadOptionsView = UploadOptionsView.getInstance
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var lbl_UserRole: UILabel!
-
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var btn_Next: UIButton!
@@ -21,6 +22,11 @@ class Face_RequirementsTableViewController:  BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         imgView_Profile.addborder()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
@@ -34,10 +40,10 @@ class Face_RequirementsTableViewController:  BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
       
       
@@ -82,6 +88,23 @@ class Face_RequirementsTableViewController:  BaseTableViewController {
     }
    
     //MARK: UIButton Action
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionNext(_ sender: UIButton){
         
         DispatchQueue.main.async {
@@ -94,6 +117,23 @@ class Face_RequirementsTableViewController:  BaseTableViewController {
 //        let faceUploadTVC = kStoryBoardMenu.instantiateViewController(identifier: "FaceUploadTableViewController") as! FaceUploadTableViewController
 //        self.navigationController?.pushViewController(faceUploadTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         let settingsTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsTableViewController") as! SettingsTableViewController
         self.navigationController?.pushViewController(settingsTVC, animated: true)
@@ -102,7 +142,8 @@ class Face_RequirementsTableViewController:  BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -119,9 +160,12 @@ extension Face_RequirementsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

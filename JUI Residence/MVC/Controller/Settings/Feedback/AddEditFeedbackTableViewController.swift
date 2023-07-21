@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DropDown
 class AddEditFeedbackTableViewController: BaseTableViewController {
     
     //Outlets
@@ -21,6 +21,8 @@ class AddEditFeedbackTableViewController: BaseTableViewController {
     @IBOutlet weak var btn_Delete: UIButton!
     @IBOutlet  var arr_Btns: [UIButton]!
     @IBOutlet weak var bottomSpace: NSLayoutConstraint!
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     var option: FeedbackOption!
     var isToDelete = false
     var isToEdit: Bool!
@@ -32,16 +34,21 @@ class AddEditFeedbackTableViewController: BaseTableViewController {
         super.viewDidLoad()
         lbl_MsgTitle.text = "Feedback Option\n Added"
         lbl_MsgDesc.text = "The requested feedback option has\n been added into the list."
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         imgView_Profile.addborder()
         for btn in arr_Btns{
             btn.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
             btn.layer.cornerRadius = 8.0
         }
+        lbl_SwitchProperty.text = kCurrentPropertyName
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         txt_FeedbackOption.layer.cornerRadius = 20.0
         txt_FeedbackOption.layer.masksToBounds = true
         txt_FeedbackOption.delegate = self
@@ -207,6 +214,23 @@ class AddEditFeedbackTableViewController: BaseTableViewController {
     }
  
     //MARK: BUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionDelete(_ sender: UIButton){
         showDeleteAlert()
         
@@ -237,12 +261,13 @@ class AddEditFeedbackTableViewController: BaseTableViewController {
         }
     }
     @IBAction func actionBackPressed(_ sender: UIButton){
+        self.view.endEditing(true)
         if isToEdit{
             self.navigationController?.popViewController(animated: true)
         }
         else{
         alertView.delegate = self
-        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.", okTitle: "Back", cancelTitle: "Yes")
+        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.",okTitle: "Yes", cancelTitle: "Back")
         }
     }
     //MARK: MENU ACTIONS
@@ -251,7 +276,8 @@ class AddEditFeedbackTableViewController: BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -259,6 +285,23 @@ class AddEditFeedbackTableViewController: BaseTableViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -285,9 +328,12 @@ extension AddEditFeedbackTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
       
@@ -312,7 +358,7 @@ extension AddEditFeedbackTableViewController: UITextFieldDelegate{
 }
 extension AddEditFeedbackTableViewController: AlertViewDelegate{
     func onBackClicked() {
-        self.navigationController?.popViewController(animated: true)
+        
     }
     
     func onCloseClicked() {
@@ -322,6 +368,9 @@ extension AddEditFeedbackTableViewController: AlertViewDelegate{
     func onOkClicked() {
         if isToDelete == true{
         deleteFeedbackOption()
+        }
+        else{
+            self.navigationController?.popViewController(animated: true)
         }
     }
     

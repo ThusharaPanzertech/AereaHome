@@ -32,7 +32,8 @@ class UpdateParticularsTableViewController: BaseTableViewController {
     @IBOutlet weak var table_Owners: UITableView!
     @IBOutlet weak var table_Tenants: UITableView!
     
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var txt_Status: UITextField!
     @IBOutlet weak var txtView_Remarks: UITextView!
    
@@ -74,6 +75,10 @@ class UpdateParticularsTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         txtView_Remarks.layer.cornerRadius = 15
         txtView_Remarks.layer.masksToBounds = true
         //ToolBar
@@ -94,12 +99,12 @@ class UpdateParticularsTableViewController: BaseTableViewController {
         }
         txtView_Remarks.delegate = self
         
-      
+        lbl_SwitchProperty.text = kCurrentPropertyName
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         txt_Status.layer.cornerRadius = 20.0
         txt_Status.layer.masksToBounds = true
@@ -118,17 +123,19 @@ class UpdateParticularsTableViewController: BaseTableViewController {
        
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         let moving_date = formatter.date(from: updateParticularsData.submission.request_date)
      
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yy"
         let moving_dateStr = formatter.string(from: moving_date ?? Date())
        
       
         
         lbl_Ticket.text = updateParticularsData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
-        lbl_UnitNo.text = updateParticularsData.unit?.unit
+       // lbl_UnitNo.text = updateParticularsData.unit?.unit
+        let unit = updateParticularsData.unit?.unit
+        lbl_UnitNo.text = unit == nil ? "" : "#\(unit!)"
         lbl_Email.text = updateParticularsData.submission.email
         lbl_Address.text = updateParticularsData.submission.address
         
@@ -305,6 +312,23 @@ func closeMenu(){
 
    
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
         
         let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected"]
@@ -346,7 +370,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -379,6 +404,23 @@ func closeMenu(){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -406,9 +448,12 @@ extension UpdateParticularsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

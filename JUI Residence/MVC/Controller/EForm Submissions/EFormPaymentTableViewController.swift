@@ -31,10 +31,12 @@ class EFormPaymentTableViewController: BaseTableViewController {
     @IBOutlet var arr_TextFields: [UITextField]!
     
     @IBOutlet weak var txt_PaymentMode: UITextField!
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var txt_ChequeAmt: UITextField!
     @IBOutlet weak var txt_ChequeBank: UITextField!
     @IBOutlet weak var txt_ChequeNo: UITextField!
+    @IBOutlet weak var txt_ChequeDate: UITextField!
     @IBOutlet weak var txt_ChequeReceiptNo: UITextField!
     
     @IBOutlet weak var txt_BankTransferDate: UITextField!
@@ -68,8 +70,11 @@ class EFormPaymentTableViewController: BaseTableViewController {
         toolbar.setItems([spaceButton,doneButton], animated: false)
     //    txtView_Address.inputAccessoryView = toolbar
        
-       
-
+         view_SwitchProperty.layer.borderColor = themeColor.cgColor
+         view_SwitchProperty.layer.borderWidth = 1.0
+         view_SwitchProperty.layer.cornerRadius = 10.0
+         view_SwitchProperty.layer.masksToBounds = true
+         lbl_SwitchProperty.text = kCurrentPropertyName
      //   lbl_SuccessTitle.text = "Change of Mailing\nAddress Application\nhas been submitted"
      //   lbl_SuccessSubTitle.text = "Your form has been submitted and we \nwill get back to you on the status of the\napplication"
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -85,10 +90,10 @@ class EFormPaymentTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         for btn in arr_Buttons{
             btn.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
@@ -177,11 +182,12 @@ class EFormPaymentTableViewController: BaseTableViewController {
                 txt_ChequeBank.text = self.moveInOutData.payment.cheque_bank
                 txt_ChequeAmt.text = self.moveInOutData.payment.cheque_amount
                 txt_ChequeReceiptNo.text = self.moveInOutData.payment.receipt_no
+                txt_ChequeDate.text = self.moveInOutData.payment.cheque_received_date
             }
            else  if self.moveInOutData.payment.payment_option == 2{
                 txt_PaymentMode.text = "Bank Transfer"
-                txt_BankTransferDate.text = self.moveInOutData.payment.bt_amount_received
-                txt_BankTransferAmt.text = self.moveInOutData.payment.bt_received_date
+                txt_BankTransferDate.text = self.moveInOutData.payment.bt_received_date
+                txt_BankTransferAmt.text = self.moveInOutData.payment.bt_amount_received
                 txt_BankTransferReceiptNo.text = self.moveInOutData.payment.receipt_no
             }
            else  if self.moveInOutData.payment.payment_option == 3{
@@ -208,6 +214,7 @@ class EFormPaymentTableViewController: BaseTableViewController {
                     txt_ChequeBank.text = self.renovationData.payment.cheque_bank
                     txt_ChequeAmt.text = self.renovationData.payment.cheque_amount
                     txt_ChequeReceiptNo.text = self.renovationData.payment.receipt_no
+                    txt_ChequeDate.text = self.renovationData.payment.cheque_received_date
                 }
                else  if self.renovationData.payment.payment_option == 2{
                     txt_PaymentMode.text = "Bank Transfer"
@@ -239,6 +246,7 @@ class EFormPaymentTableViewController: BaseTableViewController {
                 txt_ChequeBank.text = self.doorAceessData.payment.cheque_bank
                 txt_ChequeAmt.text = self.doorAceessData.payment.cheque_amount
                 txt_ChequeReceiptNo.text = self.doorAceessData.payment.receipt_no
+                txt_ChequeDate.text = self.doorAceessData.payment.cheque_received_date
             }
            else  if self.doorAceessData.payment.payment_option == 2{
                 txt_PaymentMode.text = "Bank Transfer"
@@ -296,30 +304,35 @@ class EFormPaymentTableViewController: BaseTableViewController {
     // add datepicker to textField
         txt_CashDate.inputView = datePicker
         
+        txt_ChequeDate.inputAccessoryView = toolbar
+    // add datepicker to textField
+        txt_ChequeDate.inputView = datePicker
 
       }
     
-    @objc func donedatePicker(){
-        
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.dateFormat = "dd/MM/yy"
-        
-        if txt_PaymentMode.text == "Cash"{
-            txt_CashDate.text = formatter.string(from: datePicker.date)
+        @objc func donedatePicker(){
+            
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+                formatter.dateFormat = "dd/MM/yy"
+            if txt_PaymentMode.text == "Cheque"{
+                txt_ChequeDate.text = formatter.string(from: datePicker.date)
+            }
+            if txt_PaymentMode.text == "Cash"{
+                txt_CashDate.text = formatter.string(from: datePicker.date)
+            }
+            else{
+                txt_BankTransferDate.text = formatter.string(from: datePicker.date)
+            }
+                self.view.endEditing(true)
+            
+          
+            
         }
-        else{
-            txt_BankTransferDate.text = formatter.string(from: datePicker.date)
-        }
-            self.view.endEditing(true)
-        
-      
-        
-    }
 
-    @objc func cancelDatePicker(){
-       self.view.endEditing(true)
-     }
+        @objc func cancelDatePicker(){
+           self.view.endEditing(true)
+         }
    
      override func viewWillDisappear(_ animated: Bool) {
          super.viewWillDisappear(animated)
@@ -360,9 +373,9 @@ func closeMenu(){
                                       value: UIFont(name: "Helvetica", size: 16)!,
                                       range: NSRange(location: 0, length: text.length))
                    
-
+                   // "Tiara Land Pte Ltd - Jui Residences MF Account"
                     
-                    let payableTo = settingsInfo.payable_to == "" ? "Tiara Land Pte Ltd - Jui Residences MF Account" : settingsInfo.payable_to
+                    let payableTo = response.payment_info.cheque_payable_to == "" ?  "-" : response.payment_info.cheque_payable_to
                     let text1 = NSMutableAttributedString(string: "\"\(payableTo)\"")
                     text1.addAttribute(NSAttributedString.Key.font,
                                                   value: UIFont(name: "Helvetica-Bold", size: 16)!,
@@ -429,7 +442,7 @@ func closeMenu(){
         formatter.dateFormat = "dd/MM/yy"
         let date_bank = formatter.date(from: txt_BankTransferDate.text! )
         formatter.dateFormat = "yyyy-MM-dd"
-     let dateStr_bank = formatter.string(from: date_bank ??  Date())
+        let dateStr_bank = formatter.string(from: date_bank ??  Date())
         
         params.setValue(paymentMode == 2 ? dateStr_bank : "", forKey: "bt_received_date")
         params.setValue(paymentMode == 2 ? txt_BankTransferAmt.text! : "", forKey: "bt_amount_received")
@@ -439,6 +452,10 @@ func closeMenu(){
         formatter.dateFormat = "yyyy-MM-dd"
      let dateStr_cash = formatter.string(from: date_cash ??  Date())
         
+        let date_cheque = formatter.date(from: txt_ChequeDate.text! )
+        formatter.dateFormat = "yyyy-MM-dd"
+     let dateStr_cheque = formatter.string(from: date_cheque ??  Date())
+        params.setValue(paymentMode == 1 ? dateStr_cheque : "", forKey: "cheque_received_date")
         
         params.setValue(paymentMode == 3 ? txt_CashAmt.text! : "", forKey: "cash_amount_received")
         params.setValue(paymentMode == 3 ? dateStr_cash : "", forKey: "cash_received_date")
@@ -553,6 +570,23 @@ func closeMenu(){
     
     
      //MARK: UIBUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionHome(_ sender: UIButton){
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -670,7 +704,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -702,6 +737,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -772,9 +824,12 @@ extension EFormPaymentTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

@@ -13,6 +13,8 @@ class AddEditFacilityTableViewController:BaseTableViewController {
     fileprivate var multipleDates: [Date] = []
     //Outlets
     @IBOutlet  var arr_ViewsToHide: [UIView]!
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var space_NextBooking: NSLayoutConstraint!
     @IBOutlet weak var ht_Collection: NSLayoutConstraint!
     @IBOutlet weak var ht_Notes: NSLayoutConstraint!
@@ -48,10 +50,10 @@ class AddEditFacilityTableViewController:BaseTableViewController {
         setUpCollectionViewLayout()
         lbl_MsgTitle.text = "Facility Type\n Added"
         lbl_MsgDesc.text = "The requested facility type has\n been added into the list."
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         imgView_Profile.addborder()
         for btn in arr_Btns{
@@ -66,8 +68,13 @@ class AddEditFacilityTableViewController:BaseTableViewController {
             field.attributedPlaceholder = NSAttributedString(string: field.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
             field.backgroundColor = isToEdit ? UIColor.white : UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
         }
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         collection_FacilityTiming.layer.cornerRadius = 15
         collection_FacilityTiming.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         txt_Notes.layer.cornerRadius = 15
         txt_Notes.layer.masksToBounds = true
             collection_FacilityTiming.backgroundColor = isToEdit ? UIColor.white : UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
@@ -333,6 +340,23 @@ func setUpCollectionViewLayout(){
     }
  
     //MARK: BUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func action_NextBookingAvailable(_ sender:UIButton) {
        
         let dropDown_NextBooking = DropDown()
@@ -430,12 +454,13 @@ func setUpCollectionViewLayout(){
         }
     }
     @IBAction func actionBackPressed(_ sender: UIButton){
+        self.view.endEditing(true)
         if isToEdit{
             self.navigationController?.popViewController(animated: true)
         }
         else{
         alertView.delegate = self
-        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.", okTitle: "Back", cancelTitle: "Yes")
+        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.", okTitle: "Yes", cancelTitle: "Back")
         }
     }
     //MARK: MENU ACTIONS
@@ -444,7 +469,8 @@ func setUpCollectionViewLayout(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -452,6 +478,23 @@ func setUpCollectionViewLayout(){
         self.present(alert, animated: true, completion: nil)
     }
     
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -478,9 +521,12 @@ extension AddEditFacilityTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
       
@@ -505,7 +551,6 @@ extension AddEditFacilityTableViewController: UITextFieldDelegate{
 }
 extension AddEditFacilityTableViewController: AlertViewDelegate{
     func onBackClicked() {
-        self.navigationController?.popViewController(animated: true)
     }
     
     func onCloseClicked() {
@@ -515,6 +560,9 @@ extension AddEditFacilityTableViewController: AlertViewDelegate{
     func onOkClicked() {
         if isToDelete == true{
             deleteFacilityType()
+        }
+        else{
+            self.navigationController?.popViewController(animated: true)
         }
     }
     

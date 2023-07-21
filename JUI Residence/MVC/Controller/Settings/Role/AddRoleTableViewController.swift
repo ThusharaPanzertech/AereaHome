@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DropDown
 class AddRoleTableViewController: BaseTableViewController {
 
     //Outlets
@@ -16,6 +16,8 @@ class AddRoleTableViewController: BaseTableViewController {
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var btn_Submit: UIButton!
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet  var arr_Btns: [UIButton]!
     let alertView: AlertView = AlertView.getInstance
     let alertView_message: MessageAlertView = MessageAlertView.getInstance
@@ -23,10 +25,15 @@ class AddRoleTableViewController: BaseTableViewController {
     var isToShowSucces = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        let fname = Users.currentUser?.user?.name ?? ""
+        lbl_SwitchProperty.text = kCurrentPropertyName
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         imgView_Profile.addborder()
         for btn in arr_Btns{
@@ -116,6 +123,23 @@ class AddRoleTableViewController: BaseTableViewController {
    
  
     //MARK: BUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionCreateRole(_ sender: UIButton){
         let role = txt_RoleName.text?.replacingOccurrences(of: " ", with: "")
         if txt_RoleName.text == ""{
@@ -129,8 +153,9 @@ class AddRoleTableViewController: BaseTableViewController {
         }
     }
     @IBAction func actionBackPressed(_ sender: UIButton){
+        self.view.endEditing(true)
         alertView.delegate = self
-        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.", okTitle: "Back", cancelTitle: "Yes")
+        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.",okTitle: "Yes", cancelTitle: "Back")
     }
     //MARK: MENU ACTIONS
   
@@ -138,7 +163,8 @@ class AddRoleTableViewController: BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -146,6 +172,23 @@ class AddRoleTableViewController: BaseTableViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -172,9 +215,12 @@ extension AddRoleTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
       
@@ -199,7 +245,7 @@ extension AddRoleTableViewController: UITextFieldDelegate{
 }
 extension AddRoleTableViewController: AlertViewDelegate{
     func onBackClicked() {
-        self.navigationController?.popViewController(animated: true)
+       
     }
     
     func onCloseClicked() {
@@ -207,7 +253,7 @@ extension AddRoleTableViewController: AlertViewDelegate{
     }
     
     func onOkClicked() {
-     //   deletFeedback()
+        self.navigationController?.popViewController(animated: true)
     }
     
     

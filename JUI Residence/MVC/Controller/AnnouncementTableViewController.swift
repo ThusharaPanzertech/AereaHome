@@ -22,6 +22,8 @@ class AnnouncementTableViewController: BaseTableViewController {
     @IBOutlet var arr_Buttons: [UIButton]!
     @IBOutlet weak var view_Photo: UIView!
     @IBOutlet weak var imgView_Profile: UIImageView!
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     var array_Images = [UIImage]()
     let menu: MenuView = MenuView.getInstance
     var imagePicker = UIImagePickerController()
@@ -31,10 +33,15 @@ class AnnouncementTableViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+        lbl_SwitchProperty.text = kCurrentPropertyName
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
@@ -137,8 +144,25 @@ class AnnouncementTableViewController: BaseTableViewController {
         return super.tableView(tableView, heightForRowAt: indexPath)
     }
     //MARK: UIBUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionRoles(_ sender:UIButton) {
-        let sortedArray = roles.sorted { $0.key < $1.key }
+        let sortedArray = roles.sorted { $0.value < $1.value }
         let arrRoles = sortedArray.map { $0.value }
         let dropDown_Roles = DropDown()
         dropDown_Roles.anchorView = sender // UIView or UIBarButtonItem
@@ -239,8 +263,9 @@ class AnnouncementTableViewController: BaseTableViewController {
         
     }
     @IBAction func actionBackPressed(_ sender: UIButton){
+        self.view.endEditing(true)
         alertView.delegate = self
-        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.", okTitle: "Back", cancelTitle: "Yes")
+        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.", okTitle: "Yes", cancelTitle: "Back")
     }
     @IBAction func actionUploadPhoto(_ sender: UIButton) {
         self.view.endEditing(true)
@@ -297,7 +322,8 @@ class AnnouncementTableViewController: BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -328,6 +354,23 @@ class AnnouncementTableViewController: BaseTableViewController {
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -403,9 +446,12 @@ extension AnnouncementTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -434,7 +480,7 @@ extension AnnouncementTableViewController: UITextViewDelegate{
     }
 }
 extension AnnouncementTableViewController: AlertViewDelegate{
-    func onBackClicked() {
+    func onOkClicked()  {
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -442,7 +488,7 @@ extension AnnouncementTableViewController: AlertViewDelegate{
         
     }
     
-    func onOkClicked() {
+    func onBackClicked() {
        
     }
     

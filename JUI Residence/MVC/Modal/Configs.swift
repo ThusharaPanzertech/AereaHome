@@ -17,6 +17,7 @@ let kStoryBoardMenu = UIStoryboard(name: "Menu", bundle: nil)
 let kStoryBoardSettings = UIStoryboard(name: "Settings", bundle: nil)
 
 var kCurrentPropertyId = 0
+var kCurrentPropertyName = ""
 
 let kAnnouncement = "Announcement"
 let kKeyCollection = "Key Collection"
@@ -29,6 +30,7 @@ let kFeedback = "Feedback"
 let kCondoDocument = "Condo Document"
 let kResidentsFileUpload = "Resident File Upload"
 let kVisitorManagement = "Visitor Management"
+let kDoorRecords = "Open Door Records"
 let kUserManagement = "User Management"
 let kSite = "Site Configurations"
 let kModule = "Module Configuration"
@@ -74,6 +76,8 @@ var kImageFilePath          = isDevelopment ? "https://aerea.panzerplayground.co
 
 
 struct API {
+    static let kHistoryLog = "loginHistoryLogs"
+    static let kLogoutHistoryLogs = "logoutHistoryLogs"
     static let kLogin                   = "login"
     static let kVerifyOTP = "verifyotp"
     static let kResendOtp = "resendotp"
@@ -84,15 +88,35 @@ struct API {
     static let kCreateAnnouncement = "createannouncement"
     static let kDeleteAnnouncement = "deleteannouncement"
     static let kGetUserList = "usersummarylist"
+    
+    static let kGetSystemAccessList = "useraccess"
+    static let kUpdateSystemAccess = "useraccessupdate"
+    static let kGetUserAccessList = "bulkuseraccess"
+    static let kSearchUserAccessList = "bulkuseraccesssearch"
+    static let kSubmitUserAccess = "useraccessupdate"
     static let kGetUserData = "userinfo"
     static let kGetUnits = "unitlist"
+    static let kGetUnitCard = "unitcards"
+    static let kGetCountry = "countries"
+    static let kGetAssignedUnits = "userunits"
+    static let kAssignUnit = "assignunit"
+    static let kDeleteAssignednUnit = "deleteunit"
+    static let kSearchUnits = "unitsummarysearch"
+    static let kGetUnitListType = "unitsummarytypes"
     static let kGetPropertyList = "getpropertylist"
+    static let kSwitchProperty = "switchproperty"
     static let kGetRoles = "roleslist"
+    static let kGetUserRoles = "userroles"
     static let kCreateUser = "createuser"
     static let kUpdateUser = "updateuser"
     static let kDeleteUser = "deleteuser"
     static let kSearchUser = "searchuser"
+    
+    static let kActivateUser = "activateuser"
+    static let kDeactivateUser = "deactivateuser"
+    
     static let kKeyCollectionSummary = "keycollectionlist"
+    static let kKeyCollectionInfo = "keycollectioninfo"
     static let kSearchKeyCollection = "searchkeycollection"
     static let kKeyCollectionSummaryNew = "keycollectionnewlist"
     static let kDeleteKeyCollection = "deletekeycollection"
@@ -110,6 +134,7 @@ struct API {
     
     static let kGetFacilityOptions = "facilityoptions"
     static let kGetFacilitySummary = "facilitylist"
+    static let kGetFacilityInfo = "facilityinfo"
     static let kFacilitySearch = "searchfacility"
     static let kGetNewFacilities = "facilitynewlist"
     static let kEditFacility = "editfacility"
@@ -118,6 +143,14 @@ struct API {
     static let kApproveFacility = "confirmfacility"
     static let kDeclineFacility  = "cancelfacility"
     
+    static let kGetVisitorSummary = "visitorsummary"
+    static let kSearchVisitorSummary = "visitorsearch"
+    static let kGetVisitorInfo = "visitorinfo"
+    static let kDeleteVisitorBooking = "visitordelete"
+    static let kUpdateVisitorBooking = "visitoredit"
+    static let kGetVisitorAvailability = "availability_check"
+    static let kGetVisitorFunction = "visitor_types"
+    static let kRegisterVisitorWalkin = "visitorwalkin"
     
     static let kGetDefectsSummary = "defectslist"
     static let kDefectSearch = "defectssearch"
@@ -126,14 +159,16 @@ struct API {
     static let kUpdateDefectInspectionSignature = "defectsupdate"
     static let kGetInspectionTimings = "defecttimeslot"
     static let kEditInspectionAppt = "defectsinspectionupdate"
+    static let kCancelInspectionAppt = "defectscancelinspection"
     static let kUpdateHandoverSignature = "defectshandoverupdate"
     
     static let kGetResidentFileSummary = "resFileSummary"
+    static let kGetResidentFileInfo = "resFileInfo"
     static let kGetResidentFileSummaryNew = "resFileSummaryNew"
     static let kResidentFileSearch = "resFileSearch"
     static let kGetNewResidentFileUploads = "resFileSummaryNew"
     static let kEditResidentFile = "resFileEdit"
-  //  static let kCancelResidentFile = "cancelfacility"
+    static let kDeleteResidentFileUpload = "resFileDelete"
     
     
     static let kSettings_PropertyInfo = "propertyinfo"
@@ -179,6 +214,7 @@ struct API {
     
     static let kEForm_SettingsInfo = "eformsettingsinfo"
     static let kEForm_MoveInOutSummary = "moveinoutsummary"
+    static let kEForm_MoveInOutInfo = "moveinoutinfo"
     static let kEForm_MoveInOutSearch = "moveinoutsearch"
     static let kEForm_MoveInOutDelete = "moveinoutdelete"
     static let kEForm_MoveInOutUpdate = "moveinoutedit"
@@ -186,6 +222,7 @@ struct API {
     static let kEForm_MoveInOutPayment = "moveinoutpaymentsave"
     
     static let kEForm_RenovationSummary = "renovationsummary"
+    static let kEForm_RenovationInfo = "renovationinfo"
     static let kEForm_RenovationSearch = "renovationsearch"
     static let kEForm_RenovationDelete = "renovationdelete"
     static let kEForm_RenovationUpdate = "renovationedit"
@@ -193,6 +230,7 @@ struct API {
     static let kEForm_RenovationInspection = "renovationinspectionsave"
     
     static let kEForm_DoorAccessSummary = "dooraccesssummary"
+    static let kEForm_DoorAccessInfo = "dooraccessinfo"
     static let kEForm_DoorAccessSearch = "dooraccesssearch"
     static let kEForm_DoorAccessDelete = "dooraccessdelete"
     static let kEForm_DoorAccessUpdate = "dooraccessedit"
@@ -200,16 +238,20 @@ struct API {
     static let kEForm_DoorAccessAcknowledgement = "dooracknowledgementsave"
     
     static let kEForm_VehicleRegSummary = "regvehiclesummary"
+    static let kEForm_VehicleRegInfo = "regvehicleinfo"
     static let kEForm_VehicleRegSearch = "regvehiclesearch"
     static let kEForm_VehicleRegDelete = "regvehicledelete"
     static let kEForm_VehicleRegUpdate = "regvehicleedit"
+    static let kEForm_VehicleRegDetails = "regvehicleinfo"
     
     static let kEForm_UpdateAddressSummary = "changeaddresssummary"
     static let kEForm_UpdateAddressSearch = "changeaddresssearch"
+    static let kEForm_UpdateAddressInfo = "changeaddressinfo"
     static let kEForm_UpdateAddressDelete = "changeaddressdelete"
     static let kEForm_UpdateAddressUpdate = "changeaddressedit"
     
     static let kEForm_UpdateParticularsSummary = "updateparticularsummary"
+    static let kEForm_UpdateParticularInfo = "updateparticularinfo"
     static let kEForm_UpdateParticularsSearch = "updateparticularsearch"
     static let kEForm_UpdateParticularsDelete = "updateparticulardelete"
     static let kEForm_UpdateParticularsUpdate = "updateparticularedit"
@@ -242,10 +284,16 @@ struct API {
     static let kGetHolidayInfo = "holidayinfo"
     static let kSubmitHolidayInfo = "holidayedit"
     
+    static let kAssignDeviceList = "userdevicelists"
+    static let kUpdateAssignDevice = "userdeviceupdate"
+    
     static let kGetFaceIds = "stafffaceids"
     static let kDeleteFaceId = "faceiddelete"
     static let kGetStaffRolesList = "getroleslist"
     static let kGetBuildingSummaryList = "buildingsummarylist"
+    static let kCreateBuildingList = "buildingcreate"
+    static let kEditBuildingList = "buildingedit"
+    static let kDeleteBuildingList = "buildingdelete"
     static let kGetBuildingUnitsList = "unitsearch"
     static let kGetFaceOptions = "uploadoptions"
     static let kGetUserByRole = "getstafflist"
@@ -254,6 +302,31 @@ struct API {
     static let kGetBluetoothDevices = "staffbluetoothdevices"
     static let kGetRemoteDevices = "staffremotedevices"
     static let kGetThinmooToken = "getaccesstoken"
+    static let kInsertThinmooRecord = "InsertBluetoothOpenRecord"
+    
+    static let kGetNormalDoorRecord = "dooropen"
+    static let kSearchNormalDoorRecord  = "searchdooropen"
+    static let kGetBluetoothDoorRecord = "bluetoothdooropen"
+    static let kSearchBluetoothDoorRecord = "searchbluetoothdooropen"
+    static let kGetFailedDoorRecord = "dooropenfailed"
+    static let kSearchFailedDoorRecord = "searchdooropenfailed"
+    static let kGetCallUnitDoorRecord = "callunit"
+    static let kSearchCallUnitDoorRecord = "searchcallunit"
+    static let kGetQRCodeDoorRecord = "qropenrecords"
+    static let kSearchQRCodeDoorRecord = "searchqropenrecords"
+    
+    static let kGetUnitListTypeSummary = "unitsummary"
+    
+    static let kGetInvoiceSummary = "invoice_report"
+    static let kSearchInvoiceSummary = "report_search"
+    static let kGetBatchInvoiceSummary = "batches"//batch_invoices
+    static let kGetInvoiceDetail = "invoiceview"
+    static let kSearchBatchInvoiceSummary = "batchesearch"
+    static let kDeleteBatchInvoice = "batchdelete"
+    static let kUpdateInvoicePayment = "paymentsave"
+    
+    static let kGetNotification = "manager_notifications"
+    static let kUpdateNotification = "update_notification"
     
 }
 enum Appointment{
@@ -263,6 +336,7 @@ enum Appointment{
 }
 enum MenuType {
     case home
+    case notifiation
     case settings
     case logout
 }

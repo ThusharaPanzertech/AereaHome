@@ -29,6 +29,16 @@ class SignatureView: UIView {
     open func showInView(_ view: UIView?,   parent: BaseTableViewController, tag: Int, name: String){
         self.parentView = view
         txtName.text = name
+        //ToolBar
+          let toolbar = UIToolbar();
+          toolbar.sizeToFit()
+          let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done));
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        toolbar.setItems([spaceButton,doneButton], animated: false)
+        txtName.inputAccessoryView = toolbar
+        
+        
+        
         self.vwSignature.clear()
         self.tag = tag
         self.parentController = parent
@@ -53,6 +63,9 @@ class SignatureView: UIView {
       //  view?.addSubview(self)
         kAppDelegate.window!.addSubview(self)
         vwSignature.delegate = self
+    }
+    @objc func done(){
+        txtName.resignFirstResponder()
     }
     func closeAlert(){
         self.removeFromSuperview()

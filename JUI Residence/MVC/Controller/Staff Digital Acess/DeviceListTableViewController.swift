@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DropDown
 class DeviceListTableViewController:  BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -16,7 +16,8 @@ class DeviceListTableViewController:  BaseTableViewController {
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var collection_DeviceList: UICollectionView!
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     var array_devices = [DeviceListModal]()
     var heightSet = false
     var tableHeight: CGFloat = 0
@@ -24,6 +25,11 @@ class DeviceListTableViewController:  BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imgView_Profile.addborder()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
             self.imgView_Profile.af_setImage(
@@ -36,10 +42,10 @@ class DeviceListTableViewController:  BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
       
         lbl_Title.text = isBluetooth ? kStaffBluetoothDoorOpen : kStaffRemoteDoorOpen
@@ -139,7 +145,40 @@ class DeviceListTableViewController:  BaseTableViewController {
    
     //MARK: UIButton Action
    
-   
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         let settingsTVC = kStoryBoardSettings.instantiateViewController(identifier: "SettingsTableViewController") as! SettingsTableViewController
         self.navigationController?.pushViewController(settingsTVC, animated: true)
@@ -148,7 +187,8 @@ class DeviceListTableViewController:  BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -165,9 +205,12 @@ extension DeviceListTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -286,7 +329,7 @@ extension DeviceListTableViewController: MenuViewDelegate{
                 if ret == 0{
                     ActivityIndicatorView.hiding()
                     self.displayToastMessage("Open door success")
-             //       self.insertThinmooRecord(device: device, status: 1)
+                    self.insertThinmooRecord(device: device, status: 1)
                 }
                 else{
                     ActivityIndicatorView.hiding()
@@ -304,7 +347,7 @@ extension DeviceListTableViewController: MenuViewDelegate{
                         msg = "\(ret)"
                     }
                     self.displayErrorAlert(alertStr: "Operation device failure - \(msg) ", title: "Oops")
-                   // self.insertThinmooRecord(device: device, status: 0)
+                    self.insertThinmooRecord(device: device, status: 0)
                 }
             }
         }
@@ -326,8 +369,35 @@ extension DeviceListTableViewController: MenuViewDelegate{
              self.displayErrorAlert(alertStr: "Operation device failure - \(msg) ", title: "Oops")
             
           //  self.displayToastMessage("Operation device failure，ret= \(returnData)")
-     //       self.insertThinmooRecord(device: device, status: 0)
+            self.insertThinmooRecord(device: device, status: 0)
         }
+    }
+    func insertThinmooRecord(device : DeviceListModal, status: Int){
+        let propertyId =  kCurrentPropertyId
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let insertDate = formatter.string(from:  Date())
+       
+        
+        ApiService.insert_thinmooRecord(parameters: ["user_id": userId, "property_id":propertyId, "devSn": device.thinmoo.devSn, "devMac":device.thinmoo.devMac, "devType": device.thinmoo.deviceModelValue, "eKey" :  device.thinmoo.appEkey,"status": "\(status)", "call_date_time": "\(insertDate)", "action_type": 0], completion: { status, result, error in
+        
+        
+           
+         //   ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                if let response = (result as? ThinmooRecordBase){
+                   //Success
+                }
+        }
+            else if error != nil{
+             //   self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Oops")
+            }
+            else{
+              //  self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Oops")
+            }
+        })
     }
     
 }

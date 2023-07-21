@@ -11,6 +11,8 @@ import DropDown
 class ResidentFileDetailsTableViewController: BaseTableViewController {
 
     //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var lbl_UnitNo: UILabel!
     @IBOutlet weak var lbl_UploadBy: UILabel!
     @IBOutlet weak var lbl_UploadDate: UILabel!
@@ -36,8 +38,14 @@ class ResidentFileDetailsTableViewController: BaseTableViewController {
     var residentFileData: ResidentFileModal!
     var array_Images = [String]()
     let documentInteractionController = UIDocumentInteractionController()
+    var isToDelete = false
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -60,10 +68,10 @@ class ResidentFileDetailsTableViewController: BaseTableViewController {
         layout.itemSize = size
         collection_Files.collectionViewLayout = layout
     
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         
             let toolbarDone = UIToolbar.init()
@@ -124,11 +132,13 @@ func closeMenu(){
         }
         
         lbl_UploadBy.text = residentFileData.user.name
-        lbl_UnitNo.text = "\(residentFileData.user.unit_no)"
+        lbl_UnitNo.text = "#\(residentFileData.unit.unit)"
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let date = formatter.date(from: residentFileData.submission.created_at)
+        
+        let submission = residentFileData.submission == nil ? residentFileData.data : residentFileData.submission
+        let date = formatter.date(from: submission!.created_at)
         formatter.dateFormat = "dd/MM/yy"
         let dateStr = formatter.string(from: date ?? Date())
         
@@ -136,13 +146,13 @@ func closeMenu(){
         lbl_UploadDate.text = dateStr
         
         
-        txt_Status.text = residentFileData.submission.status == 0 ? "New" :
-        residentFileData.submission.status == 1  ? "Processing" : residentFileData.submission.status == 2 ? "Processed" : ""
+        txt_Status.text = submission!.status == 0 ? "New" :
+        submission!.status == 1  ? "Processing" : submission!.status == 2 ? "Processed" : ""
         lbl_Category.text = residentFileData.cat?.docs_category
         
   
-        txt_Comment.text = residentFileData.submission.remarks
-        lbl_Message.text = residentFileData.submission.notes
+        txt_Comment.text = submission!.remarks
+        lbl_Message.text = submission!.notes
         
       
         
@@ -150,26 +160,28 @@ func closeMenu(){
     }
     //MARK: ******  PARSING *********
     func deletFileUpload(){
-     /*
+     
         ActivityIndicatorView.show("Loading")
         let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
         //
-     
-        let id = feedback.submissions.id
+        let submission = residentFileData.submission == nil ? residentFileData.data : residentFileData.submission
+        
+        let id = submission!.id
         let param = [
             "login_id" : userId,
             "id" : id,
           
         ] as [String : Any]
 
-        ApiService.delete_Feedback(parameters: param, completion: { status, result, error in
+        ApiService.delete_ResidentFileUpload(parameters: param, completion: { status, result, error in
             ActivityIndicatorView.hiding()
+            self.isToDelete = false
             if status  && result != nil{
                  if let response = (result as? DeleteUserBase){
                     if response.response == 1{
                         DispatchQueue.main.async {
                             self.alertView_message.delegate = self
-                            self.alertView_message.showInView(self.view_Background, title: "Feedback has been\n deleted", okTitle: "Home", cancelTitle: "View Feedbacks")
+                            self.alertView_message.showInView(self.view_Background, title: "File Upload has been\n deleted", okTitle: "Home", cancelTitle: "View Uploads")
                         }
                     }
                     else{
@@ -186,32 +198,33 @@ func closeMenu(){
                 self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
             }
         })
-      */
+      
     }
     func updateStatus(){
-       /*
+       
         ActivityIndicatorView.show("Loading")
         let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
         //
-     
-        let id = feedback.submissions.id
+        let submission = residentFileData.submission == nil ? residentFileData.data : residentFileData.submission
+        
+        let id = submission!.id
         let param = [
             "login_id" : userId,
             "id" : id,
             "remarks": txt_Comment.text!,
-            "status": txt_Status.text == "Open" ? 0 :
-                txt_Status.text == "Closed" ? 1 :
+            "status": txt_Status.text == "New" ? 0 :
+                txt_Status.text == "Processing" ? 1 :
             2
         ] as [String : Any]
-
-        ApiService.update_Feedback(parameters: param, completion: { status, result, error in
+       
+        ApiService.update_ResidentFileUpload(parameters: param, completion: { status, result, error in
             ActivityIndicatorView.hiding()
             if status  && result != nil{
                  if let response = (result as? DeleteUserBase){
                     if response.response == 1{
                         DispatchQueue.main.async {
                             self.alertView_message.delegate = self
-                            self.alertView_message.showInView(self.view_Background, title: "Feedback changes\n has been saved", okTitle: "Home", cancelTitle: "View Feedbacks")
+                            self.alertView_message.showInView(self.view_Background, title: "Resident file upload changes have been saved", okTitle: "Home", cancelTitle: "View Resident file Uploads")
                         }
                     }
                     else{
@@ -228,11 +241,33 @@ func closeMenu(){
                 self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
             }
         })
-        */
+        
     }
     
 
     //MARK: UIButton Action
+    @IBAction func actionBackPressed(_ sender: UIButton){
+        self.view.endEditing(true)
+        alertView.delegate = self
+        alertView.showInView(self.view_Background, title: "Are you sure you want to\n leave this page?\nYour changes would not\n be saved.",okTitle: "Yes", cancelTitle: "Back")
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
        
         let dropDown_Unit = DropDown()
@@ -248,6 +283,7 @@ func closeMenu(){
        updateStatus()
     }
     @IBAction func actionDelete(_ sender: UIButton){
+        isToDelete = true
         alertView.delegate = self
         alertView.showInView(self.view_Background, title: "Are you sure you want to\n delete the following\nfile upload?", okTitle: "Yes", cancelTitle: "Back")
     }
@@ -260,7 +296,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -293,6 +330,23 @@ func closeMenu(){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -315,16 +369,22 @@ func closeMenu(){
 
     
 extension ResidentFileDetailsTableViewController: AlertViewDelegate{
-    func onBackClicked() {
-        self.navigationController?.popViewController(animated: true)
+    func onOkClicked() {
+        if isToDelete == true{
+            deletFileUpload()
+        }
+        else{
+            self.navigationController?.popViewController(animated: true)
+            
+        }
     }
     
     func onCloseClicked() {
         
     }
     
-    func onOkClicked() {
-        deletFileUpload()
+    func onBackClicked() {
+        
     }
     
     
@@ -349,9 +409,12 @@ extension ResidentFileDetailsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DropDown
 let kMovingInOut = "Moving In & Out Application"
 let kRenovationWork = "Renovation Work Application"
 let kResidentAccessCard = "Resident Access Card & Main Door Access"
@@ -16,10 +17,12 @@ let kDefectsNotification = "Defects Notification Form"
 let kUpdateParticulars = "Update of Particulars"
 
 class EFormTypesTableViewController: BaseTableViewController {
-
+    var eformMenu: DashboardMenu!
     let menu: MenuView = MenuView.getInstance
     var unitsData = [Unit]()
      //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
      @IBOutlet weak var lbl_UserName: UILabel!
      @IBOutlet weak var lbl_UserRole: UILabel!
     @IBOutlet weak var collection_eForms: UICollectionView!
@@ -30,10 +33,11 @@ class EFormTypesTableViewController: BaseTableViewController {
     
      override func viewDidLoad() {
          super.viewDidLoad()
-        let fname = Users.currentUser?.user?.name ?? ""
+         
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         imgView_Profile.addborder()
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -52,6 +56,11 @@ class EFormTypesTableViewController: BaseTableViewController {
         view_Background.layer.cornerRadius = 25.0
         view_Background.layer.masksToBounds = true
       setUpCollectionLayout()
+         view_SwitchProperty.layer.borderColor = themeColor.cgColor
+         view_SwitchProperty.layer.borderWidth = 1.0
+         view_SwitchProperty.layer.cornerRadius = 10.0
+         view_SwitchProperty.layer.masksToBounds = true
+         lbl_SwitchProperty.text = kCurrentPropertyName
      }
      override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
@@ -99,7 +108,23 @@ func closeMenu(){
      
     
      //MARK: UIBUTTON ACTIONS
-   
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionNext(_ sender: UIButton){
        
        
@@ -111,12 +136,30 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
         }))
         self.present(alert, animated: true, completion: nil)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -147,9 +190,12 @@ extension EFormTypesTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -172,14 +218,14 @@ extension EFormTypesTableViewController: UICollectionViewDelegate, UICollectionV
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return array_eForms.count
+        return eformMenu.menus_lists.count//array_eForms.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "docCell", for: indexPath) as! DocumentCollectionViewCell
-        let file = self.array_eForms[indexPath.item]
+        let file = self.eformMenu.menus_lists[indexPath.item]
        
            
-        cell.lbl_DocumentName.text = file
+        cell.lbl_DocumentName.text = file.name
        
         cell.view_Outer.tag = indexPath.item
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
@@ -189,15 +235,19 @@ extension EFormTypesTableViewController: UICollectionViewDelegate, UICollectionV
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        let file = array_eForms[(sender! as UITapGestureRecognizer).view!.tag]
+        let file = eformMenu.menus_lists[(sender! as UITapGestureRecognizer).view!.tag].name
 //        switch indx {
 //        case 0,1,2:
+        if eformMenu.menus_lists[(sender! as UITapGestureRecognizer).view!.tag].permission == 1{
             let infoVC = kStoryBoardMenu.instantiateViewController(identifier: "EFormSummaryTableViewController") as! EFormSummaryTableViewController
         infoVC.formName = file
         infoVC.formType = self.getFormType(file: file)
         infoVC.unitsData = self.unitsData
             self.navigationController?.pushViewController(infoVC, animated: true)
-            
+        }
+        else{
+            self.displayErrorAlert(alertStr: "\(file) is currently not available in your subscription. Please contact us to find out more on how to unlock this function for your property.", title: "")
+        }
 //        default:
 //            break
 //        }

@@ -1,4 +1,4 @@
-//
+    //
 //  JUI_ResidenceUITests.swift
 //  JUI ResidenceUITests
 //

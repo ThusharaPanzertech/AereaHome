@@ -37,7 +37,8 @@ class RenovationDetailsTableViewController:  BaseTableViewController {
     @IBOutlet weak var lbl_HackingWorkEnd: UILabel!
     
     
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     
     
     @IBOutlet weak var txt_Status: UITextField!
@@ -49,7 +50,7 @@ class RenovationDetailsTableViewController:  BaseTableViewController {
     var dataSource = DataSource_Renovation()
 
     var renovationData: Renovation!
-   
+    var unit : Unit!
     var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,10 +92,10 @@ class RenovationDetailsTableViewController:  BaseTableViewController {
         dataSource.parentVc = self
         dataSource.renovationData = self.renovationData
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         txt_Status.text = renovationData.submission.status == 0 ? "New" :
             renovationData.submission.status == 1 ? "Cancelled" :
@@ -103,6 +104,11 @@ class RenovationDetailsTableViewController:  BaseTableViewController {
             renovationData.submission.status == 4 ? "Rejected" :
             renovationData.submission.status == 5 ? "Payment Pending" :
             renovationData.submission.status == 6 ? "Refunded" : ""
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
        
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -112,13 +118,13 @@ class RenovationDetailsTableViewController:  BaseTableViewController {
        
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         let moving_date = formatter.date(from: renovationData.submission.reno_date)
         let moving_start = formatter.date(from: renovationData.submission.reno_start)
         let moving_end = formatter.date(from: renovationData.submission.reno_end)
         let hack_start = formatter.date(from: renovationData.submission.hacking_work_start)
         let hack_end = formatter.date(from: renovationData.submission.hacking_work_end)
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yy"
         let moving_dateStr = formatter.string(from: moving_date ?? Date())
         let moving_startStr = formatter.string(from: moving_start ?? Date())
         let moving_endStr = formatter.string(from: moving_end ?? Date())
@@ -129,7 +135,9 @@ class RenovationDetailsTableViewController:  BaseTableViewController {
         lbl_Ticket.text = renovationData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_ResidentName.text = renovationData.submission.resident_name
-        lbl_UnitNo.text = renovationData.unit?.unit
+        //lbl_UnitNo.text = renovationData.unit?.unit
+        let unit = self.unit
+        lbl_UnitNo.text = unit == nil ? "" : "#\(unit!.unit)"
         lbl_ContactNo.text = renovationData.submission.contact_no
         lbl_Email.text = renovationData.submission.email
         lbl_CompanyName.text = renovationData.submission.reno_comp
@@ -279,6 +287,23 @@ func closeMenu(){
 
    
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
         
         let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected", "Payment Pending", "Refunded"]
@@ -320,7 +345,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -352,6 +378,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -394,18 +437,24 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         let data = renovationData.sub_con[indexPath.row]
         
         
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let expdate = formatter.date(from: data.permit_expiry)
-        formatter.dateFormat = "dd/MM/yyyy"
-        let expdateStr = formatter.string(from: expdate ?? Date())
+       
         
         cell.lbl_Indx.text = "\(indexPath.row + 1)"
        
         cell.lbl_Worker.text = data.workman
-        cell.lbl_Passport.text = data.nric
-        cell.lbl_ExpiryDate.text = expdateStr
+        cell.lbl_Passport.text = data.id_number
+        if data.id_type == 3{
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let expdate = formatter.date(from: data.permit_expiry)
+            formatter.dateFormat = "dd/MM/yy"
+            let expdateStr = formatter.string(from: expdate ?? Date())
+            cell.lbl_ExpiryDate.text = expdateStr
+        }
+        else{
+            cell.lbl_ExpiryDate.text = "-"
+        }
         
         cell.selectionStyle = .none
         return cell
@@ -425,9 +474,12 @@ extension RenovationDetailsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

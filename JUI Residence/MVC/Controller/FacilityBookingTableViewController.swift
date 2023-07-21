@@ -12,6 +12,8 @@ var selectedRowIndex_Facility = -1
 class FacilityBookingTableViewController: BaseTableViewController {
     
     //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var txt_Status: UITextField!
     @IBOutlet weak var txt_DateRange: UITextField!
     @IBOutlet weak var txt_Facility: UITextField!
@@ -34,6 +36,11 @@ class FacilityBookingTableViewController: BaseTableViewController {
     var facilityOptions = [String: String]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        lbl_SwitchProperty.text = kCurrentPropertyName
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -47,10 +54,10 @@ class FacilityBookingTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         table_FacilityList.dataSource = dataSource
         table_FacilityList.delegate = dataSource
@@ -79,7 +86,7 @@ class FacilityBookingTableViewController: BaseTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
        
         if indexPath.row == 1{
-            let ht = selectedRowIndex_Facility == -1  ?  (array_Facilities.count * 140) + 450 : ((array_Facilities.count - 1) * 140) + 205 + 450
+            let ht = selectedRowIndex_Facility == -1  ?  (array_Facilities.count * 140) + 500 : ((array_Facilities.count - 1) * 140) + 205 + 500
             return CGFloat(ht)
         }
         return super.tableView(tableView, heightForRowAt: indexPath)
@@ -186,53 +193,21 @@ func closeMenu(){
             ActivityIndicatorView.show("Loading")
             let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
             var param = [String : Any]()
-            if txt_Facility.text != ""{
+           
                 param = [
                     "login_id" : userId,
-                    "option": "category",
+                    "status" : txt_Status.text == "Cancelled" ? "1" :
+                        txt_Status.text == "Confirmed"  ? "2" :
+                        txt_Status.text == "New"  ? "3" : "" ,
                     "filter" : filter,
-                    "category" : fc_Id
-                    
-                ] as [String : Any]
-            }
-            else if txt_Status.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "status",
-                    "filter" : filter,
-                    "status" : txt_Status.text == "Cancelled" ? 1 :
-                        txt_Status.text == "Confirmed"  ? 2 : 3
-                    
-                ] as [String : Any]
-            }
-            else if txt_Unit.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "unit",
-                    "filter" : filter,
-                    "unit" : txt_Unit.text!
-                    
-                ] as [String : Any]
-            }
-            else if txt_DateRange.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "date",
+                    "category" : fc_Id,
+                    "unit" : txt_Unit.text!,
                     "fromdate" : self.startDate,
                     "todate" : self.endDate,
-                    "filter" : filter,
                     
                 ] as [String : Any]
-            }
-                else if txt_FilterBy.text != ""{
-                    param = [
-                        "login_id" : userId,
-                        "option": "category",
-                        "category" : "",
-                        "filter" : filter,
-                        
-                    ] as [String : Any]
-                }
+           
+           
             
                 ApiService.search_facility(parameters: param, completion: { status, result, error in
                    
@@ -264,6 +239,38 @@ func closeMenu(){
         }
         }
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSearch(_ sender:UIButton) {
+        self.searchFacility()
+    }
+    @IBAction func actionClear(_ sender:UIButton) {
+        self.txt_Facility.text = ""
+        txt_Unit.text = ""
+        txt_Status.text = ""
+        txt_DateRange.text = ""
+        txt_FilterBy.text = ""
+        startDate = ""
+        endDate = ""
+        self.getFacilitySummary()
+        
+        
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
         @IBAction func actionNewDefects(_ sender: UIButton){
             let defectTVC = self.storyboard?.instantiateViewController(identifier: "NewDefectsTableViewController") as! NewDefectsTableViewController
             defectTVC.appointmentType = .facility
@@ -278,11 +285,9 @@ func closeMenu(){
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
         dropDown_Unit.show()
         dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_Facility.text = ""
-            txt_DateRange.text = ""
-            txt_Status.text = ""
+           
             txt_Unit.text = item
-            self.searchFacility()
+           
             
         }
     }
@@ -294,7 +299,7 @@ func closeMenu(){
         dropDown_Filter.show()
         dropDown_Filter.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_FilterBy.text = item
-            self.searchFacility()
+           
             
         }
     }
@@ -305,16 +310,14 @@ func closeMenu(){
         dropDown_Status.dataSource = ["New", "Confirmed", "Cancelled"]// Array(unitsData.values)
         dropDown_Status.show()
         dropDown_Status.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_Facility.text = ""
-            txt_DateRange.text = ""
+           
             txt_Status.text = item
-            txt_Unit.text = ""
-            self.searchFacility()
+           
             
         }
     }
     @IBAction func actionFacility(_ sender:UIButton) {
-        let sortedArray = facilityOptions.sorted { $0.key < $1.key }
+        let sortedArray = facilityOptions.sorted { $0.value < $1.value }
         let arrfacilityOptions = sortedArray.map { $0.value }
         let dropDown_arrfacilityOptions = DropDown()
         dropDown_arrfacilityOptions.anchorView = sender // UIView or UIBarButtonItem
@@ -322,10 +325,7 @@ func closeMenu(){
         dropDown_arrfacilityOptions.show()
         dropDown_arrfacilityOptions.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_Facility.text = item
-            txt_Unit.text = ""
-            txt_Status.text = ""
-            txt_DateRange.text = ""
-            self.searchFacility()
+           
             
         }
     }
@@ -334,10 +334,18 @@ func closeMenu(){
           dateRangePickerViewController.delegate = self
           //dateRangePickerViewController.selectedStartDate = Date()
          // dateRangePickerViewController.selectedEndDate = Date()
-          
-           let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())  // 2022
+        let firstDayOfYear = DateComponents(calendar: calendar, year: currentYear).date  // "Jan 1, 2022 at 12:00 AM"
+
+       // let calendar: Calendar = Calendar.current
+        let startDate = calendar.startOfYear(Date())
+
+        let endDate = calendar.endOfYear(Date())
         
-           let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
+           let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: startDate )
+        
+           let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: endDate )
         
         
         dateRangePickerViewController.minimumDate = minimumDate
@@ -354,7 +362,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -386,6 +395,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -456,10 +482,13 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         formatter.dateFormat = "dd/MM/yy"
         let dateStr = formatter.string(from: date ?? Date())
         cell.lbl_BookingDate.text = dateStr
-        cell.lbl_BookedBy.text = facility.user_info?.name
+        let fname = facility.user_info?.first_name ?? ""
+        let lname = facility.user_info?.last_name ?? ""
+        let name = "\(fname) \(lname)"
+        cell.lbl_BookedBy.text = name
         cell.lbl_Status.text = facility.submissions.status == 0 ? "New" :
             facility.submissions.status == 1  ? "Cancelled" : facility.submissions.status == 2 ? "Confirmed" : ""
-        
+        cell.img_Arrow.image = indexPath.row == selectedRowIndex_Facility ? UIImage(named: "up_arrow") : UIImage(named: "down_arrow")
         return cell
       
     }
@@ -494,9 +523,12 @@ extension FacilityBookingTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -534,10 +566,7 @@ extension FacilityBookingTableViewController: CalendarDateRangePickerViewControl
         let fromDate = self.getDateString(date: startDate, format: "dd/MM/yy")
         let toDate = self.getDateString(date: endDate, format: "dd/MM/yy")
         self.txt_DateRange.text = "\(fromDate) - \(toDate)"
-        txt_Unit.text = ""
-        txt_Facility.text = ""
-        txt_Status.text = ""
-        self.searchFacility()
+       
         self.navigationController?.dismiss(animated: true, completion: nil)
        
     }
@@ -555,5 +584,48 @@ extension FacilityBookingTableViewController: CalendarDateRangePickerViewControl
        
         
         return dateStr
+    }
+}
+extension Date {
+    func year(using calendar: Calendar = .current) -> Int {
+        calendar.component(.year, from: self)
+    }
+    func firstDayOfYear(using calendar: Calendar = .current) -> Date? {
+        DateComponents(calendar: calendar, year: year(using: calendar)).date
+    }
+}
+extension Calendar {
+    
+    func dayOfWeek(_ date: Date) -> Int {
+        var dayOfWeek = self.component(.weekday, from: date) + 1 - self.firstWeekday
+        
+        if dayOfWeek <= 0 {
+            dayOfWeek += 7
+        }
+        
+        return dayOfWeek
+    }
+    
+    func startOfWeek(_ date: Date) -> Date {
+        return self.date(byAdding: DateComponents(day: -self.dayOfWeek(date) + 1), to: date)!
+    }
+    
+    func endOfWeek(_ date: Date) -> Date {
+        return self.date(byAdding: DateComponents(day: 6), to: self.startOfWeek(date))!
+    }
+    
+    func startOfMonth(_ date: Date) -> Date {
+        return self.date(from: self.dateComponents([.year, .month], from: date))!
+    }
+    
+    func endOfMonth(_ date: Date) -> Date {
+        return self.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth(date))!
+    }
+    func startOfYear(_ date: Date) -> Date {
+        return self.date(from: self.dateComponents([.year], from: date))!
+    }
+
+    func endOfYear(_ date: Date) -> Date {
+        return self.date(from: DateComponents(year: self.component(.year, from: date), month: 12, day: 31))!
     }
 }

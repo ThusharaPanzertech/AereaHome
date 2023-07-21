@@ -12,6 +12,8 @@ var selectedRowIndex_Appointment = -1
 class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
     //Outlets
     var selectedMonth = ""
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var lbl_title: UILabel!
     @IBOutlet weak var txt_Status: UITextField!
     @IBOutlet weak var txt_UnitNo: UITextField!
@@ -30,10 +32,15 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     var appointment: Appointment!
     var statusData = ["1":"Cancelled","2":"On Schedule","3" :"Done"]
-        //["1":"Active","2":"Inactive", "3":"Faulty","4":"Loss","5":"Stolen"]
+        //u
     //["1":"Cancelled","2":"On Schedule","3" :"Done"]
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -47,10 +54,10 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         selectedRowIndex_Appointment = -1
         lbl_title.text = appointment == .keyCollection ? "Key Collection" : "Defect Inspection"
@@ -81,9 +88,9 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         expiryDatePicker.onDateSelected = { (month: Int, year: Int) in
             let string = String(format: "%02d/%d", month, year)
             NSLog(string) // should show something like 05/2015
-            self.txt_Status.text = ""
+           
             self.txt_Month.text = string
-            self.txt_UnitNo.text = ""
+           
             
             self.selectedMonth = String(format: "%d-%02d",  year, month)
            
@@ -113,12 +120,12 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
                     
                 let string = String(format: "%02d/%d", month, year)
                 NSLog(string) // should show something like 05/2015
-                self.txt_Status.text = ""
+               
                 self.txt_Month.text = string
-                self.txt_UnitNo.text = ""
+               
                 }
             }
-        self.searchKeyCollectionSummary()
+      
         }
     }
     //MARK: ******  PARSING *********
@@ -168,30 +175,17 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         else{
         
             var param = [String : Any]()
-            if txt_Status.text != ""{
+           
                 param = [
                     "login_id" : userId,
-                    "option": "status",
-                    "status" : statusId
                     
-                ] as [String : Any]
-            }
-            else if txt_Month.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "month",
-                    "month" : selectedMonth
+                    "status" : statusId,
+                    "month" : selectedMonth,
                     
-                ] as [String : Any]
-            }
-            else if txt_UnitNo.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "unit",
                     "unit" : txt_UnitNo.text!
-                    
                 ] as [String : Any]
-            }
+          
+           
         
         ActivityIndicatorView.show("Loading")
       //  let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
@@ -258,7 +252,7 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         
         if indexPath.row == 1{
             if self.appointment == .keyCollection{
-                let ht = selectedRowIndex_Appointment == -1  ?  (array_KeyCollection.count * 100) + 310 : ((array_KeyCollection.count - 1) * 100) + 210 + 310
+                let ht = selectedRowIndex_Appointment == -1  ?  (array_KeyCollection.count * 100) + 380 : ((array_KeyCollection.count - 1) * 100) + 210 + 380
                 return CGFloat(ht)
             }
             else{
@@ -294,6 +288,35 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         return imgdefault
     }
 //MARK: UIBUTTON ACTION
+    @IBAction func actionSearch(_ sender:UIButton) {
+        self.searchKeyCollectionSummary()
+    }
+    @IBAction func actionClear(_ sender:UIButton) {
+        self.txt_Status.text = ""
+        txt_UnitNo.text = ""
+        txt_Month.text = ""
+        selectedMonth = ""
+        self.getKeyCollectionSummary()
+        
+        
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
         
         let sortedArray = statusData.sorted { $0.key < $1.key }
@@ -304,11 +327,7 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         dropDown_Status.show()
         dropDown_Status.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_Status.text = item
-            txt_Month.text = ""
-            txt_UnitNo.text = ""
-            if appointment == .keyCollection{
-            searchKeyCollectionSummary()
-            }
+           
             
         }
     }
@@ -321,12 +340,9 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         dropDown_Unit.dataSource = arrUnit//Array(unitsData.values)
         dropDown_Unit.show()
         dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_Status.text = ""
-            txt_Month.text = ""
+           
             txt_UnitNo.text = item
-            if appointment == .keyCollection{
-            searchKeyCollectionSummary()
-            }
+           
             
         }
     }
@@ -335,9 +351,9 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         expiryDatePicker.onDateSelected = { (month: Int, year: Int) in
             let string = String(format: "%02d/%d", month, year)
             NSLog(string) // should show something like 05/2015
-            self.txt_Status.text = ""
+          
             self.txt_Month.text = string
-            self.txt_UnitNo.text = ""
+           
         }
     }
     @IBAction func actionNewAppointment(_ sender: UIButton){
@@ -353,7 +369,8 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -385,6 +402,23 @@ class AppointmentUnitTakeOverTableViewController: BaseTableViewController {
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -428,7 +462,8 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         if self.appointment == .keyCollection {
         let apptInfo = self.array_KeyCollection[indexPath.row]
         cell.lbl_BookedBy.text = apptInfo.submission_info.getname?.name  ?? "-"
-        cell.lbl_UnitNo.text = apptInfo.submission_info.getunit?.unit ?? "-"
+        cell.lbl_UnitNo.text = apptInfo.submission_info.getunit?.unit != nil ?
+            "#\(apptInfo.submission_info.getunit!.unit)" : "-"
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -450,6 +485,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         cell.btn_Edit.addTarget(self, action: #selector(self.actionEdit(_:)), for: .touchUpInside)
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         cell.view_Outer.addGestureRecognizer(tap)
+        cell.img_Arrow.image = indexPath.row == selectedRowIndex_Appointment ? UIImage(named: "up_arrow") : UIImage(named: "down_arrow")
         if self.appointment == .keyCollection{
         if indexPath.row != selectedRowIndex_Appointment{
             for vw in cell.arrViews{
@@ -504,6 +540,7 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         }
        
     }
+    
 }
 
 
@@ -515,9 +552,12 @@ extension AppointmentUnitTakeOverTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

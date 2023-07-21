@@ -11,6 +11,8 @@ import DropDown
 class EditJointInspectionTableViewController: BaseTableViewController {
 
     //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var lbl_UserRole: UILabel!
     @IBOutlet weak var txt_Date: UITextField!
@@ -26,9 +28,16 @@ class EditJointInspectionTableViewController: BaseTableViewController {
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var btn_Submit: UIButton!
     @IBOutlet weak var datePicker:  UIDatePicker!
+    @IBOutlet weak var timePicker:  UIDatePicker!
     @IBOutlet var arr_Buttons: [UIButton]!
     @IBOutlet weak var collection_TimeSlot: UICollectionView!
     @IBOutlet weak var topSpace: NSLayoutConstraint!
+    
+    @IBOutlet weak var view_CancelInvitation: UIView!
+    @IBOutlet weak var view_CancelContent: UIView!
+    @IBOutlet weak var txt_Reason: UITextView!
+    
+    
     let alertView: AlertView = AlertView.getInstance
     let alertView_message: MessageAlertView = MessageAlertView.getInstance
     let menu: MenuView = MenuView.getInstance
@@ -39,6 +48,11 @@ class EditJointInspectionTableViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -52,10 +66,10 @@ class EditJointInspectionTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
       
         setUpUI()
@@ -115,6 +129,9 @@ class EditJointInspectionTableViewController: BaseTableViewController {
         txtView_email.textColor = placeholderColor
         txtView_message.text = "Enter Message"
         txtView_message.textColor = placeholderColor
+        
+        txtView_email.backgroundColor = .white
+        txtView_message.backgroundColor = .white
     }
     
     func getInspectionTimings(){
@@ -165,24 +182,50 @@ class EditJointInspectionTableViewController: BaseTableViewController {
 
         toolbar.setItems([cancelButton,spaceButton,doneButton], animated: false)
 
+        let toolbar1 = UIToolbar();
+        toolbar1.sizeToFit()
+        let doneButton1 = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(donedatePicker1));
+      
+
+      toolbar1.setItems([cancelButton,spaceButton,doneButton1], animated: false)
    // add toolbar to textField
         txt_Date.inputAccessoryView = toolbar
     // add datepicker to textField
         txt_Date.inputView = datePicker
         txt_HandoverDate.inputAccessoryView = toolbar
         txt_HandoverDate.inputView = datePicker
+        
+        
+        timePicker.datePickerMode = .time
+        txt_TimeSlot.inputAccessoryView = toolbar1
+        txt_TimeSlot.inputView = timePicker
       }
     @objc func donedatePicker(){
-        
+       
             let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.locale = Locale(identifier: "en_US_POSIX")
             formatter.dateFormat = "dd/MM/yy"
-        if txt_Date.becomeFirstResponder(){
-            txt_Date.text = formatter.string(from: datePicker.date)
-        }
-        else{
-            txt_HandoverDate.text = formatter.string(from: datePicker.date)
-        }
+            if txt_Date.becomeFirstResponder(){
+                txt_Date.text = formatter.string(from: datePicker.date)
+            }
+            else{
+                txt_HandoverDate.text = formatter.string(from: datePicker.date)
+            }
+        
+       
+        
+            self.view.endEditing(true)
+        
+    }
+    @objc func donedatePicker1(){
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "hh:mm a"
+        
+            txt_TimeSlot.text = formatter.string(from: timePicker.date)
+        
+    
+       
             self.view.endEditing(true)
         
     }
@@ -238,6 +281,23 @@ class EditJointInspectionTableViewController: BaseTableViewController {
         txtView_message.inputAccessoryView = toolbar
         txtView_email.delegate = self
         txtView_message.delegate = self
+        
+        
+        txt_Reason.layer.borderWidth = 1.0
+        txt_Reason.layer.borderColor = UIColor.lightGray.cgColor
+        txt_Reason.layer.masksToBounds = true
+        txt_Reason.layer.cornerRadius = 3.0
+        let toolbarDone = UIToolbar.init()
+        toolbarDone.sizeToFit()
+        let barBtnDone = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.done,
+                                              target: self, action: #selector(doneButtonAction))
+        let spaceButton1 = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        toolbarDone.items = [spaceButton1, barBtnDone] // You can even add cancel button too
+        txt_Reason.inputAccessoryView = toolbarDone
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.doneButtonAction))
+        view_CancelInvitation.addGestureRecognizer(tap)
+        txt_Reason.backgroundColor = .white
       
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -261,6 +321,35 @@ func closeMenu(){
     menu.removeView()
 }
     //MARK: ******  PARSING *********
+    func cancelAppointment(){
+        ActivityIndicatorView.show("Loading")
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+       
+        //
+        ApiService.cancel_InspectionAppointment(parameters: ["login_id":userId, "id" : self.defectDetail.id,  "bookId" : self.defectDetail.inspection!.id, "reason" : txt_Reason.text! ], completion: { status, result, error in
+           
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                 if let response = (result as? DeleteUserBase){
+                     if response.response == 1{
+                         DispatchQueue.main.async {
+                             self.alertView_message.delegate = self
+                             self.alertView_message.showInView(self.view_Background, title: "Appointment cancelled successfully", okTitle: "Home", cancelTitle: "View Defect List")
+                         }
+                     }
+                     else{
+                         self.displayErrorAlert(alertStr: response.message, title: "Alert")
+                     }
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
+    }
     func updateInspection(){
         ActivityIndicatorView.show("Loading")
         let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
@@ -304,6 +393,56 @@ func closeMenu(){
         })
     }
     //MARK: UIButton ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    @IBAction func actionCancelAppt(_ sender: UIButton){
+    txt_Reason.text = ""
+    UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: { [self] in
+    }, completion: { [self] finished in
+        self.view.addSubview(self.view_CancelInvitation)
+        self.view_CancelInvitation.frame = self.view.bounds
+        self.tableView.isScrollEnabled = false
+    
+    })
+    }
+    
+    @IBAction func actionCancel(_ sender: UIButton){
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: { [self] in
+        }, completion: { [self] finished in
+           
+            self.view_CancelInvitation.removeFromSuperview()
+            self.tableView.isScrollEnabled = true
+        })
+    }
+    @IBAction func actionDeclineRequest(_ sender: UIButton){
+        if txt_Reason.text.isEmpty {
+            displayErrorAlert(alertStr: "Please enter reason", title: "")
+        }
+        else {
+            let stripped = txt_Reason.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if stripped.isEmpty{
+                displayErrorAlert(alertStr: "Please enter a valid reason", title: "")
+            }
+            else{
+                cancelAppointment()
+            }
+        }
+    }
         @IBAction func actionStatus(_ sender:UIButton) {
            
             let dropDown_Status = DropDown()
@@ -373,7 +512,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -405,6 +545,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -524,9 +681,12 @@ extension EditJointInspectionTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DropDown
 class CondoDocumentsTableViewController: BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -15,14 +15,19 @@ class CondoDocumentsTableViewController: BaseTableViewController {
     @IBOutlet weak var imgView_Profile: UIImageView!
     @IBOutlet weak var view_Background: UIView!
     @IBOutlet weak var collection_CondoDoc: UICollectionView!
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     var array_Condos = [CondoCategory]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        let fname = Users.currentUser?.user?.name ?? ""
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
@@ -42,7 +47,7 @@ class CondoDocumentsTableViewController: BaseTableViewController {
     }
     func setUpUI(){
         
-        
+        lbl_SwitchProperty.text = kCurrentPropertyName
         view_Background.layer.cornerRadius = 25.0
         view_Background.layer.masksToBounds = true
       
@@ -105,6 +110,24 @@ func closeMenu(){
     
         self.collection_CondoDoc.reloadData()
         
+        
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
     }
     @IBAction func actionAdd(_ sender: UIButton){
         let editCondoTVC = kStoryBoardMenu.instantiateViewController(identifier: "EditCondoDocTableViewController") as! EditCondoDocTableViewController
@@ -123,7 +146,7 @@ func closeMenu(){
                  if let response = (result as? CondoCategoryBase){
                     self.array_Condos = response.data
                     if(self.array_Condos.count > 0){
-                        self.array_Condos = self.array_Condos.sorted(by: { $0.created_at > $1.created_at })
+                        self.array_Condos = self.array_Condos.sorted(by:  { $0.dateObj > $1.dateObj })
                     }
                      self.collection_CondoDoc.reloadData()
                     self.tableView.reloadData()
@@ -146,7 +169,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -178,6 +202,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -249,9 +290,12 @@ extension CondoDocumentsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

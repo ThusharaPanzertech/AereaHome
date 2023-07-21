@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -116,6 +116,8 @@
 		F36153380F9FFCA9117ED12239B3FB4B /* Tailor-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E7958CBDE0678C641840B81A3FBA43CE /* Tailor-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F47E4E5707EB746E39CBA999CDF4DAA0 /* NVActivityIndicatorAnimationSquareSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF8A367506B34FA9208FED305479151 /* NVActivityIndicatorAnimationSquareSpin.swift */; };
 		F616D133446433EDF3CC65D4D61E91AD /* NVActivityIndicatorAnimationBallScaleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A268FD661B2B6CCEFC2652F55E8494 /* NVActivityIndicatorAnimationBallScaleMultiple.swift */; };
+		F6BA5A2F2A680010009F248C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = F6BA5A2E2A680010009F248C /* FirebaseAnalytics */; };
+		F6BA5A312A680010009F248C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = F6BA5A302A680010009F248C /* FirebaseMessaging */; };
 		F76B0772EB1D973DB6F10E0681022DC8 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F9F86311944A6E2B4BAD01FA8BD6F4 /* Operators.swift */; };
 		F7B74645E07C39771156A1FA413B98D4 /* Alamofire-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DD5D047160373BB27AA3E1C69A06A78 /* Alamofire-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FC0C98A0E535A9AFB56DAE5C29AA023E /* Pods-JUI ResidenceTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B6AAEC8F9AC350A5344C7AA0E1C3C31E /* Pods-JUI ResidenceTests-dummy.m */; };
@@ -283,8 +285,8 @@
 		557BF1C45A34EB3262B97B852DEB302D /* NVActivityIndicatorAnimationBallClipRotate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallClipRotate.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationBallClipRotate.swift; sourceTree = "<group>"; };
 		59FFCCA47F3C2FDB058F13F533B90341 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3A044897B47F6517690C5C4F7A1DA0 /* NVActivityIndicatorAnimationDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationDelegate.swift; path = Sources/Base/NVActivityIndicatorAnimationDelegate.swift; sourceTree = "<group>"; };
-		5A5DD824AE08BDCC02989B53F7C22AB2 /* CalendarDateRangePickerViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CalendarDateRangePickerViewController.framework; path = CalendarDateRangePickerViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alamofire.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A5DD824AE08BDCC02989B53F7C22AB2 /* CalendarDateRangePickerViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CalendarDateRangePickerViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E4D0415D8717903D4120E6999B665CE /* NVActivityIndicatorAnimationTriangleSkewSpin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationTriangleSkewSpin.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationTriangleSkewSpin.swift; sourceTree = "<group>"; };
 		5EB0BA47CE43131FD405A322C3CB6F55 /* NVActivityIndicatorAnimationBallScaleRipple.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallScaleRipple.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationBallScaleRipple.swift; sourceTree = "<group>"; };
 		60556016772A53E6911E03AEE6ACB4A9 /* SessionDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDelegate.swift; path = Source/SessionDelegate.swift; sourceTree = "<group>"; };
@@ -300,7 +302,7 @@
 		6883B9F5BEA4E90203C6FB8A79AFA6FD /* Validation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Validation.swift; path = Source/Validation.swift; sourceTree = "<group>"; };
 		6A1794217F0B8FC82EABD6D6927D77D1 /* SessionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionManager.swift; path = Source/SessionManager.swift; sourceTree = "<group>"; };
 		6B36B37499266C18EE8B70821BEFDAB6 /* NVActivityIndicatorView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NVActivityIndicatorView-prefix.pch"; sourceTree = "<group>"; };
-		6C3E2D2E4178AB6171731F5479541BEE /* Pods_JUI_Residence_JUI_ResidenceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JUI_Residence_JUI_ResidenceUITests.framework; path = "Pods-JUI Residence-JUI ResidenceUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C3E2D2E4178AB6171731F5479541BEE /* Pods_JUI_Residence_JUI_ResidenceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JUI_Residence_JUI_ResidenceUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70E585B55C6B79E8E3448BAD71909313 /* Pods-JUI Residence-JUI ResidenceUITests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JUI Residence-JUI ResidenceUITests-umbrella.h"; sourceTree = "<group>"; };
 		775B0602561F6253DBB8F5B1492247B6 /* NVActivityIndicatorAnimationBallZigZag.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallZigZag.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationBallZigZag.swift; sourceTree = "<group>"; };
 		78DAB2512A1C8AD7B17DE4D1BB0ABAFD /* String+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "String+Extensions.swift"; path = "Sources/Shared/Extensions/String+Extensions.swift"; sourceTree = "<group>"; };
@@ -316,23 +318,23 @@
 		88335402650D9DAA907A8681DF33C12E /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
 		8BEEBB714F1A930AD391748B315100F6 /* Pods-JUI Residence-JUI ResidenceUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JUI Residence-JUI ResidenceUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		8E098A966B18EF697DD69045C66C67E3 /* NVActivityIndicatorAnimationBallTrianglePath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallTrianglePath.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationBallTrianglePath.swift; sourceTree = "<group>"; };
-		90963B53EDC8D87D776537D7ACD28A7B /* Tailor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Tailor.framework; path = Tailor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		90963B53EDC8D87D776537D7ACD28A7B /* Tailor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Tailor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		911BA3FC851AD32C372190827C24232B /* DropDown+Appearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DropDown+Appearance.swift"; path = "DropDown/src/DropDown+Appearance.swift"; sourceTree = "<group>"; };
 		954009D70FC6E9999253F073EBDA85D0 /* Pods-JUI Residence-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JUI Residence-dummy.m"; sourceTree = "<group>"; };
 		973C77C453E379C601AED70EE970A8F2 /* Pods-JUI ResidenceTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JUI ResidenceTests-Info.plist"; sourceTree = "<group>"; };
 		97629A9F566BA39846D15F715EC3CF1E /* NVActivityIndicatorView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = NVActivityIndicatorView.modulemap; sourceTree = "<group>"; };
 		989ED8CCB72CAAA7A12C67017E5B53BC /* NVActivityIndicatorAnimationSemiCircleSpin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationSemiCircleSpin.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationSemiCircleSpin.swift; sourceTree = "<group>"; };
 		98FF324C7B9F7FCD69872EE4F18ACAC1 /* Alamofire-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Alamofire-Info.plist"; sourceTree = "<group>"; };
-		99498F2939EEF307AC1E509B28B1B1EC /* Pods_JUI_Residence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JUI_Residence.framework; path = "Pods-JUI Residence.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9B6725B782188F18CB76A740433F14E4 /* DropDown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = DropDown.framework; path = DropDown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		99498F2939EEF307AC1E509B28B1B1EC /* Pods_JUI_Residence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JUI_Residence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B6725B782188F18CB76A740433F14E4 /* DropDown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DropDown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9D98347262B4AA380115F863799BDEC7 /* DPDKeyboardListener.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DPDKeyboardListener.swift; path = DropDown/helpers/DPDKeyboardListener.swift; sourceTree = "<group>"; };
 		9DD5D047160373BB27AA3E1C69A06A78 /* Alamofire-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-umbrella.h"; sourceTree = "<group>"; };
 		9DF8A367506B34FA9208FED305479151 /* NVActivityIndicatorAnimationSquareSpin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationSquareSpin.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationSquareSpin.swift; sourceTree = "<group>"; };
 		A0A1956AB9CE11CD5F5721BD040DEB42 /* NVActivityIndicatorAnimationCircleStrokeSpin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationCircleStrokeSpin.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationCircleStrokeSpin.swift; sourceTree = "<group>"; };
 		A0FB63CE1D17B274DC819DB9FF1D68C7 /* Pods-JUI Residence.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-JUI Residence.modulemap"; sourceTree = "<group>"; };
 		A1B78EA61E1FB7D4BAF9431F310CFAD0 /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServerTrustPolicy.swift; path = Source/ServerTrustPolicy.swift; sourceTree = "<group>"; };
-		A1B9F27862201CD82B398E0B35B14128 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = NVActivityIndicatorView.framework; path = NVActivityIndicatorView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B9F27862201CD82B398E0B35B14128 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NVActivityIndicatorView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4B05E9F4C38C3143DA4F42B439E2B75 /* AlamofireImage-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AlamofireImage-Info.plist"; sourceTree = "<group>"; };
 		A5A21AFA4B9D5011D3FED4EA5AE6866B /* CalendarDateRangePickerCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarDateRangePickerCell.swift; path = CalendarDateRangePickerViewController/Classes/CalendarDateRangePickerCell.swift; sourceTree = "<group>"; };
 		A7D604295A90B4C57FC8C1908773CAC9 /* NVActivityIndicatorAnimationBallPulseRise.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallPulseRise.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationBallPulseRise.swift; sourceTree = "<group>"; };
@@ -359,13 +361,13 @@
 		BEBCBB6032BC0201B3F7C2002C9849F9 /* DropDown-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "DropDown-Info.plist"; sourceTree = "<group>"; };
 		C2473E3C238C6181133AC5A4D83360B7 /* NVActivityIndicatorAnimationBallGridBeat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallGridBeat.swift; path = Sources/Base/Animations/NVActivityIndicatorAnimationBallGridBeat.swift; sourceTree = "<group>"; };
 		C2B2BC8DF3B1FCFC0FE42335B1107CF3 /* Pods-JUI ResidenceTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JUI ResidenceTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		C8498160B5D29EF2745E4D41F2D971B5 /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AlamofireImage.framework; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8498160B5D29EF2745E4D41F2D971B5 /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C865EF8FB80D09BBF72DE16F2869F995 /* DropDown.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DropDown.debug.xcconfig; sourceTree = "<group>"; };
 		C9B1E7CDB0E9720C754BB5C19485E54D /* Pods-JUI Residence-JUI ResidenceUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-JUI Residence-JUI ResidenceUITests.modulemap"; sourceTree = "<group>"; };
 		CB90B15922E6AB950A57BA6881D20544 /* Pods-JUI ResidenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JUI ResidenceTests.release.xcconfig"; sourceTree = "<group>"; };
 		CBEA8347E0CB970552234EDD3BDA299B /* DropDown-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DropDown-umbrella.h"; sourceTree = "<group>"; };
 		CED9DD81E80F41A32B2FF7BF729DF622 /* CalendarDateRangePickerViewController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CalendarDateRangePickerViewController-prefix.pch"; sourceTree = "<group>"; };
-		CF551AD428050D30CF74AAC820FA5866 /* Pods_JUI_ResidenceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JUI_ResidenceTests.framework; path = "Pods-JUI ResidenceTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF551AD428050D30CF74AAC820FA5866 /* Pods_JUI_ResidenceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JUI_ResidenceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF908C5BDCAFA035051505175B2B13F8 /* DropDown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DropDown.swift; path = DropDown/src/DropDown.swift; sourceTree = "<group>"; };
 		CFBA06A3A24342FBD71ADBE6EB29F77F /* HierarchyType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HierarchyType.swift; path = Sources/Shared/Protocols/HierarchyType.swift; sourceTree = "<group>"; };
 		D0640D61DB586F2EBBA760F880753BBA /* Request+AlamofireImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Request+AlamofireImage.swift"; path = "Source/Request+AlamofireImage.swift"; sourceTree = "<group>"; };
@@ -398,6 +400,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6BA5A312A680010009F248C /* FirebaseMessaging in Frameworks */,
+				F6BA5A2F2A680010009F248C /* FirebaseAnalytics in Frameworks */,
 				50013C33D35EBAF31ACF3A8B3A9A3FB4 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -616,7 +620,6 @@
 				6883B9F5BEA4E90203C6FB8A79AFA6FD /* Validation.swift */,
 				BA3E27031B998934E76D9F20BBCA4061 /* Support Files */,
 			);
-			name = Alamofire;
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
@@ -644,7 +647,6 @@
 				647D9F7AC13ACB1E180A885A931273A7 /* CalendarDateRangePickerViewController.swift */,
 				D412D3EC40CA0D3924DE8A02089A8FF2 /* Support Files */,
 			);
-			name = CalendarDateRangePickerViewController;
 			path = CalendarDateRangePickerViewController;
 			sourceTree = "<group>";
 		};
@@ -677,7 +679,6 @@
 				08469B0F68E9A5FB794B5F5AA0B7DA4E /* Resources */,
 				26F2ACB52DFFFBC9A1385F3AC56FFFB4 /* Support Files */,
 			);
-			name = DropDown;
 			path = DropDown;
 			sourceTree = "<group>";
 		};
@@ -722,7 +723,6 @@
 				135632254D1E7322EC284D2195A4CBE2 /* Tailor.swift */,
 				C8E3BF0FE4EFF5696F4595E65B865FBB /* Support Files */,
 			);
-			name = Tailor;
 			path = Tailor;
 			sourceTree = "<group>";
 		};
@@ -732,7 +732,6 @@
 				260E03007389C59B10C89560007D015E /* Base */,
 				F80B2FF54A9ECAAD9333840F7CCA3D43 /* Support Files */,
 			);
-			name = NVActivityIndicatorView;
 			path = NVActivityIndicatorView;
 			sourceTree = "<group>";
 		};
@@ -816,7 +815,6 @@
 				4FF2C89A2DAEB67DCC231148E2C43875 /* UIImageView+AlamofireImage.swift */,
 				389B2C5842E041C5289ABF4862E28FDD /* Support Files */,
 			);
-			name = AlamofireImage;
 			path = AlamofireImage;
 			sourceTree = "<group>";
 		};
@@ -1085,6 +1083,10 @@
 			dependencies = (
 			);
 			name = Alamofire;
+			packageProductDependencies = (
+				F6BA5A2E2A680010009F248C /* FirebaseAnalytics */,
+				F6BA5A302A680010009F248C /* FirebaseMessaging */,
+			);
 			productName = Alamofire;
 			productReference = 5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1107,6 +1109,9 @@
 				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			packageReferences = (
+				F6BA5A2D2A680010009F248C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 51E2F35C03084EAEF39300E5702E1DA1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2298,6 +2303,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F6BA5A2D2A680010009F248C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F6BA5A2E2A680010009F248C /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6BA5A2D2A680010009F248C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		F6BA5A302A680010009F248C /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6BA5A2D2A680010009F248C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 }

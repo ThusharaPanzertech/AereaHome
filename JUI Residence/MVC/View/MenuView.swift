@@ -15,6 +15,7 @@ var menuType : MenuType = .home
 class MenuView: UIView {
 
     @IBOutlet weak var imgHome: UIImageView!
+    @IBOutlet weak var imgNotification: UIImageView!
     @IBOutlet weak var imgSettings: UIImageView!
     @IBOutlet weak var imgLogout: UIImageView!
     fileprivate var parentView: UIView?
@@ -25,11 +26,12 @@ class MenuView: UIView {
     var delegate: MenuViewDelegate?
     var isExpanded = false
     class var getInstance: MenuView{
-        
+       
         let obj = Bundle.main.loadNibNamed("MenuView",
                                            owner: self,
                                            options: nil)
         return obj![0] as! MenuView
+       
     }
     func expandMenu(){
         
@@ -69,18 +71,29 @@ class MenuView: UIView {
         
     }
     open func showInView(_ view: UIView?, title: String, message: String){
+        self.imgHome.image = UIImage(named: "home_selected")
         if menuType == .home{
             self.imgHome.image = UIImage(named: "home_selected")
+            self.imgNotification.image = UIImage(named: "notification")
+            
             self.imgSettings.image = UIImage(named: "settings")
+            self.imgLogout.image = UIImage(named: "logout")
+        }
+        else if menuType == .notifiation{
+            self.imgHome.image = UIImage(named: "home")
+            self.imgNotification.image = UIImage(named: "notification")
+            self.imgSettings.image = UIImage(named: "settings_selected")
             self.imgLogout.image = UIImage(named: "logout")
         }
         else if menuType == .settings{
             self.imgHome.image = UIImage(named: "home")
+            self.imgNotification.image = UIImage(named: "notification")
             self.imgSettings.image = UIImage(named: "settings_selected")
             self.imgLogout.image = UIImage(named: "logout")
         }
         else{
             self.imgHome.image = UIImage(named: "home")
+            self.imgNotification.image = UIImage(named: "notification")
             self.imgSettings.image = UIImage(named: "settings")
             self.imgLogout.image = UIImage(named: "logout")
         }
@@ -115,13 +128,18 @@ class MenuView: UIView {
         removeView()
     }
     @IBAction func onMenu(_ sender: UIButton) {
-        menuType = sender.tag == 1 ? .home : sender.tag == 2 ? .settings : .logout
+        menuType = sender.tag == 1 ? .home : .logout
         if sender.tag == 1{
             self.imgHome.image = UIImage(named: "home_selected")
-            self.imgSettings.image = UIImage(named: "settings")
+           self.imgSettings.image = UIImage(named: "settings")
             self.imgLogout.image = UIImage(named: "logout")
         }
         else if sender.tag == 2{
+            self.imgHome.image = UIImage(named: "home")
+            self.imgSettings.image = UIImage(named: "settings")
+            self.imgLogout.image = UIImage(named: "logout")
+        }
+        else if sender.tag == 3{
             self.imgHome.image = UIImage(named: "home")
             self.imgSettings.image = UIImage(named: "settings_selected")
             self.imgLogout.image = UIImage(named: "logout")
@@ -135,6 +153,27 @@ class MenuView: UIView {
             delegate.onMenuClicked(sender)
         }
        // removeView()
+      /*  menuType = sender.tag == 1 ? .home : sender.tag == 2 ? .settings : .logout
+        if sender.tag == 1{
+            self.imgHome.image = UIImage(named: "home_selected")
+           self.imgSettings.image = UIImage(named: "settings")
+            self.imgLogout.image = UIImage(named: "logout")
+        }
+        else if sender.tag == 2{
+            self.imgHome.image = UIImage(named: "home")
+            self.imgSettings.image = UIImage(named: "settings_selected")
+            self.imgLogout.image = UIImage(named: "logout")
+        }
+        else{
+           // self.imgHome.image = UIImage(named: "home")
+          //  self.imgSettings.image = UIImage(named: "settings")
+            self.imgLogout.image = UIImage(named: "logout")
+        }
+        if let delegate = self.delegate{
+            delegate.onMenuClicked(sender)
+        }
+       // removeView()
+        */
     }
     
     func removeView(){

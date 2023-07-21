@@ -37,7 +37,8 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
     @IBOutlet weak var imgView_NomineeSign: UIImageView!
     
     
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     
     @IBOutlet weak var txt_Status: UITextField!
     @IBOutlet weak var txtView_Remarks: UITextView!
@@ -46,7 +47,7 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
 
     var doorAccessData: DoorAccess!
-   
+    var unit: Unit!
     var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,13 +83,16 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
             txtView_Remarks.textColor = placeholderColor
         }
         txtView_Remarks.delegate = self
-        
-      
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         txt_Status.text = doorAccessData.submission.status == 0 ? "New" :
             doorAccessData.submission.status == 1 ? "Cancelled" :
@@ -105,12 +109,12 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
        
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         let moving_date = formatter.date(from: doorAccessData.submission.request_date)
         let tenancy_start = formatter.date(from: doorAccessData.submission.tenancy_start)
         let tenancy_end = formatter.date(from: doorAccessData.submission.tenancy_end)
        
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yy"
         let moving_dateStr = formatter.string(from: moving_date ?? Date())
         let tenancy_startStr = formatter.string(from: tenancy_start ?? Date())
         let tenancy_endStr = formatter.string(from: tenancy_end ?? Date())
@@ -119,38 +123,54 @@ class DoorAccessDetailsTableViewController:BaseTableViewController {
         lbl_Ticket.text = doorAccessData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_OwnerName.text = doorAccessData.submission.owner_name
-        lbl_UnitNo.text = doorAccessData.unit?.unit
+       // lbl_UnitNo.text = doorAccessData.unit?.unit
+        let unit = self.unit
+        lbl_UnitNo.text = unit == nil ? "" : "#\(unit!.unit)"
         lbl_ContactNo.text = doorAccessData.submission.contact_no
         lbl_Email.text = doorAccessData.submission.email
         lbl_DeclaredBy.text = doorAccessData.submission.declared_by
         lbl_PassportNo.text = doorAccessData.submission.passport_no
         lbl_PersonInCharge.text = doorAccessData.submission.in_charge_name
-        lbl_CompanyContactNo.text = doorAccessData.submission.comp_contact_no
+        lbl_CompanyContactNo.text = doorAccessData.submission.nominee_contact_no
         lbl_CompanyEmail.text = doorAccessData.submission.nominee_email
-        lbl_TenancyPeriod.text = "\(tenancy_startStr) - \(tenancy_endStr)"
+        lbl_TenancyPeriod.text = tenancy_start == nil ? "" : "\(tenancy_startStr) - \(tenancy_endStr)"
         lbl_ResidentCard.text = "\(doorAccessData.submission.no_of_card_required)"
         lbl_SchlageCard.text = "\(doorAccessData.submission.no_of_schlage_required)"
         
         
         let sign1 = doorAccessData.submission.owner_signature
-        if let url1 = URL(string: "\(kImageFilePath)/" + sign1) {
-            self.imgView_OwnerSign.af_setImage(
-                        withURL: url1,
-                        placeholderImage: nil,
-                        filter: nil,
-                        imageTransition: .crossDissolve(0.2)
-                    )
-        }
+        let sign2 = doorAccessData.submission.nominee_signature
+        let image = self.convertBase64StringToImage(imageBase64String: sign1)
+        if image != nil{
+         self.imgView_OwnerSign.image = image
+         }
+         let image1 = self.convertBase64StringToImage(imageBase64String: sign2)
+         if image1 != nil{
+          self.imgView_NomineeSign.image = image1
+          }
         
-        let sign2 = doorAccessData.submission.owner_signature
-        if let url2 = URL(string: "\(kImageFilePath)/" + sign2) {
-            self.imgView_NomineeSign.af_setImage(
-                        withURL: url2,
-                        placeholderImage: nil,
-                        filter: nil,
-                        imageTransition: .crossDissolve(0.2)
-                    )
-        }
+        
+        
+        
+        
+//        if let url1 = URL(string: "\(kImageFilePath)/" + sign1) {
+//            self.imgView_OwnerSign.af_setImage(
+//                        withURL: url1,
+//                        placeholderImage: nil,
+//                        filter: nil,
+//                        imageTransition: .crossDissolve(0.2)
+//                    )
+//        }
+        
+        
+//        if let url2 = URL(string: "\(kImageFilePath)/" + sign2) {
+//            self.imgView_NomineeSign.af_setImage(
+//                        withURL: url2,
+//                        placeholderImage: nil,
+//                        filter: nil,
+//                        imageTransition: .crossDissolve(0.2)
+//                    )
+//        }
         
         
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -299,6 +319,23 @@ func closeMenu(){
 
    
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
         
         let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected", "Payment Pending", "Refunded"]
@@ -340,7 +377,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -373,6 +411,23 @@ func closeMenu(){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -400,9 +455,12 @@ extension DoorAccessDetailsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

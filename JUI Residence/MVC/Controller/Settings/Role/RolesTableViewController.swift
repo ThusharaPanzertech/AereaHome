@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DropDown
 class RolesTableViewController: BaseTableViewController {
     
     //  var array_Property = [UserModal]()
@@ -17,7 +17,8 @@ class RolesTableViewController: BaseTableViewController {
       var tableHeight: CGFloat = 0
       var arr_Roles = [RoleInfo]()
       //Outlets
-   
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
       @IBOutlet weak var table_ManageRoles: UITableView!
       @IBOutlet weak var lbl_UserName: UILabel!
       @IBOutlet weak var lbl_UserRole: UILabel!
@@ -29,10 +30,11 @@ class RolesTableViewController: BaseTableViewController {
     var unitsData = [Unit]()
       override func viewDidLoad() {
           super.viewDidLoad()
-          let fname = Users.currentUser?.user?.name ?? ""
+          lbl_SwitchProperty.text = kCurrentPropertyName
+            let fname = Users.currentUser?.moreInfo?.first_name ?? ""
           let lname = Users.currentUser?.moreInfo?.last_name ?? ""
           self.lbl_UserName.text = "\(fname) \(lname)"
-          let role = Users.currentUser?.role?.name ?? ""
+          let role = Users.currentUser?.role
           self.lbl_UserRole.text = role
           imgView_Profile.addborder()
         table_ManageRoles.dataSource = dataSource
@@ -41,7 +43,10 @@ class RolesTableViewController: BaseTableViewController {
         table_ManageRoles.reloadData()
           UITextField.appearance().attributedPlaceholder = NSAttributedString(string: UITextField().placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
 
-        
+          view_SwitchProperty.layer.borderColor = themeColor.cgColor
+          view_SwitchProperty.layer.borderWidth = 1.0
+          view_SwitchProperty.layer.cornerRadius = 10.0
+          view_SwitchProperty.layer.masksToBounds = true
           let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
           if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
              // self.imgView_Profile.af_setImage(withURL: url1)
@@ -128,7 +133,23 @@ class RolesTableViewController: BaseTableViewController {
       }
       
       //MARK: UIBUTTON ACTIONS
-    
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
       @IBAction func actionAddNew(_ sender: UIButton){
 
         let addRoleVC = kStoryBoardSettings.instantiateViewController(identifier: "AddRoleTableViewController") as! AddRoleTableViewController
@@ -140,7 +161,8 @@ class RolesTableViewController: BaseTableViewController {
           let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
           alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
               UserDefaults.standard.removeObject(forKey: "UserId")
-              kAppDelegate.setLogin()
+              kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
           }))
           alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
              
@@ -148,7 +170,24 @@ class RolesTableViewController: BaseTableViewController {
           self.present(alert, animated: true, completion: nil)
       }
      
-      func goToSettings(){
+     func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
+    func goToSettings(){
           var controller: UIViewController!
           for cntroller in self.navigationController!.viewControllers as Array {
               if cntroller.isKind(of: SettingsTableViewController.self) {
@@ -225,9 +264,12 @@ class RolesTableViewController: BaseTableViewController {
               self.navigationController?.popToRootViewController(animated: true)
               break
           case 2:
-              self.goToSettings()
+              self.goToNotification()
               break
           case 3:
+              self.goToSettings()
+              break
+          case 4:
               self.actionLogout(sender)
               break
        

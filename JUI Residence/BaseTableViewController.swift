@@ -42,6 +42,41 @@ class BaseTableViewController: UITableViewController, UIGestureRecognizerDelegat
     func getBackgroundImageName() -> String {
         return ""
     }
+    func getPropertyListInfo(){
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+       
+        ApiService.switch_Property(parameters: ["login_id":userId, "prop_id": kCurrentPropertyId], completion: { status, result, error in
+            if status  && result != nil{
+                // if let response = (result as? PropertyListBase){
+                     self.getPropList()
+               // }
+        }
+            else if error != nil{
+            }
+            else{
+            }
+        })
+        
+    }
+    func getPropList(){
+        
+        let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+        ApiService.get_PropertyList(parameters: ["login_id":userId], completion: { status, result, error in
+            if status  && result != nil{
+                 if let response = (result as? PropertyListBase){
+//                     kCurrentPropertyId = response.current_property
+//                     let prop = response.data.first(where:{ $0.id == response.current_property})
+//                     if prop != nil{
+//                        // kCurrentPropertyName = prop!.company_name
+//                     }
+                }
+        }
+            else if error != nil{
+            }
+            else{
+            }
+        })
+    }
     @IBAction func actionBack(_ sender: UIButton){
         self.navigationController?.popViewController(animated: true)
     }

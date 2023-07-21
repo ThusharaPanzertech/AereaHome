@@ -91,34 +91,187 @@ struct CreateAnnouncementBase: SafeMappable {
     }
 }
 
-//MARK: ************** USER SUMMARY ********
-struct UserSummaryBase: SafeMappable {
-    var users:[UserModal]!
+//MARK: ************** USER ACCESS ********
+
+struct UserAccessUpdateBase: SafeMappable {
+    
     var message:String = ""
-    var roles = [String: String]()
-    var response:Bool!
+   
+    var response:Int!
     
     init(_ map: [String : Any]) throws {
-        users <- map.relations("users")
+       
         message <- map.property("message")
-        roles <- map.property("roles")
+      
+        
         response <- map.property("response")
         
     }
 }
 
+struct UserAccessSummaryBase: SafeMappable {
+    var users:[UserAccessDataModal]!
+    var message:String = ""
+    var roles = [String: String]()
+    var buildings = [String: String]()
+   
+    var modules: [Module]!
+    var response:Bool!
+    
+    init(_ map: [String : Any]) throws {
+        users <- map.relations("users")
+        message <- map.property("message")
+       
+        roles <- map.property("roles")
+        buildings <- map.property("buildings")
+        modules <- map.relations("modules")
+        response <- map.property("response")
+        
+    }
+}
+struct UserAccessDataModal: SafeMappable {
+    
+  
+    var id = 0
+    var first_name = ""
+    var last_name = ""
+    var role = ""
+    var  user_id = 0
+    var  user_info_id = 0
+    var building_id = ""
+    var  unit_id = 0
+    var unit = ""
+    var building = ""
+//    var user_access = [String: [String: [Int]]]()
+    var user_access =  [String: [Int]]()
+    init(_ map: [String : Any]) throws {
+       
+        first_name <- map.property("first_name")
+       
+        id <- map.property("id")
+        building <- map.property("building")
+        last_name <- map.property("last_name")
+      
+        role <- map.property("role")
+        unit <- map.property("unit")
+       
+        user_id <- map.property("user_id")
+       
+        user_info_id <- map.property("user_info_id")
+      
+        building_id <- map.property("building_id")
+        unit_id <- map.property("unit_id")
+        
+        user_access <- map.property("access")
+  }
+}
+//MARK: ************** USER SUMMARY ********
+struct UserSummaryBase: SafeMappable {
+    var users:[UserModal]!
+    var message:String = ""
+    var roles = [String: String]()
+    var user_roles = [String]()
+    var response:Bool!
+    
+    
+    init(_ map: [String : Any]) throws {
+        users <- map.relations("users")
+        message <- map.property("message")
+        roles <- map.property("roles")
+        user_roles <- map.property("user_roles")
+        response <- map.property("response")
+        
+    }
+}
+struct UserDataModal: SafeMappable {
+    
+  
+    var id = 0
+    var name:String!
+   
+    var role:String!
+    var unit: String!
+    
+    init(_ map: [String : Any]) throws {
+       
+        unit <- map.property("unit")
+       
+        id <- map.property("id")
+       
+        name <- map.property("name")
+      
+        role <- map.property("role")
+  }
+}
+
 struct UserModal: SafeMappable {
     
-    var cardInfo : CardInfo!
+    var userinfo : UserInfo_UserSummary!
+    var status:Int!
+    var id:Int!
+    var name = ""
+    var last_name = ""
+    var email:String!
+    var account_enabled:Int!
+    var role_id:Int!
+    var created_at:String!
+    var end_date:String!
+    var role:String!
+    var unit = ""
+    var building = ""
+    var user_units: [UnitAssigned]!
+    var dateObj = Date()
+    
+    init(_ map: [String : Any]) throws {
+        userinfo <- map.relation("userinfo")
+        unit <- map.property("unit")
+        status <- map.property("status")
+        last_name <- map.property("last_name")
+        id <- map.property("id")
+        account_enabled <- map.property("account_enabled")
+        role_id <- map.property("role_id")
+        created_at <- map.property("created_at")
+        name <- map.property("name")
+        email <- map.property("email")
+        end_date <- map.property("end_date")
+        role <- map.property("role")
+        building <- map.property("building")
+        user_units <- map.relations("user_units")
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "dd/MM/yyyy"
+            let date1 = formatter.date(from: created_at)
+        dateObj = date1 ?? Date()
+  }
+}
+
+struct UserInfo_UserSummary: SafeMappable {
+   
+    var profile_picture:String = ""
+    var face_picture:String = ""
+    var last_name:String = ""
+    var phone:String = ""
+    var country:Int = 0
+    var card:String = ""
+    
+    var mailing_address:String = ""
     
     
     
     init(_ map: [String : Any]) throws {
-        cardInfo <- map.relation("card")
-       
+      
+        profile_picture <- map.property("profile_picture")
+        face_picture <- map.property("face_picture")
+        last_name <- map.property("last_name")
+        phone <- map.property("phone")
+        card <- map.property("card")
+        country <- map.property("country")
+        mailing_address <- map.property("mailing_address")
         
   }
 }
+
 struct CardInfo: SafeMappable {
    
     
@@ -153,7 +306,7 @@ struct RolesBase: SafeMappable {
     var roles = [String: String]()
     var data = [Role]()
     var message:String = ""
-    var response:Bool!
+    var response:Int!
     
     init(_ map: [String : Any]) throws {
         roles <- map.property("roles")
@@ -163,10 +316,110 @@ struct RolesBase: SafeMappable {
         
     }
 }
+struct UserRolesBase: SafeMappable {
+    var roles = [Role]()
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        roles <- map.relations("roles")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+//MARK: ************** Activate / Deactivate ********
+struct MessageBase: SafeMappable {
+    
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct CountryBase: SafeMappable {
+    
+    var roles = [String: String]()
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        message <- map.property("message")
+        response <- map.property("response")
+        roles <- map.property("roles")
+        
+    }
+   
+  
+}
+//MARK: ************** UNIT Card details ********
+struct UnitCardBase: SafeMappable {
+    
+    var cards = [String: String]()
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        message <- map.property("message")
+        response <- map.property("response")
+        cards <- map.property("cards")
+        
+    }
+   
+  
+}
+//MARK: **************ASSIGNED UNIT details ********
+struct AssignedUnitBase: SafeMappable {
+    var user_units:[UnitAssigned] = []
+    var roles = [String: String]()
+    var buildings = [String: String]()
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        user_units <- map.relations("user_units")
+        message <- map.property("message")
+        response <- map.property("response")
+        roles <- map.property("roles")
+        buildings <- map.property("buildings")
+        
+    }
+   
+  
+}
+
+struct UnitAssigned: SafeMappable {
+   
+    var id:Int!
+    var building_id = 0
+    var unit_id = 0
+    var building:String = ""
+    var unit:String = ""
+    var role:String = ""
+    var primary_contact:String = ""
+    var created_date:String = ""
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        building_id <- map.property("building_id")
+        unit_id <- map.property("unit_id")
+        building <- map.property("building")
+        unit <- map.property("unit")
+        role <- map.property("role")
+        primary_contact <- map.property("primary_contact")
+        created_date <- map.property("created_date")
+        
+    }
+   
+  
+}
 //MARK: ************** UNIT details ********
 struct UnitBase: SafeMappable {
     var units:[Unit] = []
-    //= [String: String]()
     var message:String = ""
     var response:Bool!
     
@@ -177,6 +430,20 @@ struct UnitBase: SafeMappable {
         
     }
 }
+struct SearchUnitBase: SafeMappable {
+    var units:[Unit] = []
+    //= [String: String]()
+    var message:String = ""
+    var response:Bool!
+    
+    init(_ map: [String : Any]) throws {
+        units <- map.relations("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+
 //MARK: ************** LOGIN details ********
 
 struct DashboardInfoModalBase: SafeMappable {
@@ -282,19 +549,25 @@ struct UserInfoModalBase: SafeMappable {
 }
 struct Users: SafeMappable {
     var user:User?
-    var role:Role?
+    var role = ""
+    var role_id  = 0
     var moreInfo:MoreInfo?
     var unit:Unit?
-    var property:Property?
+    var property:[Property] = []
+    var available_properties:[AvailableProperty] = []
+    var agent_assigned_property: [Int] = []
     var permissions:[Permissions] = []
     static var currentUser:Users? = nil
     var file_path: String!
     init(_ map: [String : Any]) throws {
         user <- map.relation("user")
-        role <- map.relation("role")
+        role <- map.property("role")
+        role_id <- map.property("role_id")
         moreInfo <- map.relation("moreinfo")
         unit <- map.relation("unit")
-        property <- map.relation("property")
+        property <- map.relations("property")
+        agent_assigned_property <- map.property("agent_assigned_property")
+        available_properties <- map.relations("available_properties")
         permissions <- map.relations("permissions")
         file_path <- map.property("file_path")
         
@@ -306,6 +579,8 @@ struct User: SafeMappable {
     var role_id:Int!
     var unit_no = 0
     var name:String!
+    var first_name:String!
+    var last_name:String!
     var email:String!
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
@@ -313,6 +588,8 @@ struct User: SafeMappable {
         role_id <- map.property("role_id")
         unit_no <- map.property("unit_no")
         name <- map.property("name")
+        first_name <- map.property("first_name")
+        last_name <- map.property("last_name")
         email <- map.property("email")
         
     }
@@ -357,22 +634,30 @@ struct MoreInfo: SafeMappable {
     var user_id:Int!
     var profile_picture:String!
     var last_name:String!
+    var first_name:String!
     var phone:String!
     var postal_code:String!
     var unit_no:Int!
     var mailing_address:String!
     var company_name: String!
     var face_picture:String!
+    var card_no = ""
+    var country = 0
+    var getuser: DoorRecordUser!
     init(_ map: [String : Any]) throws {
         user_id <- map.property("user_id")
         profile_picture <- map.property("profile_picture")
         last_name <- map.property("last_name")
+        first_name <- map.property("first_name")
         phone <- map.property("phone")
         unit_no <- map.property("unit_no")
         mailing_address <- map.property("mailing_address")
         company_name <- map.property("company_name")
         face_picture <- map.property("face_picture")
         postal_code <- map.property("postal_code")
+        card_no <- map.property("card_no")
+        country <- map.property("country")
+        getuser <- map.relation("getuser")
     }
 }
 struct Unit: SafeMappable {
@@ -381,13 +666,30 @@ struct Unit: SafeMappable {
     var unit:String = ""
     var size:String = ""
     var share_amount:String = ""
+    var building_id:Int = 0
+    var code:String = ""
     
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
+        building_id <- map.property("building_id")
         account_id <- map.property("account_id")
         unit <- map.property("unit")
         size <- map.property("size")
         share_amount <- map.property("share_amount")
+        unit <- map.property("unit")
+        code <- map.property("code")
+    }
+}
+struct UnitListTypeBase: SafeMappable {
+    var type = [String: String]()
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        type <- map.property("type")
+        message <- map.property("message")
+        response <- map.property("response")
         
     }
 }
@@ -429,7 +731,18 @@ struct Property: SafeMappable {
         
     }
 }
-
+struct AvailableProperty: SafeMappable {
+    var id:Int = 0
+    var prop_name:String = ""
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        prop_name <- map.property("prop_name")
+       
+        
+    }
+}
 struct Permissions: SafeMappable {
     var id:Int = 0
     var user_id:Int = 0
@@ -568,6 +881,18 @@ struct KeyCollectionSummaryBase: SafeMappable {
     }
 }
 
+struct KeyCollectionInfoBase: SafeMappable {
+    var data:KeyCollectionModal!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relation("booking_info")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct KeyCollectionModal: SafeMappable {
     var submission_info:SubmissionInfo!
     var unit_info:Unit!
@@ -662,12 +987,12 @@ struct GetName: SafeMappable {
 }
 //MARK: ************** FEEDBACK ********
 struct FeedbackOptionsBase: SafeMappable {
-    var options = [String: String]()
+    var options = [FeedbackOption]()
     var message:String = ""
     var response:Bool!
     
     init(_ map: [String : Any]) throws {
-        options <- map.property("options")
+        options <- map.relations("options")
         message <- map.property("message")
         response <- map.property("response")
         
@@ -847,7 +1172,7 @@ struct DefectData: SafeMappable {
     var notes = ""
     var user_id:Int = 0
     var status:Int = 0
-    
+    var unit_no:Int = 0
     
     
     var signature:String = ""
@@ -871,6 +1196,7 @@ struct DefectData: SafeMappable {
     var submissions = [SubmittedDefects]()
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
+        unit_no <- map.property("unit_no")
         account_id <- map.property("account_id")
         ref_id <- map.property("ref_id")
         ticket <- map.property("ticket")
@@ -1014,9 +1340,22 @@ struct FacilityModalBase: SafeMappable {
         
     }
 }
+struct FacilityInfoBase: SafeMappable {
+    var data: FacilityModal!
+    var message:String = ""
+    var response:Int = 0
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relation("booking")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct FacilityModal: SafeMappable {
     var submissions:FacilitySubmission!
     var type:FacilityOption?
+    var option:FacilityOption?
     var user_info:User?
    
     
@@ -1025,6 +1364,7 @@ struct FacilityModal: SafeMappable {
     init(_ map: [String : Any]) throws {
         submissions <- map.relation("submissions")
         type <- map.relation("type")
+        option <- map.relation("option")
         user_info <- map.relation("user_info")
        
         
@@ -1287,16 +1627,25 @@ struct CreateRoleBase: SafeMappable {
 }
 //MARK: ************** SETTINGS UNIT  ********
 struct UnitSummaryBase: SafeMappable {
-    var data:[UnitInfo]!
+    var data:[UnitInfoDet]!
     var message:String = ""
     var response:Int!
-    
     init(_ map: [String : Any]) throws {
         
         data <- map.relations("data")
-        
         message <- map.property("message")
         response <- map.property("response")
+        
+    }
+}
+struct UnitInfoDet: SafeMappable {
+    var unit: UnitInfo!
+    var building : Building!
+   
+    init(_ map: [String : Any]) throws {
+        unit <- map.relation("unit")
+        building <- map.relation("building")
+        
         
     }
 }
@@ -1309,7 +1658,7 @@ struct UnitInfo: SafeMappable {
     
     var status:Int = 0
     var account_id:Int = 0
-    
+    var buildinginfo : Building!
    
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
@@ -1318,7 +1667,7 @@ struct UnitInfo: SafeMappable {
         size <- map.property("size")
         share_amount <- map.property("share_amount")
         status <- map.property("status")
-        
+        buildinginfo <- map.relation("buildinginfo")
         
     }
 }
@@ -1544,6 +1893,20 @@ struct SubCategory: SafeMappable {
   }
 }
 //MARK: ************** EFORM SUBMISSIONS  ********
+struct MoveInOutInfoBase: SafeMappable {
+    var details:MoveInOut!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        details <- map.relation("details")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct MoveInOutSummaryBase: SafeMappable {
     var data:[MoveInOut]!
     var message:String = ""
@@ -1561,7 +1924,7 @@ struct MoveInOutSummaryBase: SafeMappable {
 struct MoveInOut: SafeMappable {
     var submission:MoveInOutSubmission!
     var sub_con:[MoveInOutContractor]!
-    var submitted_by:MoveInOutSubmittedBy!
+    var submitted_by:MoveInOutSubmittedBy?
     var inspection:MoveInOutInspection!
     var defects:[MoveInOutDefects]!
     var payment:MoveInOutPayment!
@@ -1635,6 +1998,8 @@ struct MoveInOutSubmission: SafeMappable {
 struct MoveInOutContractor: SafeMappable {
     var id:Int = 0
     var mov_id = 0
+    var id_type = 0
+    var id_number = ""
     var status:Int = 0
     var workman:String = ""
     var nric:String = ""
@@ -1643,6 +2008,8 @@ struct MoveInOutContractor: SafeMappable {
     
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
+        id_type <- map.property("id_type")
+        id_number <- map.property("id_number")
         mov_id <- map.property("mov_id")
         status <- map.property("status")
         workman <- map.property("workman")
@@ -1691,6 +2058,8 @@ struct MoveInOutPayment: SafeMappable {
     
     var payment_option:Int = 0
     var cheque_amount:String = ""
+    
+    var cheque_received_date:String = ""
     var cheque_no:String = ""
     var cheque_bank:String = ""
    
@@ -1717,7 +2086,7 @@ struct MoveInOutPayment: SafeMappable {
         manager_received <- map.property("manager_received")
         signature <- map.property("signature")
         remarks <- map.property("remarks")
-        
+        cheque_received_date <- map.property("cheque_received_date")
         bt_received_date <- map.property("bt_received_date")
         bt_amount_received <- map.property("bt_amount_received")
         cash_amount_received <- map.property("cash_amount_received")
@@ -1805,7 +2174,7 @@ struct MoveInOutInspection: SafeMappable {
 }
 //RENOVATION
 struct RenovationSummaryBase: SafeMappable {
-    var data:[Renovation]!
+    var data:[RenovationSubmission]!
     var message:String = ""
     var response:Int!
     
@@ -1818,11 +2187,25 @@ struct RenovationSummaryBase: SafeMappable {
         
     }
 }
+struct RenovationInfoBase: SafeMappable {
+    var details:Renovation!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        details <- map.relation("details")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct Renovation: SafeMappable {
     var submission:RenovationSubmission!
     var sub_con:[RenovationContractor]!
     var details:[RenovationDetails]!
-    var submitted_by:RenovationSubmittedBy!
+    var submitted_by:RenovationSubmittedBy?
     var payment:RenovationPayment!
     var inspection:MoveInOutInspection!
     var defects:[MoveInOutDefects]!
@@ -1832,7 +2215,7 @@ struct Renovation: SafeMappable {
     
     init(_ map: [String : Any]) throws {
         submission <- map.relation("submission")
-        sub_con <- map.relations("sub_con")
+        sub_con <- map.relations("sub_com")
         details <- map.relations("details")
         submitted_by <- map.relation("submitted_by")
         payment <- map.relation("payment")
@@ -1853,6 +2236,8 @@ struct RenovationPayment: SafeMappable {
     var cheque_amount:String = ""
     var cheque_bank:String = ""
     var cheque_no:String = ""
+    var cheque_received_date:String = ""
+    
     var bt_received_date:String = ""
     var bt_amount_received:String = ""
     var cash_amount_received:String = ""
@@ -1867,6 +2252,7 @@ struct RenovationPayment: SafeMappable {
     
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
+        cheque_received_date <- map.property("cheque_received_date")
         reno_id <- map.property("reno_id")
         manager_id <- map.property("manager_id")
         status <- map.property("status")
@@ -1937,8 +2323,8 @@ struct RenovationSubmission: SafeMappable {
     var nominee_contact_no:String = ""
     var remarks:String = ""
     var sub_con:[MoveInOutContractor]!
-  
-    
+    var unit: Unit!
+    var submitted_by:RenovationSubmittedBy?
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
         form_type <- map.property("form_type")
@@ -1970,13 +2356,15 @@ struct RenovationSubmission: SafeMappable {
         remarks <- map.property("remarks")
         sub_con <- map.relations("sub_con")
         
-     
-       
+        unit <- map.relation("unit")
+        submitted_by <- map.relation("submitted_by")
         
   }
 }
 struct RenovationContractor: SafeMappable {
     var id:Int = 0
+    var id_type:Int = 0
+    var id_number = ""
     var reno_id = 0
     var status:Int = 0
     var workman:String = ""
@@ -1986,6 +2374,8 @@ struct RenovationContractor: SafeMappable {
     
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
+        id_type <- map.property("id_type")
+        id_number <- map.property("id_number")
         reno_id <- map.property("reno_id")
         status <- map.property("status")
         workman <- map.property("workman")
@@ -2018,7 +2408,7 @@ struct RenovationSubmittedBy: SafeMappable {
 //Door Access
 
 struct DoorAccessSummaryBase: SafeMappable {
-    var data:[DoorAccess]!
+    var data:[DoorAccessSubmission]!
     var message:String = ""
     var response:Int!
     
@@ -2031,9 +2421,23 @@ struct DoorAccessSummaryBase: SafeMappable {
         
     }
 }
+struct DoorAccessInfoBase: SafeMappable {
+    var details:DoorAccess!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        details <- map.relation("details")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct DoorAccess: SafeMappable {
     var submission:DoorAccessSubmission!
-    var submitted_by:DoorAccessSubmittedBy!
+    var submitted_by:DoorAccessSubmittedBy?
     var unit: Unit!
     var payment:MoveInOutPayment!
     var acknowledgement : DoorAccessAcknowledgement!
@@ -2076,8 +2480,10 @@ struct DoorAccessSubmission: SafeMappable {
     var owner_signature:String = ""
     var date_of_sign:String = ""
     var remarks:String = ""
+    var nominee_signature:String = ""
     
-  
+    var submitted_by:DoorAccessSubmittedBy?
+    var unit: Unit!
   
     
     init(_ map: [String : Any]) throws {
@@ -2108,10 +2514,11 @@ struct DoorAccessSubmission: SafeMappable {
         owner_signature <- map.property("owner_signature")
         date_of_sign <- map.property("date_of_sign")
         remarks <- map.property("remarks")
-
+        nominee_signature <- map.property("nominee_signature")
         
      
-       
+        submitted_by <- map.relation("submitted_by")
+        unit <- map.relation("unit")
         
   }
 }
@@ -2136,7 +2543,7 @@ struct DoorAccessAcknowledgement: SafeMappable {
         serial_number_of_card <- map.property("serial_number_of_card")
         acknowledged_by <- map.property("acknowledged_by")
         manager_issued <- map.property("manager_issued")
-        signature <- map.property("signature")
+        signature <- map.property("owner_signature")
         date_of_signature <- map.property("date_of_signature")
   }
 }
@@ -2176,10 +2583,38 @@ struct VehicleRegSummaryBase: SafeMappable {
         
     }
 }
+struct VehicleRegBase: SafeMappable {
+    var data:VehicleReg!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        data <- map.relation("details")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct VehicleRegInfoBase: SafeMappable {
+    var details:VehicleReg!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        details <- map.relation("details")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct VehicleReg: SafeMappable {
     var submission:VehicleRegSubmission!
-    var submitted_by:DoorAccessSubmittedBy!
-    var documents : [VehicleRegDocuments]!
+    var submitted_by:DoorAccessSubmittedBy?
+    var documents : [VehicleRegDocuments]?
     var unit: Unit!
    
   
@@ -2302,18 +2737,54 @@ struct UpdateAddressSummaryBase: SafeMappable {
         
     }
 }
+struct UpdateAddressInfoSummaryBase: SafeMappable {
+    var details:UpdateAddress!
+    var message:String = ""
+    var response:Int!
+    var file_path = ""
+    init(_ map: [String : Any]) throws {
+        
+        details <- map.relation("details")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        file_path <- map.property("file_path")
+        
+    }
+}
 struct UpdateAddress: SafeMappable {
     var submission:UpdateAddressSubmission!
-   
+     var submitted_by:UpdateAddressSubmittedBy?
     var unit: Unit!
    
   
     
     init(_ map: [String : Any]) throws {
         submission <- map.relation("submission")
-        
+        submitted_by <- map.relation("submitted_by")
         unit <- map.relation("unit")
       
+       
+        
+  }
+}
+struct UpdateAddressSubmittedBy: SafeMappable {
+    var id:Int = 0
+    var role_id = 0
+    var account_id = 0
+    var unit_no:Int = 0
+    var name:String = ""
+    var email:String = ""
+  
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        role_id <- map.property("role_id")
+        account_id <- map.property("account_id")
+        unit_no <- map.property("unit_no")
+        name <- map.property("name")
+        email <- map.property("email")
+     
        
         
   }
@@ -2337,7 +2808,7 @@ struct UpdateAddressSubmission: SafeMappable {
     var nominee_signature:String = ""
     var date_of_sign:String = ""
     
-    var user: CardInfo!
+    var user: CardInfo?
     
     var remarks:String = ""
     
@@ -2346,6 +2817,7 @@ struct UpdateAddressSubmission: SafeMappable {
     
     init(_ map: [String : Any]) throws {
         id <- map.property("id")
+       
         unit_no <- map.property("unit_no")
         account_id <- map.property("account_id")
         user_id <- map.property("user_id")
@@ -2385,6 +2857,20 @@ struct UpdateParticularsSummaryBase: SafeMappable {
     init(_ map: [String : Any]) throws {
         
         data <- map.relations("data")
+        
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct UpdateParticularsInfoBase: SafeMappable {
+    var data:UpdateParticulars!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        
+        data <- map.relation("details")
         
         message <- map.property("message")
         response <- map.property("response")
@@ -2433,7 +2919,7 @@ struct UpdateParticularsSubmission: SafeMappable {
     var owners: [UpdateParticularsOwner]!
     var tenants: [UpdateParticularsTenant]!
     var remarks:String = ""
-    var user: CardInfo!
+    var user: CardInfo?
  
   
     
@@ -2553,16 +3039,30 @@ struct ResidentFileSummaryBase: SafeMappable {
         
     }
 }
-
+struct ResidentFileInfoBase: SafeMappable {
+    var data:ResidentFileModal!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relation("details")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
 struct ResidentFileModal: SafeMappable {
     var submission:ResidentFileSubmissionInfo!
+    var data:ResidentFileSubmissionInfo!
     var cat:ResidentFileCategory?
-   
+    var unit: Unit!
     var user: CardInfo!
     var files: [ResidentFile]!
     
     init(_ map: [String : Any]) throws {
         submission <- map.relation("submission")
+        data <- map.relation("data")
+        unit <- map.relation("unit")
         cat <- map.relation("cat")
         user <- map.relation("user")
         files <- map.relations("files")
@@ -2577,7 +3077,7 @@ struct ResidentFileSubmissionInfo: SafeMappable {
     var remarks: String = ""
     var created_at:String = ""
     var updated_at:String = ""
-    
+    var view_status = 0
     var status:Int = 0
     var  category: ResidentFileCategory!
     
@@ -2593,7 +3093,7 @@ struct ResidentFileSubmissionInfo: SafeMappable {
         created_at <- map.property("created_at")
         status <- map.property("status")
         category <- map.relation("category")
-       
+        view_status <- map.property("view_status")
         updated_at  <- map.property("updated_at")
   }
 }
@@ -2653,18 +3153,20 @@ struct ResidentFileCategory: SafeMappable {
 }
 struct eFormSettingsInfoBase: SafeMappable {
     var details:eFormSettingsInfo!
+    var payment_info:PaymentInfo!
     var response:Int = 0
     var message:String = ""
    
     
     init(_ map: [String : Any]) throws {
         details <- map.relation("details")
-
+        payment_info <- map.relation("payment_info")
         response <- map.property("response")
         message <- map.property("message")
        
     }
 }
+
 struct eFormSettingsInfo: SafeMappable {
     var id:Int = 0
     var account_id:Int = 0
@@ -2851,7 +3353,7 @@ struct CondoCategory: SafeMappable {
     var status = 0
     var created_at:String = ""
     var updated_at:String = ""
-    
+    var dateObj = Date()
     var files = [CondoFiles]()
     
     init(_ map: [String : Any]) throws {
@@ -2863,6 +3365,11 @@ struct CondoCategory: SafeMappable {
         updated_at <- map.property("updated_at")
        
         files <- map.relations("files")
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let date1 = formatter.date(from: created_at)
+        dateObj = date1 ?? Date()
   }
 }
 struct CondoDetailsBase: SafeMappable {
@@ -3054,6 +3561,7 @@ struct StaffRole: SafeMappable {
         
     }
 }
+//MARK: ************** MANAGE BUILDING ********
     struct BuildingSummaryBase: SafeMappable {
         var data:[Building]!
         var message:String = ""
@@ -3246,6 +3754,1345 @@ struct ThinmooTokenBase: SafeMappable {
         message <- map.property("message")
         response <- map.property("response")
         token <- map.property("token")
+        
+    }
+}
+//
+struct ThinmooRecordBase: SafeMappable {
+    var result:Int!
+    var message:String = ""
+    var code:Int!
+    
+    init(_ map: [String : Any]) throws {
+        result <- map.property("result")
+        message <- map.property("msg")
+        code <- map.property("code")
+        
+    }
+}
+struct VisitorSummaryModalBase: SafeMappable {
+    var data: [VisitorSummary]!
+    var message:String = ""
+    var response:Int = 0
+    var purposes = [String: String]()
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        purposes <- map.property("purposes")
+        response <- map.property("response")
+        
+    }
+}
+struct VisitorSummary: SafeMappable {
+    var id:Int = 0
+    var booking_type:Int = 0
+    var visitor_count:Int = 0
+   
+    var ticket:String = ""
+    var unit:String = ""
+    var invited_by:String = ""
+    var entry_date:String = ""
+    var entry_time:String = ""
+    var date_of_visit:String = ""
+    var purpose:String = ""
+    var status:String = ""
+    var view_status:Int = 0
+    
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        booking_type <- map.property("booking_type")
+        visitor_count <- map.property("visitor_count")
+        ticket <- map.property("ticket")
+        unit <- map.property("unit")
+        invited_by <- map.property("invited_by")
+        entry_date <- map.property("entry_date")
+        entry_time <- map.property("entry_time")
+        date_of_visit <- map.property("date_of_visit")
+        purpose <- map.property("purpose")
+        status <- map.property("status")
+        view_status <- map.property("view_status")
+        
+       
+        
+  }
+}
+struct VisitorInfoModalBase: SafeMappable {
+    var details: VisitorDetailsBase!
+    var message:String = ""
+    var file_path:String = ""
+    var response:Int = 0
+    var purposes = [String: String]()
+    
+    init(_ map: [String : Any]) throws {
+        details <- map.relation("details")
+        message <- map.property("message")
+        file_path <- map.property("file_path")
+        purposes <- map.property("purposes")
+        response <- map.property("response")
+        
+    }
+}
+struct VisitorAvaiabiltyBase: SafeMappable {
+    
+    var message:String = ""
+    
+    var slot_available:Int = 0
+    var limit:Int = 0
+    var id_required:Int = 0
+    var response:Int = 0
+    
+    
+    init(_ map: [String : Any]) throws {
+        slot_available <- map.property("slot_available")
+        message <- map.property("message")
+        id_required <- map.property("id_required")
+        limit <- map.property("limit")
+        response <- map.property("response")
+        
+    }
+}
+
+struct VisitorFunctionBase: SafeMappable {
+    var types = [VisitorFunctionInfoBase]()
+
+   
+    var message:String = ""
+ 
+    var response:Int = 0
+    
+    init(_ map: [String : Any]) throws {
+        types <- map.relations("types")
+        message <- map.property("message")
+        response <- map.property("response")
+       
+        
+    }
+}
+struct VisitorFunctionInfoBase: SafeMappable {
+    var type: VisitorFunctionInfo!
+
+   
+   
+    
+    init(_ map: [String : Any]) throws {
+        type <- map.relation("type")
+       
+       
+        
+    }
+}
+struct VisitorFunctionInfo: SafeMappable {
+    var id:Int = 0
+    var account_id:Int = 0
+    var visiting_purpose:String = ""
+    var limit_set:Int = 0
+    var compinfo_required:Int = 0
+    var cat_dropdown:Int = 0
+    var id_required:Int = 0
+   
+    var sub_category:String = ""
+    var status:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+   
+    var subcategory = [VisitorWalkinSubcategory]()
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        visiting_purpose <- map.property("visiting_purpose")
+        limit_set <- map.property("limit_set")
+        compinfo_required <- map.property("compinfo_required")
+        cat_dropdown <- map.property("cat_dropdown")
+        sub_category <- map.property("sub_category")
+        
+        
+        status <- map.property("status")
+        id_required <- map.property("id_required")
+        created_at <- map.property("created_at")
+       
+        updated_at <- map.property("updated_at")
+        subcategory <- map.relations("subcategory")
+       
+        
+  }
+}
+
+
+
+
+
+
+struct VisitorDetailsBase: SafeMappable {
+    var visitors = [VisitorInfo]()
+    var id:Int = 0
+    var account_id:Int = 0
+    var booking_type:Int = 0
+    var visitor_count:Int = 0
+   
+    var ticket:String = ""
+    var unit:String = ""
+    var invited_by:String = ""
+    var entry_date:String = ""
+    var comp_info:String = ""
+    var visiting_date:String = ""
+    var qrcode_file:String = ""
+    
+    var visiting_purpose:String = ""
+    var sub_cat:Int = 0
+    var status:Int = 0
+    var view_status:Int = 0
+    
+    init(_ map: [String : Any]) throws {
+        visitors <- map.relations("visitors")
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        booking_type <- map.property("booking_type")
+        visitor_count <- map.property("visitor_count")
+        ticket <- map.property("ticket")
+        unit <- map.property("unit_no")
+        invited_by <- map.property("invited_by")
+        entry_date <- map.property("entry_date")
+        comp_info <- map.property("comp_info")
+        visiting_date <- map.property("visiting_date")
+        qrcode_file <- map.property("qrcode_file")
+        visiting_purpose <- map.property("visiting_purpose")
+        status <- map.property("status")
+        sub_cat <- map.property("sub_cat")
+        view_status <- map.property("view_status")
+        
+    }
+}
+struct VisitorInfo: SafeMappable {
+    var id:Int = 0
+    var book_id:Int = 0
+    var visit_status:Int = 0
+    var visit_count:Int = 0
+   
+    var name:String = ""
+    var mobile:String = ""
+    var vehicle_no:String = ""
+    var id_number:String = ""
+    var email:String = ""
+    var qrcode_file:String = ""
+    
+    
+    var entry_date:String = ""
+    var entry_time:String = ""
+       
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        book_id <- map.property("book_id")
+        visit_status <- map.property("visit_status")
+        visit_count <- map.property("visit_count")
+        
+        name <- map.property("name")
+        mobile <- map.property("mobile")
+        vehicle_no <- map.property("vehicle_no")
+        id_number <- map.property("id_number")
+        email <- map.property("email")
+        qrcode_file <- map.property("qrcode_file")
+       
+        entry_date <- map.property("entry_date")
+        entry_time <- map.property("entry_time")
+       
+        
+  }
+}
+struct UpdateVisitorBase: SafeMappable {
+    var data:VisitorSummary!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relation("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct WalkinVisitorBase: SafeMappable {
+    var data:VisitorSummary!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relation("details")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct VisitorWalkinSubcategory: SafeMappable {
+   
+    var sub_category:String = ""
+    var id:Int = 0
+    var account_id:Int = 0
+    var type_id:Int = 0
+    var status:Int = 0
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        type_id <- map.property("type_id")
+        sub_category <- map.property("sub_category")
+        status <- map.property("status")
+    
+        
+    }
+}
+
+
+
+struct DoorRecordsBase: SafeMappable {
+    var data: [DoorRecord]!
+    var message:String = ""
+    var response:Int = 0
+    var devices = [String: String]()
+    var types = [String: String]()
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        devices <- map.property("devices")
+        types <- map.property("types")
+        response <- map.property("response")
+        
+    }
+}
+struct DoorRecord: SafeMappable {
+   
+    var id:String = ""
+    var logId:String = ""
+    var communityName:String = ""
+    var communityUuid:String = ""
+    var buildingName:String = ""
+    var roomName:String = ""
+    var doorName:String = ""
+    var devSn:String = ""
+    var devName:String = ""
+    var deviceModelName:String = ""
+    var number:String = ""
+    var memo:String = ""
+    var empUuid:String = ""
+    var empPhone:String = ""
+    var empName:String = ""
+    var eventTypeName:String = ""
+    var positionFullName:String = ""
+    var eventTime:String = ""
+    var extendDay:String = ""
+    var createTime:String = ""
+    var realCreateTime:String = ""
+    
+    
+    
+    
+    
+    var platformId:Int = 0
+    var companyId:Int = 0
+    var communityId:Int = 0
+    var buildingId:Int = 0
+    var devId:Int = 0
+    var deviceModelValue:Int = 0
+    var appUserId:Int = 0
+    var empType:Int = 0
+    var empId:Int = 0
+    var eventType:Int = 0
+    var relayIndex:Int = 0
+    var inoutState:Int = 0
+    var accInoutStatus:Int = 0
+    var openStatus:Int = 0
+    var terminalApplyType:Int = 0
+    var terminalOsType:Int = 0
+    var eventKinds:Int = 0
+    var isHaveTestContent:Int = 0
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        logId <- map.property("logId")
+        communityName <- map.property("communityName")
+        communityUuid <- map.property("communityUuid")
+        buildingName <- map.property("buildingName")
+        roomName <- map.property("roomName")
+        doorName <- map.property("doorName")
+        devSn <- map.property("devSn")
+        devName <- map.property("devName")
+        deviceModelName <- map.property("deviceModelName")
+        number <- map.property("number")
+        memo <- map.property("memo")
+        empUuid <- map.property("empUuid")
+        empPhone <- map.property("empPhone")
+        empName <- map.property("empName")
+        eventTypeName <- map.property("eventTypeName")
+        positionFullName <- map.property("positionFullName")
+        eventTime <- map.property("eventTime")
+        extendDay <- map.property("extendDay")
+        createTime <- map.property("createTime")
+        realCreateTime <- map.property("realCreateTime")
+        
+        
+        
+        
+        platformId <- map.property("platformId")
+        companyId <- map.property("companyId")
+        communityId <- map.property("communityId")
+        buildingId <- map.property("buildingId")
+        
+        devId <- map.property("devId")
+        deviceModelValue <- map.property("deviceModelValue")
+        appUserId <- map.property("appUserId")
+        empType <- map.property("empType")
+        empId <- map.property("empId")
+        eventType <- map.property("eventType")
+        relayIndex <- map.property("relayIndex")
+        inoutState <- map.property("inoutState")
+        accInoutStatus <- map.property("accInoutStatus")
+        openStatus <- map.property("openStatus")
+        terminalApplyType <- map.property("terminalApplyType")
+        terminalOsType <- map.property("terminalOsType")
+        eventKinds <- map.property("eventKinds")
+        isHaveTestContent <- map.property("isHaveTestContent")
+    
+        
+    }
+}
+
+struct BluetoothDoorRecordsBase: SafeMappable {
+    var data: [BluetoothDoorRecordModal]!
+    var message:String = ""
+    var response:Int = 0
+    var devices = [String: String]()
+   
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        devices <- map.property("devices")
+       
+        response <- map.property("response")
+        
+    }
+}
+struct BluetoothDoorRecordModal: SafeMappable {
+    
+    var record:BluetoothDoorRecord!
+    var unitinfo:String = ""
+    var name:String = ""
+    var action:String = ""
+    var status:String = ""
+    
+    init(_ map: [String : Any]) throws {
+        record <- map.relation("record")
+        unitinfo <- map.property("unitinfo")
+        name <- map.property("name")
+        action <- map.property("action")
+        status <- map.property("status")
+      
+    }
+}
+struct BluetoothDoorRecord: SafeMappable {
+   
+    var id:Int = 0
+    var account_id:Int = 0
+    var devMac:String = ""
+    var call_date_time:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+    var eKey:String = ""
+    var devSn:String = ""
+    var devName:String = ""
+   
+    
+    
+    
+    
+    var user_id:Int = 0
+    var devType:Int = 0
+    var status:Int = 0
+    var action_type:Int = 0
+   
+    var user: DoorRecordUser!
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        user_id <- map.property("user_id")
+        devMac <- map.property("devMac")
+        devType <- map.property("devType")
+        status <- map.property("status")
+        action_type <- map.property("action_type")
+        call_date_time <- map.property("call_date_time")
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+        eKey <- map.property("eKey")
+        devSn <- map.property("devSn")
+        devName <- map.property("devName")
+      
+        user <- map.relation("user")
+    }
+}
+struct DoorRecordUser: SafeMappable {
+    
+    var id:Int = 0
+    var account_id:Int = 0
+    var role_id:Int = 0
+    var building_no:Int = 0
+    var unit_no:Int = 0
+    
+    var email:String = ""
+    var name:String = ""
+    var email_verified_at:String = ""
+    var account_enabled:Int = 0
+    var status:Int = 0
+    var otp:Int = 0
+    var deactivated_date:String = ""
+   var primary_contact = 0
+   
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        role_id <- map.property("role_id")
+        building_no <- map.property("building_no")
+        unit_no <- map.property("unit_no")
+        email_verified_at <- map.property("email_verified_at")
+        account_enabled <- map.property("account_enabled")
+        status <- map.property("status")
+        otp <- map.property("otp")
+        primary_contact <- map.property("primary_contact")
+        deactivated_date <- map.property("deactivated_date")
+       
+        
+        
+        email <- map.property("email")
+        name <- map.property("name")
+       
+      
+    }
+}
+
+struct FailedDoorRecordsBase: SafeMappable {
+    var data: [FailedDoorRecordModal]!
+    var message:String = ""
+    var response:Int = 0
+    var devices = [String: String]()
+   
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        devices <- map.property("devices")
+       
+        response <- map.property("response")
+        
+    }
+}
+struct FailedDoorRecordModal: SafeMappable {
+    
+    var record:FailedDoorRecord!
+    var unitinfo:String = ""
+    var name:String = ""
+   
+    init(_ map: [String : Any]) throws {
+        record <- map.relation("record")
+        unitinfo <- map.property("unitinfo")
+        name <- map.property("name")
+       
+      
+    }
+}
+struct FailedDoorRecord: SafeMappable {
+   
+    var id:Int = 0
+    var account_id:Int = 0
+    var user_id:Int = 0
+    var empuuid:String = ""
+    var empname:String = ""
+    var empPhone:String = ""
+    var empCardNo:String = ""
+    var devId:Int = 0
+    var devuuid:String = ""
+    var devname:String = ""
+    var devSn:String = ""
+    var building_no:String = ""
+    var buildingCode:String = ""
+    var eventType:Int = 0
+    var eventtime:String = ""
+    var captureImageUrl:String = ""
+    var faceAge:Int = 0
+    
+ 
+   
+    
+    
+    
+    
+    var faceGender:Int = 0
+    var faceMatchScore:Int = 0
+    var bodyTemperature:Int = 0
+    var created_at:String = ""
+    var updated_at:String = ""
+   
+    
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        user_id <- map.property("user_id")
+        empuuid <- map.property("empuuid")
+        empname <- map.property("empname")
+        empPhone <- map.property("empPhone")
+        empCardNo <- map.property("empCardNo")
+        devId <- map.property("devId")
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+        devuuid <- map.property("devuuid")
+        devname <- map.property("devname")
+        devSn <- map.property("devSn")
+        building_no <- map.property("building_no")
+        buildingCode <- map.property("buildingCode")
+        eventType <- map.property("eventType")
+        eventtime <- map.property("eventtime")
+        captureImageUrl <- map.property("captureImageUrl")
+        faceAge <- map.property("faceAge")
+        faceGender <- map.property("faceGender")
+        faceMatchScore <- map.property("faceMatchScore")
+        bodyTemperature <- map.property("bodyTemperature")
+       
+        
+      
+    }
+}
+
+
+struct CallUnitDoorRecordsBase: SafeMappable {
+    var data: [CallUnitDoorRecordModal]!
+    var message:String = ""
+    var response:Int = 0
+    var devices = [String: String]()
+   
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        devices <- map.property("devices")
+       
+        response <- map.property("response")
+        
+    }
+}
+struct CallUnitDoorRecordModal: SafeMappable {
+    
+    var record:CallUnitDoorRecord!
+    var unitinfo:String = ""
+    var name:String = ""
+   
+    init(_ map: [String : Any]) throws {
+        record <- map.relation("record")
+        unitinfo <- map.property("unitinfo")
+        name <- map.property("name")
+       
+      
+    }
+}
+struct CallUnitDoorRecord: SafeMappable {
+   
+    var id:Int = 0
+    var account_id:Int = 0
+    var user_ids:String = ""
+    var fcm_token:String = ""
+    var devSn:String = ""
+    var roomId:String = ""
+    var roomuuid:String = ""
+    var roomCode:Int = 0
+    var building_no:Int = 0
+    var buildingCode:Int = 0
+    var eventType:Int = 0
+    var eventtime:String = ""
+    var captureImage:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+    
+   
+    var getunit: Unit!
+   
+    
+    
+    
+  
+   
+    
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        user_ids <- map.property("user_ids")
+        fcm_token <- map.property("fcm_token")
+        devSn <- map.property("devSn")
+        roomId <- map.property("roomId")
+        roomuuid <- map.property("roomuuid")
+        roomCode <- map.property("roomCode")
+        building_no <- map.property("building_no")
+        buildingCode <- map.property("buildingCode")
+        eventType <- map.property("eventType")
+        eventtime <- map.property("eventtime")
+        captureImage <- map.property("captureImage")
+        
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+       
+        getunit <- map.relation("getunit")
+      
+    }
+}
+
+
+struct QRCodeDoorRecordsBase: SafeMappable {
+    var data: [QRCodeDoorRecordModal]!
+    var message:String = ""
+    var response:Int = 0
+    var devices = [String: String]()
+   
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        devices <- map.property("devices")
+       
+        response <- map.property("response")
+        
+    }
+}
+struct QRCodeDoorRecordModal: SafeMappable {
+    
+    var record:QRCodeDoorRecord!
+    var booking_id:String = ""
+    var name:String = ""
+   
+    init(_ map: [String : Any]) throws {
+        record <- map.relation("record")
+        booking_id <- map.property("booking_id")
+        name <- map.property("name")
+       
+      
+    }
+}
+struct QRCodeDoorRecord: SafeMappable {
+   
+    var id:Int = 0
+    var account_id:Int = 0
+    var booking_id:Int = 0
+    var visitor_id:Int = 0
+    
+    var devSn:String = ""
+    var dataType:Int = 0
+    
+    var message:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+    
+  
+    
+   
+    var booking_info: QRCodeDoorRecordBooingInfo!
+   
+    
+    
+    
+  
+   
+    
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        booking_id <- map.property("booking_id")
+        visitor_id <- map.property("visitor_id")
+        
+        devSn <- map.property("devSn")
+        dataType <- map.property("dataType")
+        message <- map.property("message")
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+        
+       
+        
+      
+       
+        booking_info <- map.relation("booking_info")
+      
+    }
+}
+struct QRCodeDoorRecordBooingInfo: SafeMappable {
+   
+    var id:Int = 0
+    var account_id:Int = 0
+    var booking_type:Int = 0
+    var unit_no:Int = 0
+    
+    var ticket:String = ""
+    var user_id:Int = 0
+    var visiting_date:String = ""
+    var visiting_purpose:Int = 0
+    
+    var qrcode_file:String = ""
+    var entry_date:String = ""
+    var comp_info:String = ""
+    var sub_cat:String = ""
+    var status:Int = 0
+    var view_status:Int = 0
+    var remarks:String = ""
+    
+    
+    var created_at:String = ""
+    var updated_at:String = ""
+    
+  
+    
+    var user: DoorRecordUser!
+    
+    
+    
+  
+   
+    
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        booking_type <- map.property("booking_type")
+        unit_no <- map.property("unit_no")
+        
+        ticket <- map.property("ticket")
+        user_id <- map.property("user_id")
+        visiting_date <- map.property("visiting_date")
+        visiting_purpose <- map.property("visiting_purpose")
+        qrcode_file <- map.property("qrcode_file")
+        
+        entry_date <- map.property("entry_date")
+        comp_info <- map.property("comp_info")
+        sub_cat <- map.property("sub_cat")
+        status <- map.property("status")
+        view_status <- map.property("view_status")
+        remarks <- map.property("remarks")
+      
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+        
+        user <- map.relation("user")
+      
+       
+      
+      
+    }
+}
+//MARK: ************** USER LIST TYPE ********
+struct ContactInfoBase: SafeMappable {
+    var data:[UserModal]!
+    var message:String = ""
+    var response:Bool!
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct CardInfoBase: SafeMappable {
+    var data:[Card]!
+    var message:String = ""
+    var response:Bool!
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct ResidentMgmtBase: SafeMappable {
+    var data: [ResidentMgmt]!
+    var message:String = ""
+    var response:Int = 0
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct ResidentMgmt: SafeMappable {
+
+    
+    var invoice_info:InvoiceInfo!
+    var building:Building!
+    var unit:Unit!
+    var invoice_amount:Double = 0.0
+    var status_lable:String = ""
+        
+   
+  
+    
+    init(_ map: [String : Any]) throws {
+        invoice_info <- map.relation("invoice_info")
+        building <- map.relation("building")
+        unit <- map.relation("unit")
+        invoice_amount <- map.property("invoice_amount")
+        status_lable <- map.property("status_lable")
+       
+       
+        
+  }
+}
+struct InvoiceInfo: SafeMappable {
+    var id:Int = 0
+    var account_id = 0
+    var unit_no:Int = 0
+    var info_id:Int = 0
+    var unit_share = 0
+    var active_status:Int = 0
+    var reminder_status:Int = 0
+    var balance_type = 0
+    var status:Int = 0
+    
+    var invoice_date:String = ""
+    var due_date:String = ""
+    var batch_file_no:String = ""
+    var invoice_no:String = ""
+    var tax_percentage:String = ""
+    var invoice_amount:String = ""
+    var payable_amount:String = ""
+    var balance_amount:Double = 0
+    var notes:String = ""
+    var remarks:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+        
+    var advance_payment: AdvancePaymentInfo!
+  
+    
+    init(_ map: [String : Any]) throws {
+  
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        unit_no <- map.property("unit_no")
+        info_id <- map.property("info_id")
+        unit_share <- map.property("unit_share")
+        active_status <- map.property("active_status")
+        reminder_status <- map.property("reminder_status")
+        balance_type <- map.property("balance_type")
+        unit_no <- map.property("unit_no")
+        status <- map.property("status")
+       
+      
+        invoice_date <- map.property("invoice_date")
+        due_date  <- map.property("due_date")
+        batch_file_no <- map.property("batch_file_no")
+        invoice_no  <- map.property("invoice_no")
+        tax_percentage <- map.property("tax_percentage")
+        invoice_amount  <- map.property("invoice_amount")
+        payable_amount <- map.property("payable_amount")
+        balance_amount  <- map.property("balance_amount")
+        notes <- map.property("notes")
+        remarks  <- map.property("remarks")
+
+        
+        created_at <- map.property("created_at")
+        updated_at  <- map.property("updated_at")
+       
+        
+  }
+}
+struct AdvancePaymentInfo: SafeMappable {
+
+    
+    var id:Int = 0
+    var account_id = 0
+    var unit_no:Int = 0
+    var invoice_id:Int = 0
+    var payment_id = 0
+        
+   
+    var amount:String = ""
+    var payment_received_date:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+    
+    init(_ map: [String : Any]) throws {
+       
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        unit_no <- map.property("unit_no")
+        invoice_id <- map.property("invoice_id")
+        payment_id <- map.property("payment_id")
+        
+        amount <- map.property("amount")
+        payment_received_date <- map.property("payment_received_date")
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+       
+       
+        
+  }
+}
+struct BatchSummaryBase: SafeMappable {
+    var data: [BatchInfo]!
+    var message:String = ""
+    var file_path:String = ""
+    var response:Int = 0
+    var buildings = [String: String]()
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        buildings <- map.property("buildings")
+        file_path <- map.property("file_path")
+        
+    }
+}
+struct BatchInfo: SafeMappable {
+    
+    var batch_no:String = ""
+    var created_by:String = ""
+    var id:Int = 0
+    var count = 0
+    var created_date :String = ""
+    
+    init(_ map: [String : Any]) throws {
+        created_by <- map.property("created_by")
+        batch_no <- map.property("batch_no")
+        id <- map.property("id")
+        count <- map.property("count")
+        created_date <- map.property("created_date")
+        
+    }
+}
+struct InvoiceSummaryBase: SafeMappable {
+    var data: [InvoiceReportInfo]!
+    var message:String = ""
+    var file_path:String = ""
+    var response:Int = 0
+    var buildings = [String: String]()
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relations("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        buildings <- map.property("buildings")
+        file_path <- map.property("file_path")
+        
+    }
+}
+struct InvoiceReportInfo: SafeMappable {
+    var invoice_info: InvoiceInfo!
+    var status_lable:String = ""
+    var invoice_amount:Double = 0.0
+    var building : Building!
+    var unit: Unit!
+    
+    init(_ map: [String : Any]) throws {
+        invoice_info <- map.relation("invoice_info")
+        status_lable <- map.property("status_lable")
+        building <- map.relation("building")
+        unit <- map.relation("unit")
+        invoice_amount <- map.property("invoice_amount")
+        
+    }
+}
+
+struct InvoiceDataBase: SafeMappable {
+    var data: InvoiceData!
+    var message:String = ""
+    var file_path:String = ""
+    var response:Int = 0
+  
+    
+    init(_ map: [String : Any]) throws {
+        data <- map.relation("data")
+        message <- map.property("message")
+        response <- map.property("response")
+       
+        file_path <- map.property("file_path")
+        
+    }
+}
+struct InvoiceData: SafeMappable {
+    var invoice_info: InvoiceInfo!
+    var details:[InvoiceDetails]!
+   var unit_info = ""
+    var building_info = ""
+    
+    
+    init(_ map: [String : Any]) throws {
+        invoice_info <- map.relation("invoice")
+        details <- map.relations("details")
+        unit_info <- map.property("unit_info")
+        building_info <- map.property("building_info")
+        
+    }
+}
+
+struct InvoiceDetails: SafeMappable {
+    var id = 0
+    var account_id = 0
+    var unit_no = 0
+    var invoice_id = 0
+    var payment_id = 0
+    var reference_type = 0
+    var reference_no:String = ""
+    var reference_invoice = 0
+    var order = 0
+    var display_order = 0
+    var detail:String = ""
+    var total_amount:String = ""
+    var amount:String = ""
+    var balance:String = ""
+    var payment_received_date:String = ""
+    var payment_status = 0
+    var received_amount:String = ""
+    var paid_by_credit = 0
+    var status = 0
+    
+    var due_date:String = ""
+    var created_at:String = ""
+    var updated_at:String = ""
+    
+    
+    init(_ map: [String : Any]) throws {
+       
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        unit_no <- map.property("unit_no")
+        invoice_id <- map.property("invoice_id")
+        payment_id <- map.property("payment_id")
+        reference_type <- map.property("reference_type")
+        reference_no <- map.property("reference_no")
+        reference_invoice <- map.property("reference_invoice")
+        order <- map.property("order")
+        display_order <- map.property("display_order")
+        detail <- map.property("detail")
+        total_amount <- map.property("total_amount")
+        amount <- map.property("amount")
+        balance <- map.property("balance")
+        payment_received_date <- map.property("payment_received_date")
+        payment_status <- map.property("payment_status")
+        received_amount <- map.property("received_amount")
+        paid_by_credit <- map.property("paid_by_credit")
+        status <- map.property("status")
+        due_date <- map.property("due_date")
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+       
+        
+    }
+}
+//MARK: ************** ASSIGN DEVICE ********
+    struct AssignDeviceBase: SafeMappable {
+        var data:[AssignDevice]!
+        var message:String = ""
+        var type:String = ""
+        var response:Int!
+        
+        init(_ map: [String : Any]) throws {
+            
+            data <- map.relations("data")
+            message <- map.property("message")
+            type <- map.property("type")
+            response <- map.property("response")
+            
+        }
+    }
+    struct AssignDevice: SafeMappable {
+        var id = 0
+        var building_no = 0
+        var unit_no = 0
+        var building = ""
+        var unit = ""
+        var devices = [AssignDeviceData]()
+       var receive_call = 0
+        
+        init(_ map: [String : Any]) throws {
+            id <- map.property("id")
+            receive_call <- map.property("receive_call")
+            building_no <- map.property("building_no")
+            building <- map.property("building")
+            unit <- map.property("unit")
+            unit_no <- map.property("unit_no")
+            devices <- map.relations("devices")
+        }
+    }
+struct AssignDeviceData: SafeMappable {
+    var id = 0
+    var user_bluethooth_checked_status = 0
+    var user_remote_checked_status = 0
+    var model = ""
+    var location_id = ""
+    var location = ""
+    var device_name = ""
+    var device_serial_no = ""
+    
+    
+    init(_ map: [String : Any]) throws {
+        id <- map.property("id")
+        user_bluethooth_checked_status <- map.property("user_bluethooth_checked_status")
+        user_remote_checked_status <- map.property("user_remote_checked_status")
+        model <- map.property("model")
+        location_id <- map.property("location_id")
+        location <- map.property("location")
+        device_name <- map.property("device_name")
+        device_serial_no <- map.property("device_serial_no")
+        
+    }
+}
+struct LoginHistoryLog: SafeMappable {
+    var message:String = ""
+    var response:Bool!
+    var data: LogDataModal!
+    
+    init(_ map: [String : Any]) throws {
+        message <- map.property("message")
+        response <- map.property("response")
+        data <- map.relation("data")
+        
+    }
+}
+struct LogDataModal: SafeMappable {
+    var user_id = ""
+    var login_from = ""
+    var device_info = ""
+    
+    init(_ map: [String : Any]) throws {
+        user_id <- map.property("user_id")
+        login_from <- map.property("login_from")
+        device_info <- map.property("device_info")
+        
+    }
+}
+//MARK: ************** NOTIFICATION ********
+struct NotificationBase: SafeMappable {
+   
+    var data:NotificationMessages!
+    var message:String = ""
+    var response:Int!
+    
+    init(_ map: [String : Any]) throws {
+       
+        data <- map.relation("data")
+        message <- map.property("message")
+        response <- map.property("response")
+        
+    }
+}
+struct NotificationMessages: SafeMappable {
+   
+    var messages:[NotificationDataModal] = []
+    var types:[String : String] = [String : String]()
+   
+    
+    init(_ map: [String : Any]) throws {
+       
+        messages <- map.relations("messages")
+        types <- map.property("types")
+
+        
+    }
+}
+struct NotificationDataModal: SafeMappable {
+ 
+    
+    var booking_date:String = ""
+    var booking_time:String = ""
+   
+    var created_at:String = ""
+    var updated_at:String = ""
+    var title:String = ""
+    var message:String = ""
+    var deleted:Int!
+    var ref_id = 0
+    var id:Int!
+    var account_id = 0
+    var user_id = 0
+    var type = 0
+    var status = 0
+    var admin_view_status = 0
+    var event_status = 0
+    
+    init(_ map: [String : Any]) throws {
+       
+
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        user_id <- map.property("user_id")
+        type <- map.property("type")
+        status <- map.property("status")
+        admin_view_status <- map.property("admin_view_status")
+        event_status <- map.property("event_status")
+        deleted <- map.property("deleted")
+        type <- map.property("type")
+        ref_id <- map.property("ref_id")
+        
+        title <- map.property("title")
+        message <- map.property("message")
+       
+        booking_date <- map.property("booking_date")
+        booking_time <- map.property("booking_time")
+        
+        created_at <- map.property("created_at")
+        updated_at <- map.property("updated_at")
+    }
+}
+struct NotificationUpdateBase: SafeMappable {
+  
+    var data:NotificationUpdateModal!
+    var msg:String = ""
+    var code:Int!
+    
+    init(_ map: [String : Any]) throws {
+       
+        data <- map.relation("data")
+        msg <- map.property("msg")
+        code <- map.property("code")
+        
+    }
+}
+struct NotificationUpdateModal: SafeMappable {
+ 
+  
+   
+    var title:String = ""
+    var message:String = ""
+    var status:Int!
+    var ref_id:Int!
+    var user_id:Int!
+    var account_id:Int!
+    var id:Int!
+    
+    init(_ map: [String : Any]) throws {
+       
+
+        id <- map.property("id")
+        account_id <- map.property("account_id")
+        user_id <- map.property("user_id")
+        ref_id <- map.property("ref_id")
+        status <- map.property("status")
+       
+        message <- map.property("message")
+        title <- map.property("title")
+       
+        status <- map.property("status")
         
     }
 }

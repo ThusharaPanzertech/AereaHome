@@ -10,7 +10,8 @@ import DropDown
 class DefectsListTableViewController: BaseTableViewController {
 
     //Outlets
-   
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var view_Footer: UIView!
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var lbl_UserRole: UILabel!
@@ -33,6 +34,11 @@ class DefectsListTableViewController: BaseTableViewController {
     let alertView_message: MessageAlertView = MessageAlertView.getInstance
     override func viewDidLoad() {
         super.viewDidLoad()
+        lbl_SwitchProperty.text = kCurrentPropertyName
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -51,10 +57,10 @@ class DefectsListTableViewController: BaseTableViewController {
         dataSource.parentVc = self
         dataSource.unitsData = self.unitsData
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
       
     }
@@ -77,7 +83,7 @@ class DefectsListTableViewController: BaseTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
        
         if indexPath.row == 1{
-            return CGFloat((300 * array_Defects.count) + 350)
+            return CGFloat((300 * array_Defects.count) + 430)
         }
         return super.tableView(tableView, heightForRowAt: indexPath)
     
@@ -205,41 +211,18 @@ func closeMenu(){
             ActivityIndicatorView.show("Loading")
             let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
             var param = [String : Any]()
-            if txt_status.text != ""{
+           
                 param = [
                     "login_id" : userId,
-                    "option": "status",
+                    
                     "status" : txt_status.text == "Open" ? "0" : txt_status.text == "Closed" ? "1" : txt_status.text == "In Progress" ? "2" : txt_status.text == "On Schedule" ? "3" : "",
-                    
-                    
-                ] as [String : Any]
-            }
-            else if txt_ticket.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "ticket",
                     "ticket" : txt_ticket.text!,
-                    
-                    
-                    
-                ] as [String : Any]
-            }
-            else if txt_unit.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "unit",
-                    "unit" : txt_unit.text!
-                    
-                ] as [String : Any]
-            }
-            else if txt_name.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "name",
+                    "unit" : txt_unit.text!,
                     "name" : txt_name.text!
                     
                 ] as [String : Any]
-            }
+            
+           
             
             
                 ApiService.search_Defects(parameters: param, completion: { status, result, error in
@@ -273,6 +256,35 @@ func closeMenu(){
         }
     
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSearch(_ sender:UIButton) {
+        self.searchDefects()
+    }
+    @IBAction func actionClear(_ sender:UIButton) {
+        self.txt_name.text = ""
+        txt_unit.text = ""
+        txt_status.text = ""
+        txt_ticket.text = ""
+        self.getDefectsSummary()
+        
+        
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
         @IBAction func actionNewDefects(_ sender: UIButton){
             let defectTVC = self.storyboard?.instantiateViewController(identifier: "NewDefectsTableViewController") as! NewDefectsTableViewController
             defectTVC.appointmentType = .defect
@@ -286,11 +298,9 @@ func closeMenu(){
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
         dropDown_Unit.show()
         dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_status.text = ""
-            txt_name.text = ""
-            txt_ticket.text = ""
+           
             txt_unit.text = item
-            self.searchDefects()
+          
             
         }
     }
@@ -301,11 +311,9 @@ func closeMenu(){
         dropDown_Status.dataSource = ["Open", "On Schedule", "In Progress", "Closed"]// Array(unitsData.values)
         dropDown_Status.show()
         dropDown_Status.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_name.text = ""
-            txt_unit.text = ""
+            
             txt_status.text = item
-            txt_ticket.text = ""
-            self.searchDefects()
+            
             
         }
     }
@@ -318,7 +326,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -350,6 +359,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -511,9 +537,12 @@ extension DefectsListTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -537,17 +566,7 @@ extension DefectsListTableViewController: MenuViewDelegate{
 extension DefectsListTableViewController: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        if textField == txt_ticket{
-            txt_unit.text = ""
-            txt_name.text = ""
-            txt_status.text = ""
-        }
-        else if textField == txt_name{
-            txt_unit.text = ""
-            txt_ticket.text = ""
-            txt_status.text = ""
-        }
-        self.searchDefects()
+       
         return true
     }
 }

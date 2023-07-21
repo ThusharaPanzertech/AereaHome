@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WA-pe-84v">
-                    <rect key="frame" x="25" y="184" width="364" height="450"/>
+                    <rect key="frame" x="25" y="94" width="364" height="450"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RE7-rx-PPW">
                             <rect key="frame" x="25" y="45" width="45.5" height="18"/>
@@ -140,7 +141,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.80195082100000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="3WA-pe-84v" firstAttribute="leading" secondItem="ss9-IS-8M6" secondAttribute="leading" constant="25" id="5V4-gl-8Z5"/>
-                <constraint firstItem="3WA-pe-84v" firstAttribute="top" secondItem="ss9-IS-8M6" secondAttribute="top" constant="140" id="faR-An-bU6"/>
+                <constraint firstItem="3WA-pe-84v" firstAttribute="top" secondItem="ss9-IS-8M6" secondAttribute="top" constant="50" id="faR-An-bU6"/>
                 <constraint firstItem="ss9-IS-8M6" firstAttribute="trailing" secondItem="3WA-pe-84v" secondAttribute="trailing" constant="25" id="hBT-tU-soe"/>
             </constraints>
             <connections>

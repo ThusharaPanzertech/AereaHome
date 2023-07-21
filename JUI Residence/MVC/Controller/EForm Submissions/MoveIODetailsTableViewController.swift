@@ -14,6 +14,8 @@ class MoveIODetailsTableViewController: BaseTableViewController {
     let alertView: AlertView = AlertView.getInstance
     let alertView_message: MessageAlertView = MessageAlertView.getInstance
     let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var view_Footer: UIView!
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var lbl_UserRole: UILabel!
@@ -33,7 +35,7 @@ class MoveIODetailsTableViewController: BaseTableViewController {
     @IBOutlet weak var lbl_WorkStart: UILabel!
     @IBOutlet weak var lbl_WorkEnd: UILabel!
    
-    
+    var unit: Unit!
     
     
     
@@ -88,10 +90,10 @@ class MoveIODetailsTableViewController: BaseTableViewController {
         dataSource.parentVc = self
         dataSource.moveInOutData = self.moveInOutData
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         txt_Status.text = moveInOutData.submission.status == 0 ? "New" :
             moveInOutData.submission.status == 1 ? "Cancelled" :
@@ -100,7 +102,11 @@ class MoveIODetailsTableViewController: BaseTableViewController {
             moveInOutData.submission.status == 4 ? "Rejected" :
             moveInOutData.submission.status == 5 ? "Payment Pending" :
             moveInOutData.submission.status == 6 ? "Refunded" : ""
-       
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -109,11 +115,11 @@ class MoveIODetailsTableViewController: BaseTableViewController {
        
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         let moving_date = formatter.date(from: moveInOutData.submission.moving_date)
         let moving_start = formatter.date(from: moveInOutData.submission.moving_start)
         let moving_end = formatter.date(from: moveInOutData.submission.moving_end)
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yy"
         let moving_dateStr = formatter.string(from: moving_date ?? Date())
         let moving_startStr = formatter.string(from: moving_start ?? Date())
         let moving_endStr = formatter.string(from: moving_end ?? Date())
@@ -122,7 +128,9 @@ class MoveIODetailsTableViewController: BaseTableViewController {
         lbl_Ticket.text = moveInOutData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_ResidentName.text = moveInOutData.submission.resident_name
-        lbl_UnitNo.text = moveInOutData.unit?.unit
+        //lbl_UnitNo.text = moveInOutData.unit?.unit
+        let unit = self.unit
+        lbl_UnitNo.text = unit == nil ? "" : "#\(unit!.unit)"
         lbl_ContactNo.text = moveInOutData.submission.contact_no
         lbl_Email.text = moveInOutData.submission.email
         lbl_CompanyName.text = moveInOutData.submission.mover_comp
@@ -154,7 +162,7 @@ class MoveIODetailsTableViewController: BaseTableViewController {
         let count = moveInOutData.sub_con.count
         ht_Table.constant = CGFloat(40 + (45 * count))
         if indexPath.row == 1{
-            return CGFloat((45 * count) + 995) +  40
+            return CGFloat((45 * count) + 995) +  50
         }
         return super.tableView(tableView, heightForRowAt: indexPath)
     
@@ -269,6 +277,23 @@ func closeMenu(){
 
    
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
         
         let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected", "Payment Pending", "Refunded"]
@@ -310,7 +335,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -342,6 +368,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -384,18 +427,30 @@ func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         let data = moveInOutData.sub_con[indexPath.row]
         
        
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let expdate = formatter.date(from: data.permit_expiry)
-        formatter.dateFormat = "dd/MM/yyyy"
-        let expdateStr = formatter.string(from: expdate ?? Date())
-        
+       
         cell.lbl_Indx.text = "\(indexPath.row + 1)"
        
         cell.lbl_Worker.text = data.workman
-        cell.lbl_Passport.text = data.nric
-        cell.lbl_ExpiryDate.text = expdateStr
+        cell.lbl_Passport.text = data.id_number
+       // cell.lbl_ExpiryDate.text = expdateStr
+        
+        let idType   = data.id_type == 1 ? "Passport" :
+        data.id_type == 2 ? "NRIC"   :
+        "Work Permit"
+        if data.id_type == 3{
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let expdate = formatter.date(from: data.permit_expiry)
+            formatter.dateFormat = "dd/MM/yy"
+            let expdateStr = formatter.string(from: expdate ?? Date())
+            cell.lbl_ExpiryDate.text = expdateStr
+        }
+        else{
+            cell.lbl_ExpiryDate.text = "-"
+        }
+        
+        
         
         cell.selectionStyle = .none
         return cell
@@ -415,9 +470,12 @@ extension MoveIODetailsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

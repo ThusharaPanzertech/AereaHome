@@ -6,11 +6,12 @@
 //
 
 import UIKit
-
+import DropDown
 class HolidaySettingsTableViewController: BaseTableViewController {
     
     //Outlets
-   
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var txt_Holidays: UITextView!
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var lbl_UserRole: UILabel!
@@ -27,10 +28,15 @@ class HolidaySettingsTableViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let fname = Users.currentUser?.user?.name ?? ""
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
@@ -146,7 +152,23 @@ class HolidaySettingsTableViewController: BaseTableViewController {
         })
     }
     //MARK: UIButton Action
-   
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionHolidayDates(_ sender: UIButton){
         self.closeMenu()
         let selector = UIStoryboard(name: "WWCalendarTimeSelector", bundle: nil).instantiateInitialViewController() as! WWCalendarTimeSelector
@@ -179,7 +201,8 @@ class HolidaySettingsTableViewController: BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -211,6 +234,23 @@ class HolidaySettingsTableViewController: BaseTableViewController {
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -237,38 +277,15 @@ extension HolidaySettingsTableViewController: MenuViewDelegate{
             self.menu.contractMenu()
             self.navigationController?.popToRootViewController(animated: true)
             break
+       
         case 2:
-            self.actionInbox(sender)
+            self.goToNotification()
             break
         case 3:
             self.goToSettings()
             break
         case 4:
             self.actionLogout(sender)
-            break
-        case 5:
-            self.menu.contractMenu()
-            self.actionAnnouncement(sender)
-            break
-        case 6:
-            self.menu.contractMenu()
-            self.actionAppointmemtUnitTakeOver(sender)
-            break
-        case 7:
-            self.menu.contractMenu()
-            self.actionDefectList(sender)
-            break
-        case 8:
-            self.menu.contractMenu()
-            self.actionAppointmentJointInspection(sender)
-            break
-        case 9:
-            self.menu.contractMenu()
-            self.actionFacilityBooking(sender)
-            break
-        case 10:
-            self.menu.contractMenu()
-            self.actionFeedback(sender)
             break
         default:
             break

@@ -6,13 +6,15 @@
 //
 
 import UIKit
-
+import DropDown
 class DoorAccessAcknowledgementTableViewController: BaseTableViewController {
     
     var eForm : String!
     let menu: MenuView = MenuView.getInstance
     var isToShowSucces = false
      //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
      @IBOutlet weak var lbl_UserName: UILabel!
      @IBOutlet weak var lbl_UserRole: UILabel!
      @IBOutlet weak var lbl_Title: UILabel!
@@ -47,7 +49,10 @@ class DoorAccessAcknowledgementTableViewController: BaseTableViewController {
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         toolbar.setItems([spaceButton,doneButton], animated: false)
     //    txtView_Address.inputAccessoryView = toolbar
-       
+         view_SwitchProperty.layer.borderColor = themeColor.cgColor
+         view_SwitchProperty.layer.borderWidth = 1.0
+         view_SwitchProperty.layer.cornerRadius = 10.0
+         view_SwitchProperty.layer.masksToBounds = true
        
 
      //   lbl_SuccessTitle.text = "Change of Mailing\nAddress Application\nhas been submitted"
@@ -65,10 +70,10 @@ class DoorAccessAcknowledgementTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         for btn in arr_Buttons{
             btn.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
@@ -78,7 +83,7 @@ class DoorAccessAcknowledgementTableViewController: BaseTableViewController {
          view_Background.layer.masksToBounds = true
         view_Background1.layer.cornerRadius = 25.0
         view_Background1.layer.masksToBounds = true
-        
+         lbl_SwitchProperty.text = kCurrentPropertyName
        
         //self.lbl_Title.text = formType == .moveInOut ? "Moving In & Out Application" : "Renovation Work Application"
         //self.lbl_SubTitle.text = "(For official use only)"
@@ -225,6 +230,23 @@ func closeMenu(){
     
     
      //MARK: UIBUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionHome(_ sender: UIButton){
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -287,7 +309,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -319,6 +342,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -389,9 +429,12 @@ extension DoorAccessAcknowledgementTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

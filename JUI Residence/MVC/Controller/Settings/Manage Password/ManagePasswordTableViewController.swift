@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DropDown
 class ManagePasswordTableViewController: BaseTableViewController {
     //Outlets
     @IBOutlet weak var lbl_UserName: UILabel!
@@ -16,13 +16,18 @@ class ManagePasswordTableViewController: BaseTableViewController {
     @IBOutlet weak var txt_ConfirmPassword: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var btn_Submit: UIButton!
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     var selectedFeedbackName = ""
     let menu: MenuView = MenuView.getInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-       
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        lbl_SwitchProperty.text = kCurrentPropertyName
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -47,7 +52,23 @@ class ManagePasswordTableViewController: BaseTableViewController {
         let imgdefault = ""//UserInfoModalBase.currentUser?.data.property.defect_bg ?? ""
         return imgdefault
     }
-    
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     //MARK: MENU ACTIONS
     @IBAction func actionInbox(_ sender: UIButton){
 //        let inboxTVC = self.storyboard?.instantiateViewController(identifier: "InboxTableViewController") as! InboxTableViewController
@@ -57,7 +78,8 @@ class ManagePasswordTableViewController: BaseTableViewController {
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -89,6 +111,23 @@ class ManagePasswordTableViewController: BaseTableViewController {
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -115,37 +154,13 @@ extension ManagePasswordTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.actionInbox(sender)
+            self.goToNotification()
             break
         case 3:
             self.goToSettings()
             break
         case 4:
             self.actionLogout(sender)
-            break
-        case 5:
-            self.menu.contractMenu()
-            self.actionAnnouncement(sender)
-            break
-        case 6:
-            self.menu.contractMenu()
-            self.actionAppointmemtUnitTakeOver(sender)
-            break
-        case 7:
-            self.menu.contractMenu()
-            self.actionDefectList(sender)
-            break
-        case 8:
-            self.menu.contractMenu()
-            self.actionAppointmentJointInspection(sender)
-            break
-        case 9:
-            self.menu.contractMenu()
-            self.actionFacilityBooking(sender)
-            break
-        case 10:
-            self.menu.contractMenu()
-            self.actionFeedback(sender)
             break
         default:
             break

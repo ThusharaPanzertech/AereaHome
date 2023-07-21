@@ -137,7 +137,54 @@ class ServiceManager: NSObject {
         
     }
     
-    
+    func postMethodAlamofire_With_Array(_ serviceName : String, with params : [String:Any]?,arraydatas:[String]?, completion : @escaping completionHandler)
+    {
+        
+//        let headers = ["Content-Type":"application/x-www-form-urlencoded"]
+//        request("\(kBaseUrl)"+"\(serviceName)", method: .post, parameters: parameter, encoding: URLEncoding.httpBody, headers: headers).responseJSON { (response) in
+//            switch response.result {
+        
+        
+        let headers = ["Content-Type":"application/x-www-form-urlencoded"]
+       
+        upload(multipartFormData: { (multipartFormData) in
+            for ids in arraydatas!
+            {
+               
+                multipartFormData.append(ids.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue) )!, withName: "visitor_ids[]" )
+                
+            }
+            
+            for (key, value) in params! {
+                multipartFormData.append((value as AnyObject).data(using: String.Encoding.utf8.rawValue)!, withName: key )
+            }
+        }, usingThreshold: UInt64.init(), to: "\(kBaseUrl)"+"\(serviceName)", method: .post, headers: headers) { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.uploadProgress(closure: { (progress) in
+                    //Print progress
+                    print(progress)
+                })
+                upload.responseJSON { response in
+                    if response.error == nil{
+                        completion(true, response , nil)
+                    }else
+                    {
+                        completion(false, response , response.error! as NSError)
+                    }
+                }
+               
+            case .failure(let encodingError):
+                completion(false, nil, encodingError as NSError)
+            }
+        }
+        
+        
+        
+       
+        
+    }
+   
     func postMethodAlamofire_With_Multiple_Data1(_ serviceName : String, with params : [String:Any]?,imagedatas:[[String:Any]]?, completion : @escaping completionHandler)
     {
         let headers = ["Content-Type":"application/x-www-form-urlencoded"]
@@ -237,7 +284,7 @@ class ServiceManager: NSObject {
                 let dictionary = jsonData as! NSDictionary
                 if  let status = dictionary.object(forKey: "response") as? Int
                 {
-                    if(status == 1){
+                    if(status == 1 || status == 200){
                       completion(true,response,nil)
                     }else{
                         let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : dictionary.value(forKey: "message")! as! String])

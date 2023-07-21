@@ -75,6 +75,7 @@ class SubmittedDefectsListTableViewCell: UITableViewCell {
     @IBOutlet weak var txtView_Other: UITextView!
     @IBOutlet weak var btn_Comment: UIButton!
     @IBOutlet weak var img_Photo: UIImageView!
+    @IBOutlet weak var btn_Photo: UIButton!
     @IBOutlet weak var lbl_Indx: UILabel!
   
     
@@ -104,6 +105,7 @@ class DefectsListTableViewCell: UITableViewCell {
     @IBOutlet weak var lbl_TicketNo: UILabel!
     @IBOutlet weak var lbl_Reference: UILabel!
     @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet weak var lbl_ApptStatus: UILabel!
     @IBOutlet weak var lbl_UnitNo: UILabel!
     @IBOutlet weak var lbl_SubmittedDate: UILabel!
     @IBOutlet weak var lbl_CompletedDate: UILabel!
@@ -258,6 +260,27 @@ class AppointmentSettingsTableViewCell: UITableViewCell {
     }
 
 }
+class NotificationTableViewCell: UITableViewCell {
+    //Outlets
+
+    @IBOutlet weak var lbl_Title: UILabel!
+    @IBOutlet weak var lbl_Mesage: UILabel!
+    @IBOutlet weak var lbl_Date: UILabel!
+    @IBOutlet weak var view_Outer: UIView!
+    @IBOutlet weak var view_Unread: UIView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
 
 class RoleTableViewCell: UITableViewCell {
     //Outlets
@@ -285,6 +308,7 @@ class UnitTableViewCell: UITableViewCell {
     //Outlets
    
     @IBOutlet weak var lbl_Unit: UILabel!
+    @IBOutlet weak var lbl_Building: UILabel!
     @IBOutlet weak var lblSize: UILabel!
     @IBOutlet weak var lbl_Share: UILabel!
     @IBOutlet weak var btn_Edit: UIButton!
@@ -369,6 +393,8 @@ class EFormSummaryTableViewCell: UITableViewCell {
     @IBOutlet weak var lbl_SubmittedDate: UILabel!
     @IBOutlet weak var lbl_TenancyStart: UILabel!
     @IBOutlet weak var lbl_TenancyEnd: UILabel!
+    @IBOutlet weak var lbl_TenancyStartTitle: UILabel!
+    @IBOutlet weak var lbl_TenancyEndTitle: UILabel!
     @IBOutlet weak var btn_Edit: UIButton!
     @IBOutlet weak var lbl_SubmittedBy: UILabel!
     @IBOutlet weak var btn_Payment: UIButton!
@@ -474,6 +500,7 @@ class EFormInspectionTableViewCell: UITableViewCell {
 class ResidentFileTableViewCell: UITableViewCell {
     //Outlets
     @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var lbl_New: UILabel!
     @IBOutlet weak var lbl_UploadBy: UILabel!
     @IBOutlet weak var lbl_UploadDate: UILabel!
     @IBOutlet weak var lbl_UpdatedAt: UILabel!
@@ -549,6 +576,442 @@ class DeviceSummaryTableViewCell: UITableViewCell {
         // Initialization code
         view_Outer.layer.cornerRadius = 10.0
         
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class BuildingSummaryTableViewCell: UITableViewCell {
+    //Outlets
+   
+    @IBOutlet weak var lbl_Building: UILabel!
+    @IBOutlet weak var lbl_BuildingId: UILabel!
+    @IBOutlet weak var btn_Edit: UIButton!
+    @IBOutlet weak var view_Outer: UIView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        
+        view_Outer.layer.cornerRadius = 10
+
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class AddBuildingTableViewCell: UITableViewCell {
+    //Outlets
+   
+    @IBOutlet weak var txt_Building: UITextField!
+    @IBOutlet weak var view_Outer: UIView!
+    @IBOutlet weak var btn_Delete: UIButton!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        
+        view_Outer.layer.cornerRadius = 10
+
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class VisitorTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_BookingId: UILabel!
+    @IBOutlet weak var lbl_InvitedBy: UILabel!
+    @IBOutlet weak var lbl_DateOfVisit: UILabel!
+    @IBOutlet weak var btn_Edit: UIButton!
+    @IBOutlet weak var lbl_VisitorNo: UILabel!
+    @IBOutlet weak var lbl_VisitingPurpose: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet var arrViews:[UIView]!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet weak var btn_Approve: UIButton!
+    @IBOutlet weak var btn_Decline: UIButton!
+    @IBOutlet weak var lbl_New: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+        if btn_Approve != nil{
+            btn_Approve.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+            btn_Approve.layer.cornerRadius = 8.0
+            btn_Decline.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
+            btn_Decline.layer.cornerRadius = 8.0
+        }
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class VisitorInfoTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_Name: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Mobile: UILabel!
+    @IBOutlet weak var lbl_Email: UILabel!
+    @IBOutlet weak var lbl_VehicleNo: UITextField!
+    @IBOutlet weak var btn_Checkbox: UIButton!
+    @IBOutlet weak var lbl_VisitorTitle: UILabel!
+    @IBOutlet weak var lbl_EntryDate: UILabel!
+    @IBOutlet weak var lbl_EntryTime: UILabel!
+   
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+        btn_Checkbox.layer.cornerRadius = 8.0
+        btn_Checkbox.layer.masksToBounds = true
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class VisitorWalkinTableViewCell: UITableViewCell {
+    //Outlets
+    
+    @IBOutlet var arr_Textfields: [UITextField]!
+    
+    @IBOutlet weak var btn_Close: UIButton!
+    @IBOutlet weak var txt_Name: UITextField!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var txt_Mobile: UITextField!
+    @IBOutlet weak var txt_VehicleNo: UITextField!
+    @IBOutlet weak var txt_Id: UITextField!
+    @IBOutlet weak var lbl_EntryDate: UILabel!
+    @IBOutlet weak var lbl_EntryTime: UILabel!
+    @IBOutlet weak var lbl_VisitorTitle: UILabel!
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+        
+        for txtField in arr_Textfields{
+            txtField.layer.cornerRadius = 20.0
+            txtField.layer.masksToBounds = true
+           
+            txtField.textColor = UIColor(red: 93/255, green: 93/255, blue: 93/255, alpha: 1.0)
+            txtField.attributedPlaceholder = NSAttributedString(string: txtField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
+        }
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+
+//MARK: Open Door Records
+class NormalDoorRecordTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_Opendoordate: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Time: UILabel!
+    @IBOutlet weak var lbl_DeviceName: UILabel!
+    @IBOutlet weak var lbl_DeviceNo: UILabel!
+    @IBOutlet weak var lbl_PersonName: UILabel!
+    @IBOutlet weak var lbl_OpenDoorType: UILabel!
+    @IBOutlet weak var img_Photo: UIImageView!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet var arrViews: [UIView]!
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class BluetoothDoorRecordTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_Opendoordate: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Time: UILabel!
+    @IBOutlet weak var lbl_PersonName: UILabel!
+    @IBOutlet weak var lbl_Unit: UILabel!
+    @IBOutlet weak var lbl_DeviceName: UILabel!
+    @IBOutlet weak var lbl_DeviceNo: UILabel!
+    @IBOutlet weak var lbl_Action: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet var arrViews: [UIView]!
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class FailedDoorRecordTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_Date: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Time: UILabel!
+    @IBOutlet weak var lbl_Unit: UILabel!
+    @IBOutlet weak var lbl_Name: UILabel!
+    @IBOutlet weak var img_Photo: UIImageView!
+    @IBOutlet weak var btn_Delete: UIButton!
+    @IBOutlet weak var lbl_Device: UILabel!
+    @IBOutlet weak var lbl_DeviceNo: UILabel!
+    @IBOutlet weak var lbl_Reason: UILabel!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet var arrViews: [UIView]!
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class CallUntDoorRecordTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_Date: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Time: UILabel!
+    @IBOutlet weak var lbl_Unit: UILabel!
+    @IBOutlet weak var img_Photo: UIImageView!
+    @IBOutlet weak var lbl_Device: UILabel!
+    @IBOutlet weak var btn_Delete: UIButton!
+    @IBOutlet weak var lbl_DeviceNo: UILabel!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet var arrViews: [UIView]!
+   
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class QRCodeDoorRecordTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var lbl_Date: UILabel!
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Time: UILabel!
+    @IBOutlet weak var lbl_BookingId: UILabel!
+    @IBOutlet weak var lbl_Name: UILabel!
+    @IBOutlet weak var btn_Delete: UIButton!
+    @IBOutlet weak var lbl_Device: UILabel!
+    @IBOutlet weak var lbl_DeviceNo: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+    @IBOutlet weak var img_Arrow: UIImageView!
+    @IBOutlet var arrViews: [UIView]!
+       
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+
+class UnitInfoTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Building: UILabel!
+    @IBOutlet weak var lbl_Id: UILabel!
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var lbl_Size: UILabel!
+    @IBOutlet weak var btn_Summary: UIButton!
+    @IBOutlet weak var lbl_Share: UILabel!
+   
+  //  @IBOutlet var arrViews:[UIView]!
+    @IBOutlet weak var btn_Read: UIButton!
+    @IBOutlet weak var btn_Hold: UIButton!
+  
+  //  @IBOutlet weak var img_Arrow: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+      
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class ResidentMgmtTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Invoice: UILabel!
+    @IBOutlet weak var lbl_BatchNo: UILabel!
+    @IBOutlet weak var lbl_Building: UILabel!
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var btn_Edit: UIButton!
+    @IBOutlet weak var lbl_Amount: UILabel!
+    @IBOutlet weak var lbl_CreatedAt: UILabel!
+    @IBOutlet weak var lbl_Status: UILabel!
+
+    
+  
+    @IBOutlet weak var img_Arrow: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class BatchInvoiceTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_BatchNo: UILabel!
+    @IBOutlet weak var lbl_NoofInvoice: UILabel!
+    @IBOutlet weak var lbl_CreatedBy: UILabel!
+   
+    @IBOutlet weak var lbl_CreatedDate: UILabel!
+    
+    @IBOutlet weak var btn_Print: UIButton!
+    @IBOutlet weak var btn_View: UIButton!
+    @IBOutlet weak var btn_Delete: UIButton!
+   
+  
+    @IBOutlet weak var img_Arrow: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class IndividualInvoiceTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_BatchNo: UILabel!
+    @IBOutlet weak var lbl_InvoiceNo: UILabel!
+    @IBOutlet weak var lbl_Building: UILabel!
+    @IBOutlet weak var lbl_UnitNo: UILabel!
+    @IBOutlet weak var lbl_TotalAmount: UILabel!
+    @IBOutlet weak var lbl_PaymentStatus: UILabel!
+    @IBOutlet weak var lbl_InvoiceDate: UILabel!
+    @IBOutlet weak var lbl_DueDate: UILabel!
+   
+    
+    @IBOutlet weak var btn_Print: UIButton!
+    @IBOutlet weak var btn_View: UIButton!
+    @IBOutlet weak var btn_Delete: UIButton!
+    @IBOutlet weak var btn_Payment: UIButton!
+   
+  
+    @IBOutlet weak var img_Arrow: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+class InvoiceDetailTableViewCell: UITableViewCell {
+    //Outlets
+    @IBOutlet weak var view_Outer: UILabel!
+    @IBOutlet weak var lbl_Detail: UILabel!
+    @IBOutlet weak var lbl_Amount: UILabel!
+    @IBOutlet weak var lbl_Paid: UILabel!
+    @IBOutlet weak var lbl_Balance: UILabel!
+    @IBOutlet weak var lbl_Allocation: UILabel!
+    @IBOutlet weak var txt_Allocation: UITextField!
+   
+    
+   
+  
+    @IBOutlet weak var img_Arrow: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        view_Outer.layer.cornerRadius = 10.0
+       
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -7,47 +7,143 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BE80B82F-5CB7-4FF0-8882-96E7B5DE2BB3"
+            uuid = "8223F47F-0DB4-4CB8-AF18-0B0EF042CCB3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditAppointmentTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/UnitListTypeTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "updateKeyCollection()"
+            startingLineNumber = "1924"
+            endingLineNumber = "1924"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BD43549A-FBB2-4D10-8EB4-24760124E12A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/HomeTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "449"
+            endingLineNumber = "449"
+            landmarkName = "getUnitList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E57B9CAE-EB93-4BDB-9DD4-68C1E0E49CB0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/UnitListTypeTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
+            landmarkName = "getUnitListTypeSummary()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "337D211E-A18F-4771-A463-2DC6CBA5CA00"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4860"
+            endingLineNumber = "4860"
+            landmarkName = "update_InvoicePayment(parameters:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "12EBAAF8-915E-425D-8AF8-14BBEC51F091"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/ResidentManagement/InvoicePaymentTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "422"
+            endingLineNumber = "422"
+            landmarkName = "actionSubmit(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "21EDAB1D-FDEC-4336-8066-BF4541C0C291"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/EForm Submissions/EFormSummaryTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "826"
+            endingLineNumber = "826"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E2B4FB38-AC19-4F0E-8BDB-494E51269AA8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/FacilityBookingTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
+            landmarkName = "searchFacility()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "BE80B82F-5CB7-4FF0-8882-96E7B5DE2BB3 - 196de55e62adea89"
+                  uuid = "E2B4FB38-AC19-4F0E-8BDB-494E51269AA8 - a1e6323ece62ec89"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Aerea_Manager.EditAppointmentTableViewController.updateKeyCollection() -&gt; ()"
+                  symbolName = "Aerea_Manager.FacilityBookingTableViewController.searchFacility() -&gt; ()"
                   moduleName = "Aerea Manager"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence/JUI%20Residence/MVC/Controller/EditAppointmentTableViewController.swift"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/FacilityBookingTableViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "128"
-                  endingLineNumber = "128"
-                  offsetFromSymbolStart = "3742">
+                  startingLineNumber = "212"
+                  endingLineNumber = "212"
+                  offsetFromSymbolStart = "11462">
                </Location>
                <Location
-                  uuid = "BE80B82F-5CB7-4FF0-8882-96E7B5DE2BB3 - 2109352ee51c5467"
+                  uuid = "E2B4FB38-AC19-4F0E-8BDB-494E51269AA8 - 4aaf2bfbf5929194"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.EditAppointmentTableViewController.updateKeyCollection() -&gt; ()"
+                  symbolName = "closure #2 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.FacilityBookingTableViewController.searchFacility() -&gt; ()"
                   moduleName = "Aerea Manager"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence/JUI%20Residence/MVC/Controller/EditAppointmentTableViewController.swift"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/FacilityBookingTableViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "129"
-                  endingLineNumber = "129"
-                  offsetFromSymbolStart = "292">
+                  startingLineNumber = "214"
+                  endingLineNumber = "214"
+                  offsetFromSymbolStart = "183">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -55,447 +151,111 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "40964BEB-8D66-44B1-8BD2-86332B14ACDB"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Login &amp; Sign Up/SignInViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
-            landmarkName = "login(email:password:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "FFA3E5D4-AA74-4A18-9781-52BDEF4A1EE3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Login &amp; Sign Up/SignInViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "login(email:password:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D5434C01-19BB-461C-9F5B-C62E58FF1BE1"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Login &amp; Sign Up/SignInViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
-            landmarkName = "login(email:password:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "969AC4E4-62B3-4735-B998-376B0C97D212"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
-            landmarkName = "update_User(parameters:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "60B1F5F6-1072-409A-9DF0-3F3AC08962CB"
+            uuid = "466922FB-FDCD-489D-A091-4F6806C87DE3"
             shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Settings/Role/AddRoleTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "createRole()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CB9A5DB8-3533-405D-A161-8EA0672CB553"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Settings/Role/AddRoleTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "createRole()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "75029B6D-ECD9-4174-8EBF-6FF4F1CB8153"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Settings/Unit/AddEditUnitTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "updateUnit()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F6CB9B18-4BAF-4462-BD0A-31BE8FD6E56A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Settings/Visiting Purpose/AddEditVisitingPurposeTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "426"
-            endingLineNumber = "426"
-            landmarkName = "actionId(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DB56BE19-3350-48B7-9CD7-4912032B1C6B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EForm Submissions/MoveIOInspectionTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A86CDBA3-FFA4-452B-9F5D-2274475CCAC8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EForm Submissions/MoveIOInspectionTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
-            landmarkName = "submitAppication()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "258013A8-3077-4725-A4D6-C4570AD3FAB8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EForm Submissions/EFormPaymentTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "74CE8EAF-6848-486B-A2DE-7023B2633274"
-            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JUI Residence/MVC/Controller/ResidentFileUploadTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
-            landmarkName = "tableView(_:numberOfRowsInSection:)"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "donedatePicker()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1B348E80-A31B-492E-8BD7-C20DDB3DAABC"
+            uuid = "7439B832-F5A3-4B4C-8710-E4FF0FCA33F3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/SubmittedDefectsListTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/ResidentFileUploadTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "287"
-            endingLineNumber = "287"
-            landmarkName = "updateManagementSignatureImage()"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "setUpUI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4851C9E6-3155-40B8-B3EF-16C3FCC8EC58"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/Externals/WWCalendarTimeSelector/Sources/WWCalendarTimeSelector.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1821"
-            endingLineNumber = "1821"
-            landmarkName = "tableView(_:didSelectRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "41D77BA6-AC2C-4D47-9A37-38F8E9430068"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/Externals/WWCalendarTimeSelector/Sources/WWCalendarTimeSelector.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1812"
-            endingLineNumber = "1812"
-            landmarkName = "tableView(_:didSelectRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "18269D2E-B0C4-4669-B0CD-3536FEAE4F1E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/Externals/WWCalendarTimeSelector/Sources/WWCalendarTimeSelector.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1012"
-            endingLineNumber = "1012"
-            landmarkName = "selectEndRange()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "98609BD1-7EF3-4DD0-8159-AF9EB3D4A2FC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/Externals/WWCalendarTimeSelector/Sources/WWCalendarTimeSelector.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "993"
-            endingLineNumber = "993"
-            landmarkName = "selectStartRange()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "9D7BCA8E-9F3B-4B45-A64E-F4779EFFC7B2"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/DefectHandoverTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "251"
-            endingLineNumber = "251"
-            landmarkName = "updateManagementSignatureImage()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "03405B02-393F-4817-902D-6714A79A89BD"
+            uuid = "98B91607-1C70-48EA-B2DE-AB1505E3FE5B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "602"
-            endingLineNumber = "602"
-            landmarkName = "approve_decline_KeyCollection(isToApprove:parameters:completion:)"
+            startingLineNumber = "2625"
+            endingLineNumber = "2625"
+            landmarkName = "search_ResidentFiles(parameters:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "761E6322-7458-426E-B781-1768DD13DDC9"
+            uuid = "6DD4EBC3-257B-4EFC-80EC-152CF6C27AE2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
+            filePath = "JUI Residence/MVC/Controller/Visitor Management/VisitorDetaisTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "603"
-            endingLineNumber = "603"
-            landmarkName = "approve_decline_KeyCollection(isToApprove:parameters:completion:)"
+            startingLineNumber = "484"
+            endingLineNumber = "484"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4DBFA2C8-3100-479D-A83F-A4B0D8A4929A"
+            uuid = "688015C0-B630-4451-B2EB-664056191FD6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Modal/ServiceManager/ServiceManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "315"
+            endingLineNumber = "315"
+            landmarkName = "postMethod(_:parameter:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FBD7641E-1CBC-4967-AE78-24638AF6E62B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/AssignUnitsTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
+            landmarkName = "getUnitCardList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "08B349E7-835A-4852-B24D-3B4FA784F773"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/FeedbackTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/UserAccessTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
-            landmarkName = "searchFeedbacks()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "19EB4B75-479D-482B-9DE3-BBCA9D90D785"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/CardAccess/CardSummaryTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "448"
-            endingLineNumber = "448"
-            landmarkName = "actionUnit(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "618A4F5E-C337-4345-B700-FC9DAFBCD3FF"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/CardAccess/AddEditCard_DeviceTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "213"
-            endingLineNumber = "213"
-            landmarkName = "createCard()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5FE898BD-9E01-4EA5-A8D1-7F0790666176"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/CardAccess/AddEditCard_DeviceTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "374"
-            endingLineNumber = "374"
-            landmarkName = "createDevice()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "67FE3BAF-E1FA-4864-9D58-F04ADFC06E1C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/CardAccess/AddEditCard_DeviceTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "377"
-            endingLineNumber = "377"
-            landmarkName = "createDevice()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A774FAC0-D114-49EE-A4BF-8CA7174F0DA2"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/CardAccess/AddEditCard_DeviceTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "421"
-            endingLineNumber = "421"
-            landmarkName = "updateDevice()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "77602867-260A-4322-9E76-07C5E449D938"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditCondoDocTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "371"
-            endingLineNumber = "371"
-            landmarkName = "deleteCondoFiles()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6A600717-79EF-4BC0-BB00-81272D8AD9E2"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditCondoDocTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "708"
-            endingLineNumber = "708"
+            startingLineNumber = "756"
+            endingLineNumber = "756"
             landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -503,129 +263,657 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CBA24C74-9E2A-40A0-95F0-44E43C5815EE"
+            uuid = "2B49079C-69B5-43AB-A8EE-0F23D491E0B9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditCondoDocTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/UserAccessTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "552"
-            endingLineNumber = "552"
-            landmarkName = "actionSelectFile(_:)"
+            startingLineNumber = "805"
+            endingLineNumber = "805"
+            landmarkName = "actionSelectColumn(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F819896C-3618-47EB-9408-87DC0BBBA780"
+            uuid = "355D13E7-C088-41D2-85BE-611B47BF6473"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditCondoDocTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/UnitListTypeTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "545"
-            endingLineNumber = "545"
-            landmarkName = "actionSelect_DeleteFile(_:)"
+            startingLineNumber = "673"
+            endingLineNumber = "673"
+            landmarkName = "activateUser(user_id:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2A289F72-378C-415C-83ED-7BC2931B5AF2"
+            uuid = "263179DE-0BEA-497E-97FA-26F6126014D0"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditCondoDocTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/UnitListTypeTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "438"
-            endingLineNumber = "438"
-            landmarkName = "actionSave(_:)"
+            startingLineNumber = "678"
+            endingLineNumber = "678"
+            landmarkName = "activateUser(user_id:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "263179DE-0BEA-497E-97FA-26F6126014D0 - f58a97f8726cb8dc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.UnitListTypeTableViewController.activateUser(user_id: Swift.Int) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/UnitListTypeTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "678"
+                  endingLineNumber = "678"
+                  offsetFromSymbolStart = "451">
+               </Location>
+               <Location
+                  uuid = "263179DE-0BEA-497E-97FA-26F6126014D0 - f58a97f8726cb8dc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.UnitListTypeTableViewController.activateUser(user_id: Swift.Int) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/UnitListTypeTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "678"
+                  endingLineNumber = "678"
+                  offsetFromSymbolStart = "861">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C172A2E5-E40F-4CE4-ABC2-B77E93F0047F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
+            landmarkName = "getBuildingUnitsLists()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "735E0608-01F0-4744-A053-D443851C4A97"
+            uuid = "25BF0862-3359-4E58-A735-869FCD0E91E4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditCondoDocTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "425"
-            endingLineNumber = "425"
-            landmarkName = "actionSave(_:)"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
+            landmarkName = "getBuildingSummaryLists()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A0F45884-8DBC-417C-B7F6-25B2BE893661"
+            uuid = "360619C7-21DC-4893-B904-763E77020C99"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/EditJointInspectionTableViewController.swift"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "282"
-            endingLineNumber = "282"
-            landmarkName = "updateInspection()"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
+            landmarkName = "getRolesList()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "399E36CF-522F-44C3-834C-26495C9B5991"
+            uuid = "F6C20C70-B6BA-4398-BEF1-19C1DB46DF68"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1196"
-            endingLineNumber = "1196"
-            landmarkName = "update_InspectionAppointment(parameters:completion:)"
+            startingLineNumber = "468"
+            endingLineNumber = "468"
+            landmarkName = "getUnitList()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2C41CF11-9ABB-4508-BD29-82E54BC90C5C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JUI Residence/MVC/Controller/Settings/SettingsSubMenuTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "330"
-            endingLineNumber = "330"
-            landmarkName = "handleTap(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "AA50DD96-7594-4295-9640-35F0075BF596"
+            uuid = "9717E87F-1742-413B-A184-787DAFAFCC26"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/UserManagementTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
+            landmarkName = "actionRoles(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9717E87F-1742-413B-A184-787DAFAFCC26 - b20d742efe04d002"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Aerea_Manager.UserManagementTableViewController.actionRoles(__C.UIButton) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/UserManagementTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "440"
+                  endingLineNumber = "440"
+                  offsetFromSymbolStart = "85">
+               </Location>
+               <Location
+                  uuid = "9717E87F-1742-413B-A184-787DAFAFCC26 - 3f1331f6623b9dd1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 ((key: Swift.String, value: Swift.String), (key: Swift.String, value: Swift.String)) -&gt; Swift.Bool in Aerea_Manager.UserManagementTableViewController.actionRoles(__C.UIButton) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/UserManagementTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "440"
+                  endingLineNumber = "440"
+                  offsetFromSymbolStart = "99">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4365F68E-1EF8-4E65-A37A-117FF001BD76"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/AssignDevicesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "347"
+            endingLineNumber = "347"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BB844434-4789-4097-8543-7F15305A91D4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
             filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3229"
-            endingLineNumber = "3229"
-            landmarkName = "get_ThinmooDeviceList(isBluetooth:parameters:completion:)"
+            startingLineNumber = "4329"
+            endingLineNumber = "4329"
+            landmarkName = "update_assignedDeviceList(parameters:completion:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "44760C8F-7107-4C9E-977F-7C5DF608AAAB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/HomeTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "469"
+            endingLineNumber = "469"
+            landmarkName = "getUserSummary()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8A4D07EF-D9AF-47C0-AEB9-7EFA0568334B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/HomeTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "610"
+            endingLineNumber = "610"
+            landmarkName = "actionResidentManagement(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "633883AF-C64E-49AC-82D7-2A1A11658DEF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/HomeTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "785"
+            endingLineNumber = "785"
+            landmarkName = "actionIcon(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BE3EA1A2-9B53-4E91-A665-B099B4A95A88"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/CardAccess/AddEditCard_DeviceTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7E75D947-F0FD-43DA-9CE6-9BCB7DC3D108"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/HomeTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "689"
+            endingLineNumber = "689"
+            landmarkName = "numberOfSections(in:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BDBB1BCA-632D-41D0-82B0-29B2E4AFCDB7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/UserManagementTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
+            landmarkName = "searchUser()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BDBB1BCA-632D-41D0-82B0-29B2E4AFCDB7 - ec745906de84fd42"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Aerea_Manager.UserManagementTableViewController.searchUser() -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/UserManagementTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "288"
+                  endingLineNumber = "288"
+                  offsetFromSymbolStart = "8511">
+               </Location>
+               <Location
+                  uuid = "BDBB1BCA-632D-41D0-82B0-29B2E4AFCDB7 - 731cd6f8a9372f7c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.UserManagementTableViewController.searchUser() -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/UserManagementTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "289"
+                  endingLineNumber = "289"
+                  offsetFromSymbolStart = "278">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DA38692E-7D81-4417-B6F4-BE9BF43D16BD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/EditUserTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "532858DE-9BD4-4F9D-9842-25A191C4CFB1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/DefectHandoverTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
+            landmarkName = "updateManagementSignatureImage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B4CE5808-8E7C-4F1E-ADF5-D3931B77FA8E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "652"
+            endingLineNumber = "652"
+            landmarkName = "deleteUser()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B4CE5808-8E7C-4F1E-ADF5-D3931B77FA8E - 3f198488445b794b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Aerea_Manager.AddUserTableViewController.deleteUser() -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/AddUserTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "652"
+                  endingLineNumber = "652"
+                  offsetFromSymbolStart = "2070">
+               </Location>
+               <Location
+                  uuid = "B4CE5808-8E7C-4F1E-ADF5-D3931B77FA8E - 4c7dc0e9ca469b57"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.AddUserTableViewController.deleteUser() -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/AddUserTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "653"
+                  endingLineNumber = "653"
+                  offsetFromSymbolStart = "266">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A042CE9A-D153-41C8-A118-0EBBBF9C0C55"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "280"
+            endingLineNumber = "280"
+            landmarkName = "application(_:didFailToRegisterForRemoteNotificationsWithError:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CEC34AA3-7D15-4F54-BB15-AE236B0A7F99"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
+            landmarkName = "application(_:didFailToRegisterForRemoteNotificationsWithError:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BBA75383-5D1B-4E7B-9738-3E32BE0A4D52"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
+            landmarkName = "application(_:didRegisterForRemoteNotificationsWithDeviceToken:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6E49117B-9296-4710-B6C9-D3EE3E28F058"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "611"
+            endingLineNumber = "611"
+            landmarkName = "updateUser()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4448921B-5268-4F99-BAB8-20CF865E4D97"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Controller/AddUserTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "517"
+            endingLineNumber = "517"
+            landmarkName = "createUser()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4448921B-5268-4F99-BAB8-20CF865E4D97 - b27e736214065492"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Aerea_Manager.AddUserTableViewController.createUser() -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/AddUserTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "518"
+                  endingLineNumber = "518"
+                  offsetFromSymbolStart = "13571">
+               </Location>
+               <Location
+                  uuid = "4448921B-5268-4F99-BAB8-20CF865E4D97 - bb0e177763b3460e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in Aerea_Manager.AddUserTableViewController.createUser() -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Controller/AddUserTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "519"
+                  endingLineNumber = "519"
+                  offsetFromSymbolStart = "356">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9AE27BD7-719A-42B9-9E96-15A7B5A90015"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/MVC/Modal/ServiceManager/ApiService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "795"
+            endingLineNumber = "795"
+            landmarkName = "search_UserAccessSummary(parameters:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9AE27BD7-719A-42B9-9E96-15A7B5A90015 - 16d90db9fda875d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Aerea_Manager.ApiService.search_UserAccessSummary(parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Modal/ServiceManager/ApiService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "795"
+                  endingLineNumber = "795"
+                  offsetFromSymbolStart = "65">
+               </Location>
+               <Location
+                  uuid = "9AE27BD7-719A-42B9-9E96-15A7B5A90015 - 7ce94f6d89db3cf2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Alamofire.DataResponse&lt;Any&gt;&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in static Aerea_Manager.ApiService.search_UserAccessSummary(parameters: Swift.Dictionary&lt;Swift.String, Any&gt;, completion: (Swift.Bool, Swift.Optional&lt;Swift.AnyObject&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/MVC/Modal/ServiceManager/ApiService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "796"
+                  endingLineNumber = "796"
+                  offsetFromSymbolStart = "222">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "62DF8858-2D0B-4A2C-96F0-8E87DEE641DC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "userNotificationCenter(_:didReceive:withCompletionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C7A1F748-BA2C-47A0-A231-DAEADF437C4C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JUI Residence/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "285"
+            endingLineNumber = "285"
+            landmarkName = "application(_:didReceiveRemoteNotification:fetchCompletionHandler:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C7A1F748-BA2C-47A0-A231-DAEADF437C4C - cb06f4e35966ca8f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Aerea_Manager.AppDelegate.application(_: __C.UIApplication, didReceiveRemoteNotification: Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;, fetchCompletionHandler: (__C.UIBackgroundFetchResult) -&gt; ()) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "271"
+                  endingLineNumber = "271"
+                  offsetFromSymbolStart = "227">
+               </Location>
+               <Location
+                  uuid = "C7A1F748-BA2C-47A0-A231-DAEADF437C4C - cb06f4e35966ca8f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Aerea_Manager.AppDelegate.application(_: __C.UIApplication, didReceiveRemoteNotification: Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;, fetchCompletionHandler: (__C.UIBackgroundFetchResult) -&gt; ()) -&gt; ()"
+                  moduleName = "Aerea Manager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thusharaharish/Documents/JUI%20Residence%20old/JUI%20Residence/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "271"
+                  endingLineNumber = "271"
+                  offsetFromSymbolStart = "340">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

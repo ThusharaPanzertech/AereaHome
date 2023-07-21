@@ -10,6 +10,8 @@ import DropDown
 class CardSummaryTableViewController: BaseTableViewController {
     
     //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var txt_CardNo: UITextField!
     @IBOutlet weak var txt_UnitNo: UITextField!
     @IBOutlet weak var txt_Status: UITextField!
@@ -36,6 +38,10 @@ class CardSummaryTableViewController: BaseTableViewController {
     var indexToDelete  = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -49,11 +55,11 @@ class CardSummaryTableViewController: BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-       
-        let fname = Users.currentUser?.user?.name ?? ""
+        lbl_SwitchProperty.text = kCurrentPropertyName
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         table_CardList.dataSource = dataSource
         table_CardList.delegate = dataSource
@@ -91,7 +97,7 @@ class CardSummaryTableViewController: BaseTableViewController {
         if indexPath.row == 1{
             let ht =  isCardAccess ? 143 : 200
             let count = isCardAccess ? array_Cards.count : array_Devices.count
-            return CGFloat((ht * count) + 300)
+            return CGFloat((ht * count) + 380)
         }
         return super.tableView(tableView, heightForRowAt: indexPath)
     
@@ -108,16 +114,16 @@ func closeMenu(){
     func setUpUI(){
        
         if self.isCardAccess{
-            self.lbl_Title.text = "Card Access Management"
+            self.lbl_Title.text = "Access Card Management"
             txt_CardNo.placeholder = "Please enter card no"
-            txt_UnitNo.placeholder = "Enter Unit no"
-            txt_Status.placeholder = "Enter Status"
+            txt_UnitNo.placeholder = "Select Unit"
+            txt_Status.placeholder = "Select Status"
         }
         else{
             self.lbl_Title.text = "Device Management"
             txt_CardNo.placeholder = "Search by device name"
             txt_UnitNo.placeholder = "Enter Serial no"
-            txt_Status.placeholder = "Enter Status"
+            txt_Status.placeholder = "Select Status"
              btn_Unit.isHidden = true
              dropdown_Unit.isHidden = true
         }
@@ -180,35 +186,20 @@ func closeMenu(){
             ActivityIndicatorView.show("Loading")
             let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
             var param = [String : Any]()
-            if txt_CardNo.text != ""{
+           
                 param = [
                     "login_id" : userId,
-                    "option": "card",
-                    "card" : txt_CardNo.text!
-                    
-                ] as [String : Any]
-            }
-            else if txt_Status.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "status",
+                    "unit" : txt_UnitNo.text!,
+                    "card" : txt_CardNo.text!,
                     "status" : txt_Status.text! == "Active" ? "1" :
                         txt_Status.text! == "Inactive" ? "2" :
                         txt_Status.text! == "Faulty" ? "3" :
                         txt_Status.text! == "Loss" ? "4" :
-                        txt_Status.text! == "Stolen" ? "5" : ""
+                        txt_Status.text! == "Stolen" ? "5" : "",
                     
                 ] as [String : Any]
-            }
-            else if txt_UnitNo.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "unit",
-                    "unit" : txt_UnitNo.text!
-                    
-                ] as [String : Any]
-            }
-         
+           
+           
             
             
                 ApiService.search_cardSummary(parameters: param, completion: { status, result, error in
@@ -286,31 +277,17 @@ func closeMenu(){
          ActivityIndicatorView.show("Loading")
          let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
          var param = [String : Any]()
-         if txt_CardNo.text != ""{
+        
              param = [
                  "login_id" : userId,
-                 "option": "name",
-                 "name" : txt_CardNo.text!
-                 
-             ] as [String : Any]
-         }
-         else if txt_Status.text != ""{
-             param = [
-                 "login_id" : userId,
-                 "option": "status",
                  "status" : txt_Status.text! == "Active" ? "1" :
-                     "0"
-                 
-             ] as [String : Any]
-         }
-         else if txt_UnitNo.text != ""{
-             param = [
-                 "login_id" : userId,
-                 "option": "serial_no",
+                     "0",
+                 "name" : txt_CardNo.text!,
                  "serial_no" : txt_UnitNo.text!
                  
              ] as [String : Any]
-         }
+        
+        
       
          
          
@@ -427,6 +404,54 @@ func closeMenu(){
       
     }
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSearch(_ sender:UIButton) {
+        if txt_CardNo.text == "" && txt_Status.text == "" && txt_UnitNo.text == ""{
+            if self.isCardAccess{
+                self.getCardSummary()
+            }
+            else{
+                self.getDeviceSummary()
+            }
+        }
+        else{
+            if self.isCardAccess{
+                self.searchCards()
+            }
+            else{
+                self.searchDevices()
+            }
+        }
+    }
+    @IBAction func actionClear(_ sender:UIButton) {
+        self.txt_Status.text = ""
+        txt_CardNo.text = ""
+        txt_UnitNo.text = ""
+        if self.isCardAccess{
+            self.getCardSummary()
+        }
+        else{
+            self.getDeviceSummary()
+        }
+        
+        
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionAddNew(_ sender: UIButton){
         if self.isCardAccess{
             let editCardTVC = kStoryBoardMenu.instantiateViewController(identifier: "AddEditCard_DeviceTableViewController") as! AddEditCard_DeviceTableViewController
@@ -445,6 +470,7 @@ func closeMenu(){
         }
     }
     @IBAction func actionUnit(_ sender:UIButton) {
+        view.endEditing(true)
        // let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
         let arrUnit = unitsData.map { $0.unit }
         let dropDown_Unit = DropDown()
@@ -452,15 +478,15 @@ func closeMenu(){
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
         dropDown_Unit.show()
         dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_Status.text = ""
-            txt_CardNo.text = ""
+           
            
             txt_UnitNo.text = item
-            searchCards()
+            txt_UnitNo.backgroundColor = .white
             
         }
     }
     @IBAction func actionStatus(_ sender:UIButton) {
+        view.endEditing(true)
         if isCardAccess{
         let arrStatus = [ "Active", "Inactive", "Faulty", "Loss", "Stolen"]
         let dropDown_Status = DropDown()
@@ -469,10 +495,7 @@ func closeMenu(){
         dropDown_Status.show()
         dropDown_Status.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_Status.text = item
-            txt_CardNo.text = ""
-           
-            txt_UnitNo.text = ""
-            searchCards()
+           txt_Status.backgroundColor = .white
         }
         }
         else{
@@ -483,10 +506,11 @@ func closeMenu(){
             dropDown_Status.show()
             dropDown_Status.selectionAction = { [unowned self] (index: Int, item: String) in
                 txt_Status.text = item
-                txt_CardNo.text = ""
-               
-                txt_UnitNo.text = ""
-                searchDevices()
+                    txt_Status.backgroundColor = .white
+//                txt_CardNo.text = ""
+//
+//                txt_UnitNo.text = ""
+//                searchDevices()
         }
         }
     }
@@ -500,7 +524,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -532,6 +557,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -675,9 +717,12 @@ extension CardSummaryTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -703,32 +748,34 @@ extension CardSummaryTableViewController: MenuViewDelegate{
 extension CardSummaryTableViewController: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        if textField == txt_CardNo{
-            txt_UnitNo.text = ""
-            txt_Status.text = ""
-        }
-        else if textField == txt_UnitNo{
-            txt_CardNo.text = ""
-            txt_Status.text = ""
-        }
-        if isCardAccess{
-            searchCards()
-        }
-        else{
-            searchDevices()
-        }
+//        if textField == txt_CardNo{
+//            txt_UnitNo.text = ""
+//            txt_Status.text = ""
+//        }
+//        else if textField == txt_UnitNo{
+//            txt_CardNo.text = ""
+//            txt_Status.text = ""
+//        }
+//        if isCardAccess{
+//            searchCards()
+//        }
+//        else{
+//            searchDevices()
+//        }
         return true
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        
+        textField.backgroundColor = .white
+
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if isCardAccess{
-        searchCards()
+        if textField.text!.count > 0{
+            textField.backgroundColor = UIColor.white
         }
         else{
-            searchDevices()
+            textField.backgroundColor = UIColor(red: 208/255, green: 208/255, blue: 208/255, alpha: 1.0)
         }
+        
     }
    
 }

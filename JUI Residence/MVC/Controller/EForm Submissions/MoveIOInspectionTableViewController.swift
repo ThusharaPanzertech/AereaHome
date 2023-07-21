@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DropDown
 var arr_DamageDesc : [[String: Any]] = [[kId: "", kDesc:"", kImage: ""]]
 class MoveIOInspectionTableViewController:  BaseTableViewController {
    
@@ -13,6 +14,8 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
     var isToShowSucces = false
      //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var datePicker:  UIDatePicker!
      @IBOutlet weak var lbl_UserName: UILabel!
      @IBOutlet weak var lbl_UserRole: UILabel!
@@ -69,6 +72,8 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
      override func viewDidLoad() {
          super.viewDidLoad()
         arr_DamageDesc.removeAll()
+         
+         arr_DamageDesc =   [[kId: "", kDesc:"", kImage: ""]]
         self.configureDatePicker()
         let toolbar = UIToolbar();
         toolbar.sizeToFit()
@@ -82,7 +87,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
         dataSource.parentVc = self
         self.table_Damages.reloadData()
         self.tableView.reloadData()
-
+         lbl_SwitchProperty.text = kCurrentPropertyName
      //   lbl_SuccessTitle.text = "Change of Mailing\nAddress Application\nhas been submitted"
      //   lbl_SuccessSubTitle.text = "Your form has been submitted and we \nwill get back to you on the status of the\napplication"
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
@@ -98,10 +103,10 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
         else{
             self.imgView_Profile.image = UIImage(named: "avatar")
         }
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         for btn in arr_Buttons{
             btn.addShadow(offset: CGSize.init(width: 0, height: 3), color: UIColor.lightGray, radius: 3.0, opacity: 0.35)
@@ -112,7 +117,10 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
         view_Background1.layer.cornerRadius = 25.0
         view_Background1.layer.masksToBounds = true
         
-       
+         view_SwitchProperty.layer.borderColor = themeColor.cgColor
+         view_SwitchProperty.layer.borderWidth = 1.0
+         view_SwitchProperty.layer.cornerRadius = 10.0
+         view_SwitchProperty.layer.masksToBounds = true
         self.lbl_Title.text = formType == .moveInOut ? "Moving In & Out Application" : "Renovation Work Application"
         self.lbl_SubTitle.text =  formType == .moveInOut ? "(For official use only - for inspection after moving work)" : "(For official use only - for inspection after renovation work)"
         
@@ -241,7 +249,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
             formatter.locale = Locale(identifier: "en_US_POSIX")
             formatter.dateFormat = "yyyy-MM-dd"
             let moving_date = formatter.date(from:moveInOutData.inspection.date_of_completion)
-            formatter.dateFormat = "dd/MM/yyyy"
+            formatter.dateFormat = "dd/MM/yy"
                 let moving_dateStr = formatter.string(from: moving_date ?? Date())
             self.txt_ActualDate.text = moving_dateStr
             
@@ -315,7 +323,7 @@ class MoveIOInspectionTableViewController:  BaseTableViewController {
                 formatter.locale = Locale(identifier: "en_US_POSIX")
                 formatter.dateFormat = "yyyy-MM-dd"
                 let moving_date = formatter.date(from:renovationData.inspection.date_of_completion)
-                formatter.dateFormat = "dd/MM/yyyy"
+                formatter.dateFormat = "dd/MM/yy"
                     let moving_dateStr = formatter.string(from: moving_date ?? Date())
                 self.txt_ActualDate.text = moving_dateStr
                 
@@ -371,7 +379,7 @@ func closeMenu(){
     func submitAppication(){
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yy"
        
         let moving_date = formatter.date(from:txt_ActualDate.text!)
         formatter.dateFormat = "yyyy-MM-dd"
@@ -499,6 +507,23 @@ func closeMenu(){
     
     
      //MARK: UIBUTTON ACTIONS
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionAddNew(_ sender: UIButton){
         let new_Defect  = [kId: "", kDesc:"", kImage: ""]
         arr_DamageDesc.append(new_Defect)
@@ -642,7 +667,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -674,6 +700,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -759,9 +802,12 @@ extension MoveIOInspectionTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      

@@ -12,6 +12,8 @@ var selectedRowIndex_Feedback = -1
 class FeedbackTableViewController: BaseTableViewController {
     
     //Outlets
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     @IBOutlet weak var txt_Category: UITextField!
     @IBOutlet weak var txt_DateRange: UITextField!
     @IBOutlet weak var txt_Ticket: UITextField!
@@ -31,10 +33,14 @@ class FeedbackTableViewController: BaseTableViewController {
     var array_Feedbacks = [FeedbackModal]()
     var startDate = ""
     var endDate = ""
-    var feedbackOptions = [String: String]()
+    var feedbackOptions = [FeedbackOption]()
     var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
         let profilePic = Users.currentUser?.moreInfo?.profile_picture ?? ""
         if let url1 = URL(string: "\(kImageFilePath)/" + profilePic) {
            // self.imgView_Profile.af_setImage(withURL: url1)
@@ -50,10 +56,10 @@ class FeedbackTableViewController: BaseTableViewController {
         }
         getFeedbackTypes()
         getUnitList()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         table_FeedbackList.dataSource = dataSource
         table_FeedbackList.delegate = dataSource
@@ -97,7 +103,7 @@ func closeMenu(){
 }
     func setUpUI(){
        
-        
+        lbl_SwitchProperty.text = kCurrentPropertyName
         
         view_Background.layer.cornerRadius = 25.0
         view_Background.layer.masksToBounds = true
@@ -200,8 +206,8 @@ func closeMenu(){
             else{
             var fb_Id = ""
            // var unit_Id = ""
-            if let fbId = feedbackOptions.first(where: { $0.value == txt_Category.text })?.key {
-                fb_Id = fbId
+            if let fbId = feedbackOptions.first(where: { $0.feedback_option == txt_Category.text })?.id {
+                fb_Id = "\(fbId)"
             }
             if let unitId = unitsData.first(where: { $0.unit == txt_Unit.text }) {
            //     unit_Id = unitId
@@ -210,53 +216,21 @@ func closeMenu(){
             ActivityIndicatorView.show("Loading")
             let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
             var param = [String : Any]()
-            if txt_Category.text != ""{
+           
                 param = [
                     "login_id" : userId,
-                    "option": "category",
+                    "ticket" : txt_Ticket.text!,
                     "filter" : filter,
-                    "category" : fb_Id
-                    
-                ] as [String : Any]
-            }
-            else if txt_Ticket.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "ticket",
-                    "filter" : filter,
-                    "ticket" : txt_Ticket.text!
-                    
-                ] as [String : Any]
-            }
-            else if txt_Unit.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "unit",
-                    "filter" : filter,
-                    "unit" : txt_Unit.text!
-                    
-                ] as [String : Any]
-            }
-            else if txt_DateRange.text != ""{
-                param = [
-                    "login_id" : userId,
-                    "option": "date",
+                    "category" : fb_Id,
+                    "unit" : txt_Unit.text!,
                     "fromdate" : self.startDate,
                     "todate" : self.endDate,
-                    "filter" : filter,
                     
                 ] as [String : Any]
-            }
             
-                else if txt_FilterBy.text != ""{
-                    param = [
-                        "login_id" : userId,
-                        "option": "date",
-                       // "category" : "",
-                        "filter" : filter,
-                        
-                    ] as [String : Any]
-                }
+           
+            
+               
                 ApiService.search_feedback(parameters: param, completion: { status, result, error in
                    
                     ActivityIndicatorView.hiding()
@@ -288,6 +262,38 @@ func closeMenu(){
         }
     
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSearch(_ sender:UIButton) {
+        self.searchFeedbacks()
+    }
+    @IBAction func actionClear(_ sender:UIButton) {
+        self.txt_Category.text = ""
+        txt_DateRange.text = ""
+        txt_Ticket.text = ""
+        txt_Unit.text = ""
+        txt_FilterBy.text = ""
+         startDate = ""
+         endDate = ""
+        self.getFeedbackSummary()
+        
+        
+    }
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionUnit(_ sender:UIButton) {
        // let sortedArray = unitsData.sorted(by:  { $0.1 < $1.1 })
         let arrUnit = unitsData.map { $0.unit }
@@ -296,11 +302,9 @@ func closeMenu(){
         dropDown_Unit.dataSource = arrUnit// Array(unitsData.values)
         dropDown_Unit.show()
         dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
-            txt_Category.text = ""
-            txt_DateRange.text = ""
-            txt_Ticket.text = ""
+            
             txt_Unit.text = item
-            self.searchFeedbacks()
+            
             
         }
     }
@@ -318,23 +322,20 @@ func closeMenu(){
         dropDown_Filter.show()
         dropDown_Filter.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_FilterBy.text = item
-            self.searchFeedbacks()
+           
             
         }
     }
     @IBAction func actionCategory(_ sender:UIButton) {
-        let sortedArray = feedbackOptions.sorted { $0.key < $1.key }
-        let arrfeedbackOptions = sortedArray.map { $0.value }
+       // let sortedArray = feedbackOptions.sorted { $0.key < $1.key }
+        let arrfeedbackOptions = feedbackOptions.map { $0.feedback_option }
         let dropDown_feedbackOptions = DropDown()
         dropDown_feedbackOptions.anchorView = sender // UIView or UIBarButtonItem
         dropDown_feedbackOptions.dataSource = arrfeedbackOptions//Array(roles.values)
         dropDown_feedbackOptions.show()
         dropDown_feedbackOptions.selectionAction = { [unowned self] (index: Int, item: String) in
             txt_Category.text = item
-            txt_DateRange.text = ""
-            txt_Ticket.text = ""
-            txt_Unit.text = ""
-            self.searchFeedbacks()
+           
             
         }
     }
@@ -344,9 +345,22 @@ func closeMenu(){
           //dateRangePickerViewController.selectedStartDate = Date()
          // dateRangePickerViewController.selectedEndDate = Date()
           
-           let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+//           let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+//        
+//           let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
+//        
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())  // 2022
+        let firstDayOfYear = DateComponents(calendar: calendar, year: currentYear).date  // "Jan 1, 2022 at 12:00 AM"
+
+       // let calendar: Calendar = Calendar.current
+        let startDate = calendar.startOfYear(Date())
+
+        let endDate = calendar.endOfYear(Date())
         
-           let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
+           let minimumDate = Calendar.current.date(byAdding: .year, value: -1, to: startDate )
+        
+           let maximumDate = Calendar.current.date(byAdding: .year, value: 1, to: endDate )
         
         
         dateRangePickerViewController.minimumDate = minimumDate
@@ -363,7 +377,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -395,6 +410,23 @@ func closeMenu(){
     @IBAction func actionFeedback(_ sender: UIButton){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
+    }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
     }
     func goToSettings(){
         var controller: UIViewController!
@@ -514,9 +546,12 @@ extension FeedbackTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -548,10 +583,7 @@ extension FeedbackTableViewController: CalendarDateRangePickerViewControllerDele
         let fromDate = self.getDateString(date: startDate, format: "dd/MM/yy")
         let toDate = self.getDateString(date: endDate, format: "dd/MM/yy")
         self.txt_DateRange.text = "\(fromDate) - \(toDate)"
-        txt_Unit.text = ""
-        txt_Ticket.text = ""
-        txt_Category.text = ""
-        self.searchFeedbacks()
+       
         self.navigationController?.dismiss(animated: true, completion: nil)
        
     }
@@ -574,22 +606,15 @@ extension FeedbackTableViewController: CalendarDateRangePickerViewControllerDele
 extension FeedbackTableViewController: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        if textField == txt_Ticket{
-            txt_Unit.text = ""
-        }
-        else if textField == txt_Unit{
-            txt_Ticket.text = ""
-        }
-        self.searchFeedbacks()
+       
         return true
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        txt_Category.text = ""
-        txt_DateRange.text = ""
+       
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
        
-            self.searchFeedbacks()
+           
         
     }
    

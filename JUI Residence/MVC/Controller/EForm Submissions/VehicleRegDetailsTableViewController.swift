@@ -42,7 +42,8 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
     @IBOutlet weak var imgView_OwnerSign: UIImageView!
     @IBOutlet weak var imgView_NomineeSign: UIImageView!
 
-    
+    @IBOutlet weak var view_SwitchProperty: UIView!
+    @IBOutlet weak var lbl_SwitchProperty: UILabel!
     
     
     @IBOutlet weak var txt_Status: UITextField!
@@ -52,7 +53,7 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
     let menu: MenuView = MenuView.getInstance
 
     var vehicleRegData: VehicleReg!
-   
+    var unit: Unit!
     var unitsData = [Unit]()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,14 +88,18 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
             txtView_Remarks.text = "Enter Remarks"
             txtView_Remarks.textColor = placeholderColor
         }
+        lbl_SwitchProperty.text = kCurrentPropertyName
         txtView_Remarks.delegate = self
-        
-      
+        view_SwitchProperty.layer.borderColor = themeColor.cgColor
+        view_SwitchProperty.layer.borderWidth = 1.0
+        view_SwitchProperty.layer.cornerRadius = 10.0
+        view_SwitchProperty.layer.masksToBounds = true
+        getVehicleRegDetails()
         setUpUI()
-        let fname = Users.currentUser?.user?.name ?? ""
+          let fname = Users.currentUser?.moreInfo?.first_name ?? ""
         let lname = Users.currentUser?.moreInfo?.last_name ?? ""
         self.lbl_UserName.text = "\(fname) \(lname)"
-        let role = Users.currentUser?.role?.name ?? ""
+        let role = Users.currentUser?.role
         self.lbl_UserRole.text = role
         txt_Status.text = vehicleRegData.submission.status == 0 ? "New" :
             vehicleRegData.submission.status == 1 ? "Cancelled" :
@@ -111,12 +116,12 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
        
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         let moving_date = formatter.date(from: vehicleRegData.submission.request_date)
         let tenancy_start = formatter.date(from: vehicleRegData.submission.tenancy_start)
         let tenancy_end = formatter.date(from: vehicleRegData.submission.tenancy_end)
        
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yy"
         let moving_dateStr = formatter.string(from: moving_date ?? Date())
         let tenancy_startStr = formatter.string(from: tenancy_start ?? Date())
         let tenancy_endStr = formatter.string(from: tenancy_end ?? Date())
@@ -125,7 +130,9 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
         lbl_Ticket.text = vehicleRegData.submission.ticket
         lbl_SubmittedDate.text = moving_dateStr
         lbl_OwnerName.text = vehicleRegData.submission.owner_name
-        lbl_UnitNo.text = vehicleRegData.unit?.unit
+     //   lbl_UnitNo.text = vehicleRegData.unit?.unit
+        let unit = self.unit
+        lbl_UnitNo.text = unit == nil ? "" : "#\(unit!.unit)"
         lbl_ContactNo.text = vehicleRegData.submission.contact_no
         lbl_Email.text = vehicleRegData.submission.email
         
@@ -165,7 +172,7 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
         }
         
         
-        let sign2 = vehicleRegData.submission.owner_signature
+        let sign2 = vehicleRegData.submission.nominee_signature
 //        if let url2 = URL(string: "\(kImageFilePath)/" + sign2) {
 //            self.imgView_NomineeSign.af_setImage(
 //                        withURL: url2,
@@ -221,7 +228,8 @@ class VehicleRegDetailsTableViewController: BaseTableViewController {
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 1{
-            let rowCount = vehicleRegData.documents.count / 3 + vehicleRegData.documents.count % 3
+            let count = vehicleRegData.documents == nil ? 0 : vehicleRegData.documents!.count
+            let rowCount = count / 3 + count % 3
             
             ht_Collection.constant = CGFloat(140 * rowCount) + 10
 
@@ -258,6 +266,28 @@ func closeMenu(){
        
     }
     //MARK: ***************  PARSING ***************
+    func getVehicleRegDetails(){
+        ActivityIndicatorView.show("Loading")
+        let userId = UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"        //
+        ApiService.get_VehicleRegDetails(parameters: ["login_id":userId, "id":vehicleRegData.submission.id], completion: { status, result, error in
+           
+            ActivityIndicatorView.hiding()
+            if status  && result != nil{
+                 if let response = (result as? VehicleRegBase){
+                     self.vehicleRegData = response.data
+                     self.collection_Files.reloadData()
+                    self.tableView.reloadData()
+                    
+                }
+        }
+            else if error != nil{
+                self.displayErrorAlert(alertStr: "\(error!.localizedDescription)", title: "Alert")
+            }
+            else{
+                self.displayErrorAlert(alertStr: "Something went wrong.Please try again", title: "Alert")
+            }
+        })
+    }
     func  deleteVehicleReg(){
         ActivityIndicatorView.show("Loading")
         let userId =  UserDefaults.standard.value(forKey: "UserId") as? String ?? "0"
@@ -340,6 +370,23 @@ func closeMenu(){
 
    
     //MARK: UIBUTTON ACTION
+    @IBAction func actionSwitchProperty(_ sender:UIButton) {
+
+        let dropDown_Unit = DropDown()
+        dropDown_Unit.anchorView = sender // UIView or UIBarButtonItem
+        dropDown_Unit.dataSource = array_Property.map { $0.company_name }// Array(unitsData.values)
+        dropDown_Unit.show()
+        dropDown_Unit.selectionAction = { [unowned self] (index: Int, item: String) in
+            lbl_SwitchProperty.text = item
+            kCurrentPropertyName = item
+            let prop = array_Property.first(where:{ $0.company_name == item})
+            if prop != nil{
+                kCurrentPropertyId = prop!.id
+                getPropertyListInfo()
+            }
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
     @IBAction func actionStatus(_ sender:UIButton) {
         
         let arrStatus = [ "New", "Approved", "In Progress", "Cancelled", "Rejected"]
@@ -381,7 +428,8 @@ func closeMenu(){
         let alert = UIAlertController(title: "Are you sure you want to logout?", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { action in
             UserDefaults.standard.removeObject(forKey: "UserId")
-            kAppDelegate.setLogin()
+            kAppDelegate.updateLogoutLogs()
+           kAppDelegate.setLogin()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
            
@@ -414,6 +462,23 @@ func closeMenu(){
 //        let feedbackTVC = self.storyboard?.instantiateViewController(identifier: "FeedbackSummaryTableViewController") as! FeedbackSummaryTableViewController
 //        self.navigationController?.pushViewController(feedbackTVC, animated: true)
     }
+   func goToNotification(){
+       var controller: UIViewController!
+       for cntroller in self.navigationController!.viewControllers as Array {
+           if cntroller.isKind(of: NotificationsTableViewController.self) {
+               controller = cntroller
+               break
+           }
+       }
+       if controller != nil{
+           self.navigationController!.popToViewController(controller, animated: true)
+       }
+       else{
+           let inboxTVC = kStoryBoardMain.instantiateViewController(identifier: "NotificationsTableViewController") as! NotificationsTableViewController
+           self.navigationController?.pushViewController(inboxTVC, animated: true)
+       }
+        
+    }
     func goToSettings(){
         var controller: UIViewController!
         for cntroller in self.navigationController!.viewControllers as Array {
@@ -441,9 +506,12 @@ extension VehicleRegDetailsTableViewController: MenuViewDelegate{
             self.navigationController?.popToRootViewController(animated: true)
             break
         case 2:
-            self.goToSettings()
+            self.goToNotification()
             break
         case 3:
+            self.goToSettings()
+            break
+        case 4:
             self.actionLogout(sender)
             break
      
@@ -525,13 +593,13 @@ extension VehicleRegDetailsTableViewController: UICollectionViewDelegate, UIColl
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return vehicleRegData.documents.count
+        return vehicleRegData.documents == nil ? 0 : vehicleRegData.documents!.count
         
         
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "docCell", for: indexPath) as! DocumentCollectionViewCell
-        let file = self.vehicleRegData.documents[indexPath.item]
+        let file = self.vehicleRegData.documents![indexPath.item]
         let arr1 = file.file_original.components(separatedBy: ".")
         if arr1.count > 1{
            
@@ -550,7 +618,7 @@ extension VehicleRegDetailsTableViewController: UICollectionViewDelegate, UIColl
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        let file = vehicleRegData.documents[(sender! as UITapGestureRecognizer).view!.tag]
+        let file = vehicleRegData.documents![(sender! as UITapGestureRecognizer).view!.tag]
         var filename =  ""
         let arr1 = file.file_original.components(separatedBy: ".")
         if arr1.count > 1{

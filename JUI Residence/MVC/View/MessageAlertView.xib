@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,7 +20,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LUQ-v1-gMo">
-                    <rect key="frame" x="25" y="184" width="364" height="335"/>
+                    <rect key="frame" x="25" y="188" width="364" height="335"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V8c-gz-D0P">
                             <rect key="frame" x="30" y="170" width="304" height="50"/>
@@ -51,8 +51,8 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you sure you want to delete the following user?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Oiy-mp-TIg">
-                            <rect key="frame" x="0.0" y="20" width="364" height="130"/>
-                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="28"/>
+                            <rect key="frame" x="5" y="20" width="354" height="130"/>
+                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="25"/>
                             <color key="textColor" red="0.5568627451" green="0.49803921569999998" blue="0.39607843139999999" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -67,10 +67,10 @@
                         <constraint firstAttribute="trailing" secondItem="V8c-gz-D0P" secondAttribute="trailing" constant="30" id="YE7-Bl-RTl"/>
                         <constraint firstItem="V8c-gz-D0P" firstAttribute="top" secondItem="Oiy-mp-TIg" secondAttribute="bottom" constant="20" id="ZJw-fc-SRo"/>
                         <constraint firstAttribute="bottom" secondItem="saR-eE-lgK" secondAttribute="bottom" constant="45" id="cxR-cs-ewG"/>
-                        <constraint firstAttribute="trailing" secondItem="Oiy-mp-TIg" secondAttribute="trailing" id="gdV-Ko-D8C"/>
+                        <constraint firstAttribute="trailing" secondItem="Oiy-mp-TIg" secondAttribute="trailing" constant="5" id="gdV-Ko-D8C"/>
                         <constraint firstItem="Oiy-mp-TIg" firstAttribute="top" secondItem="LUQ-v1-gMo" secondAttribute="top" constant="20" id="wT6-X7-mfQ"/>
                         <constraint firstItem="saR-eE-lgK" firstAttribute="top" secondItem="V8c-gz-D0P" secondAttribute="bottom" constant="20" id="wcR-fm-7di"/>
-                        <constraint firstItem="Oiy-mp-TIg" firstAttribute="leading" secondItem="LUQ-v1-gMo" secondAttribute="leading" id="xaE-zr-54X"/>
+                        <constraint firstItem="Oiy-mp-TIg" firstAttribute="leading" secondItem="LUQ-v1-gMo" secondAttribute="leading" constant="5" id="xaE-zr-54X"/>
                     </constraints>
                 </view>
             </subviews>

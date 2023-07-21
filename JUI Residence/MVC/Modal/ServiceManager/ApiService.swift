@@ -16,6 +16,51 @@ class ApiService{
     typealias completionHandler = (_ status:Bool, _ result:AnyObject?,_ error:NSError?)->Void
     typealias progressClosure = (_ status:Progress)->Void
     //MARK:  **********  SIGN IN USER *****
+    
+    static func loginHistoryLogs(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kHistoryLog, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try LoginHistoryLog(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func logoutHistoryLogs(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kLogoutHistoryLogs, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try LoginHistoryLog(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
 
   
     //MARK:  **********  RESENDS OTP USER *****
@@ -166,6 +211,143 @@ class ApiService{
             }
         }
     }
+    
+    static func get_UserRolesList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetUserRoles, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try UserRolesBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    //MARK:  **********  GET COUNTRY LIST *****
+    static func get_UserCountryList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetCountry, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try CountryBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    //MARK:  **********  GET CARD UNIT LIST *****
+    static func get_UnitCardList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetUnitCard, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try UnitCardBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    //MARK:  **********  GET ASSIGNED UNIT LIST *****
+    static func get_AssignedUnitList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetAssignedUnits, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try AssignedUnitBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func assign_Unit(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kAssignUnit, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try DeleteUserBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func delete_AssignedUnit(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kDeleteAssignednUnit, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try DeleteUserBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    
     //MARK:  **********  GET UNIT LIST *****
     static func get_UnitList(parameters:[String:Any],completion:@escaping completionHandler)
     {
@@ -189,7 +371,73 @@ class ApiService{
             }
         }
     }
+    static func search_UnitList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kSearchUnits, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try SearchUnitBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_UnitListTyps(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetUnitListType, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UnitListTypeBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
     //MARK:  **********  GET PROPERTY LIST *****
+    static func switch_Property(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kSwitchProperty, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try PropertyListBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
     static func get_PropertyList(parameters:[String:Any],completion:@escaping completionHandler)
     {
         ServiceManager.sharedInstance.postMethod(API.kGetPropertyList, parameter: parameters) { status, response, error in
@@ -281,6 +529,57 @@ class ApiService{
             }
         }
     }
+    
+    //MARK:  **********  ACTIVATE USER *****
+    static func activate_user(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kActivateUser, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try MessageBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    
+    //MARK:  **********  DEACTIVATE USER  *****
+    static func deactivate_user(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kDeactivateUser, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try MessageBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    
+    
+    
     //MARK:  **********  GET USERD DETAIL INFO *****
     static func get_UserDetail_With(parameters:[String:Any],completion:@escaping completionHandler)
     {
@@ -410,7 +709,142 @@ class ApiService{
             }
         }
     }
+    //MARK:  **********   SYSTEM ACCESS *****
+    static func get_SystemAccessSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetSystemAccessList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UserAccessSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    static func update_SystemAccess(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kUpdateSystemAccess, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DeleteUserBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
     //MARK:  **********   USER MANAGEMENT *****
+    static func get_UserAccessSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetUserAccessList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UserAccessSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func search_UserAccessSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchUserAccessList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UserAccessSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    static func submit_UserAccess(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSubmitUserAccess, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UserAccessUpdateBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    
     static func get_UserSummary(parameters:[String:Any],completion:@escaping completionHandler)
     {
         
@@ -466,7 +900,217 @@ class ApiService{
         
      
     }
+    //MARK:  **********   VISITOR MANAGEMENT  *****
+    static func get_VisitorSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetVisitorSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VisitorSummaryModalBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func search_VisitorSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchVisitorSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VisitorSummaryModalBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func get_VisitorInfo(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetVisitorInfo, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VisitorInfoModalBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
     
+    static func delete_visitorBooking(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kDeleteVisitorBooking, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DeleteUserBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_VisitorAvailabilty(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetVisitorAvailability, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VisitorAvaiabiltyBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func get_VisitorFunctions(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetVisitorFunction, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VisitorFunctionBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func update_visitorBooking(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        //  ServiceManager.sharedInstance.postMethodAlamofire_With_Array(API.kUpdateVisitorBooking, with: parameters, arraydatas: ["267,268,269"]) { (status, response, error) in
+        
+        
+       ServiceManager.sharedInstance.postMethod(API.kUpdateVisitorBooking, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UpdateVisitorBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func register_VisitorWalkin(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kRegisterVisitorWalkin, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try WalkinVisitorBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
     //MARK:  **********   KEY COLECTION  *****
     static func get_KeyCollectionSummary(parameters:[String:Any],completion:@escaping completionHandler)
     {
@@ -495,7 +1139,33 @@ class ApiService{
         
      
     }
-    
+    static func get_KeyCollectionInfo(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kKeyCollectionInfo, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try KeyCollectionInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
     static func search_KeyCollection(parameters:[String:Any],completion:@escaping completionHandler)
     {
         
@@ -828,6 +1498,33 @@ class ApiService{
                     let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
                     
                     let response =  try FacilityModalBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func get_facilityInfo(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetFacilityInfo, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try FacilityInfoBase(result as! [String : Any])
                     completion(true,response as AnyObject,nil)
                 }catch let error {
                     print(error)
@@ -1194,6 +1891,33 @@ class ApiService{
         
         
         ServiceManager.sharedInstance.postMethod(API.kEditInspectionAppt, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DeleteUserBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func cancel_InspectionAppointment(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kCancelInspectionAppt, parameter: parameters) { status, response, error in
             if status
             {
                 let data = response?.data
@@ -1840,6 +2564,33 @@ class ApiService{
         
      
     }
+    static func get_ResidentFileDetail(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetResidentFileInfo, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try ResidentFileInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
     static func get_ResidentFileSummaryNew(parameters:[String:Any],completion:@escaping completionHandler)
     {
         
@@ -1871,14 +2622,14 @@ class ApiService{
     {
         
         
-        ServiceManager.sharedInstance.postMethod(API.kSearchKeyCollection, parameter: parameters) { status, response, error in
+        ServiceManager.sharedInstance.postMethod(API.kResidentFileSearch, parameter: parameters) { status, response, error in
             if status
             {
                 let data = response?.data
                 do{
                     let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
                     
-                    let response =  try KeyCollectionSummaryBase(result as! [String : Any])
+                    let response =  try ResidentFileSummaryBase(result as! [String : Any])
                     completion(true,response as AnyObject,nil)
                 }catch let error {
                     print(error)
@@ -1922,7 +2673,53 @@ class ApiService{
         
      
     }
-    
+    static func delete_ResidentFileUpload(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kDeleteResidentFileUpload, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try DeleteUserBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func update_ResidentFileUpload(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kEditResidentFile, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try DeleteUserBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+
+
+
   /*  static func delete_KeyCollection(parameters:[String:Any],completion:@escaping completionHandler)
     {
         ServiceManager.sharedInstance.postMethod(API.kDeleteKeyCollection, parameter: parameters) { status, response, error in
@@ -2070,6 +2867,103 @@ class ApiService{
             }
         }
     }
+    static func get_MoveInOutInfo( parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        let service =  API.kEForm_MoveInOutInfo
+        ServiceManager.sharedInstance.postMethod(service, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try MoveInOutInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    
+    static func get_RenovationInfo( parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        let service =  API.kEForm_RenovationInfo
+        ServiceManager.sharedInstance.postMethod(service, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try RenovationInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_DoorAccessInfo( parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        let service =  API.kEForm_DoorAccessInfo
+        ServiceManager.sharedInstance.postMethod(service, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DoorAccessInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_VehicleRegInfo( parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        let service =  API.kEForm_VehicleRegInfo
+        ServiceManager.sharedInstance.postMethod(service, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VehicleRegInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
     static func delete_EForm(formType: eForm,parameters:[String:Any],completion:@escaping completionHandler)
     {
         let service = formType == .moveInOut ? API.kEForm_MoveInOutDelete :
@@ -2201,7 +3095,29 @@ class ApiService{
             }
         }
     }
-    
+    static func get_VehicleRegDetails(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        ServiceManager.sharedInstance.postMethod(API.kEForm_VehicleRegDetails, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try VehicleRegBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
     static func get_UpdateAddressSummary(isToSearch: Bool,parameters:[String:Any],completion:@escaping completionHandler)
     {
         
@@ -2214,6 +3130,30 @@ class ApiService{
                     let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
                     
                     let response =  try UpdateAddressSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_UpdateAddressInfo(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        let service = API.kEForm_UpdateAddressInfo
+        ServiceManager.sharedInstance.postMethod(service, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UpdateAddressInfoSummaryBase(result as! [String : Any])
                     completion(true,response as AnyObject,nil)
                 }catch let error {
                     print(error)
@@ -2251,6 +3191,31 @@ class ApiService{
             }
         }
     }
+    static func get_UpdateParticularInfo(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        let service =  API.kEForm_UpdateParticularInfo
+        ServiceManager.sharedInstance.postMethod(service, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try UpdateParticularsInfoBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    
     static func submit_MoveIOPayment(signature: Data?, parameters:[String:Any],completion:@escaping completionHandler)
     {
         var datas = [Data]()
@@ -3093,7 +4058,72 @@ class ApiService{
             }
         }
     }
-    
+    static func create_buildingList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kCreateBuildingList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BuildingSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func edit_buildingList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kEditBuildingList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BuildingSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func delete_buildingList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kDeleteBuildingList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BuildingSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
     static func get_faceOptions(parameters:[String:Any],completion:@escaping completionHandler)
     {
         ServiceManager.sharedInstance.postMethod(API.kGetFaceOptions, parameter: parameters) { status, response, error in
@@ -3264,7 +4294,645 @@ class ApiService{
             }
         }
     }
+    //MARK:  ********** Assign devces *****
+    static func get_assignedDeviceList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kAssignDeviceList, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try AssignDeviceBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func update_assignedDeviceList(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kUpdateAssignDevice, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DeleteUserBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    //MARK:  **********  INSERT BLUETOOTH THINMOO RECORD *****
+    static func insert_thinmooRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kInsertThinmooRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try ThinmooRecordBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
     
     
+    //MARK:  **********   OPEN DOOR RECORDS  *****
+    static func get_NormalDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetNormalDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func search_NormalDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchNormalDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try DoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func get_BluetoothDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetBluetoothDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BluetoothDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func search_BluetoothDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchBluetoothDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BluetoothDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    
+    
+    
+    static func get_FailedDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetFailedDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try FailedDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func search_FailedDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchFailedDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try FailedDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    
+    
+    static func get_CallUnitDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetCallUnitDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try CallUnitDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func search_CallUnitDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchCallUnitDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try CallUnitDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    
+    
+    static func get_QRCodeDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetQRCodeDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try QRCodeDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func search_QRCodeDoorRecord(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kSearchQRCodeDoorRecord, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try QRCodeDoorRecordsBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    
+    //MARK:  **********   UNIT LIST TYPE SUMMARY  *****
+    static func get_UnitListTypeSummary(unitlisttype:UnitListType,parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetUnitListTypeSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    if unitlisttype == .contactinfo{
+                        let response =  try ContactInfoBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .keycollection{
+                        let response =  try KeyCollectionSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    
+                    else if unitlisttype == .defects{
+                        let response =  try DefectsModalBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .facilitybooking{
+                        let response =  try FacilityModalBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .feedback{
+                        let response =  try FeedbackModalBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .moveinout{
+                        let response =  try MoveInOutSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .renovation{
+                        let response =  try RenovationSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .dooraccess{
+                        let response =  try DoorAccessSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .vehiclereg{
+                        let response =  try VehicleRegSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .updateAddress{
+                        let response =  try UpdateAddressSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .updateParticulars{
+                        let response =  try UpdateParticularsSummaryBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .accesscardmanagement{
+                        let response =  try CardInfoBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .visitormanagement{
+                        let response =  try VisitorSummaryModalBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                    else if unitlisttype == .residentmanagement{
+                        let response =  try ResidentMgmtBase(result as! [String : Any])
+                        completion(true,response as AnyObject,nil)
+                    }
+                   
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    //MARK:  **********   RESIDENT MANAGEMENT  *****
+    static func get_BatchInvoiceSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetBatchInvoiceSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BatchSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func search_BatchInvoiceSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kSearchBatchInvoiceSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try BatchSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_InvoiceSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetInvoiceSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try InvoiceSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func search_InvoiceSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kSearchInvoiceSummary, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try InvoiceSummaryBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func get_InvoiceDetail(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kGetInvoiceDetail, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try InvoiceDataBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func delete_BatchInvoice(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kDeleteBatchInvoice, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try DeleteUserBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    static func update_InvoicePayment(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        ServiceManager.sharedInstance.postMethod(API.kUpdateInvoicePayment, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let userBase = try DeleteUserBase(result as! [String : Any])
+                    completion(true,userBase as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+    }
+    
+    
+    //MARK:  **********  GET NOTIFICATIONS FOR USER *****
+    static func get_NotificationSummary(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kGetNotification, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try NotificationBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
+    static func update_NotificationStatus(parameters:[String:Any],completion:@escaping completionHandler)
+    {
+        
+        
+        ServiceManager.sharedInstance.postMethod(API.kUpdateNotification, parameter: parameters) { status, response, error in
+            if status
+            {
+                let data = response?.data
+                do{
+                    let result = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+                    
+                    let response =  try NotificationUpdateBase(result as! [String : Any])
+                    completion(true,response as AnyObject,nil)
+                }catch let error {
+                    print(error)
+                    completion(false,nil,error as NSError)
+                }
+            }
+            else
+            {
+                completion(status,nil,error)
+            }
+        }
+        
+        
+     
+    }
 }
 
